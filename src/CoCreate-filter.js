@@ -72,6 +72,7 @@ CoCreateFilter.prototype = {
 			}
 			
 			this._initFilter(item, id, mainAttr);
+			this._initOrder(item, id, mainAttr);
 			this.items.push(item);
 			this._initInputForm(item, mainAttr);
 			return item;
@@ -85,12 +86,14 @@ CoCreateFilter.prototype = {
 			let filter_name = f_el.getAttribute('data-filter_name');
 			let filter_operator = f_el.getAttribute('data-filter_operator') ? f_el.getAttribute('data-filter_operator') : 'contain';
 			let value_type = f_el.getAttribute('data-value_type') ? f_el.getAttribute('data-value_type') : 'string';
+			let filter_type = f_el.getAttribute('data-filter_type');
 			let filter_value = f_el.getAttribute('data-filter_value');
 			if (!filter_value || filter_value == "") {
 				continue ;
 			}
-	
-			filter_value = filter_value.replace(/\s/g, '').split(',');
+			if (value_type !== "raw") {
+				filter_value = filter_value.replace(/\s/g, '').split(',');
+			}
 	
 			if (!filter_name) {
 				item.search.value = this._makeSearchOption(id, attrName);
@@ -101,9 +104,56 @@ CoCreateFilter.prototype = {
 						filter_value[i] = Number(filter_value[i]);
 					}
 				}
-				this.insertArrayObject(item.filters, idx, {name: filter_name, value: filter_value, operator: filter_operator})
+				this.insertArrayObject(item.filters, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type})
 			}
 		}
+	},
+	
+	_initOrder: function(item, id, attrName) {
+		let filter_objs = item.el.getRootNode().querySelectorAll('[' + attrName + '="' + id + '"]');
+		const _this = this;
+		for (var i = 0; i < filter_objs.length; i++) {
+			
+			let f_el = filter_objs[i];
+			let order_name = f_el.getAttribute('data-order_by');
+			let order_value = f_el.getAttribute('value');
+			if (!order_name || !order_value) {
+				continue ;
+			}
+			
+			
+			if (['A', 'BUTTON'].includes(f_el.tagName)) {
+				f_el.addEventListener('click', function(){
+					let name = this.getAttribute('data-order_by');
+					let value = this.getAttribute('value');
+					_this._applyOrder(item, name, value)
+					if (item.el) {
+						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
+					}
+				});
+				//. apply click event
+			} else {
+				this._applyOrder(item, order_name, order_value);
+			}
+		}			
+	},
+	
+	_applyOrder: function(item, name, value) {
+		
+		if (!value) {
+			return;
+		}
+		let order_type = 0;
+		let idx = this.getOrderByName(item, name);
+		
+		if (value == 'asc') {
+			order_type = 1;   
+		} else if (value == 'desc') {
+			order_type = -1;
+		} else {
+			order_type = [];
+		}
+		this.insertArrayObject(item.orders, idx, {name: name, type: order_type}, order_type)
 	},
 	
 	changeCollection: function(filter) {
@@ -219,6 +269,7 @@ CoCreateFilter.prototype = {
 			e.preventDefault();
 			let filter_name = this.getAttribute('data-filter_name');
 			let filter_operator = this.getAttribute('data-filter_operator') || 'contain';
+			let filter_type = this.getAttribute('data-filter_type');
 			let value_type = this.getAttribute('data-value_type') || 'string';
 			clearTimeout(delayTimer);
 			delayTimer = setTimeout(function() {
@@ -233,8 +284,6 @@ CoCreateFilter.prototype = {
 					let filterValue = [];
 				
 					if (inputType == 'checkbox') {
-						let value = input.value;
-						
 						var inputGroup = document.querySelectorAll("input[name=" + input.name + "]:checked");
 						for (var i = 0; i < inputGroup.length; i++) {
 							filterValue.push(inputGroup[i].value);
@@ -252,9 +301,13 @@ CoCreateFilter.prototype = {
 						if (value != "none") {
 							filterValue = [value];
 						}
+						
+						if (value_type === "raw") {
+							filterValue = value;
+						}
 					}
 					
-					_instance.insertArrayObject(item.filters, idx, {name: filter_name, value: filterValue, operator: filter_operator})
+					_instance.insertArrayObject(item.filters, idx, {name: filter_name, value: filterValue, operator: filter_operator, type: filter_type})
 				}
 				if (item.el) {
 					item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }))
