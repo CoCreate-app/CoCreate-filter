@@ -8,74 +8,71 @@ CoCreateFilter.prototype = {
 	
 	setFilter: function(el, mainAttr, type) {
 			
-			if (!mainAttr) {
-				return;
-			}
-			
-			let id = el.getAttribute(mainAttr);
-			
-			if (!id) return;
-			
-			let collection = el.getAttribute('data-fetch_collection') ? el.getAttribute('data-fetch_collection') : 'module_activity';
-			let fetch_name = el.getAttribute('data-fetch_name');
-			let fetch_value = el.getAttribute('data-fetch_value');
-			let search_type = el.getAttribute('data-search_type');
-			let fetch_collection = el.getAttribute('data-fetch_collection_list') == "true" ? true : false;
-			
-			let order_name = el.getAttribute('data-order_by')
-			let order_type = el.getAttribute('data-order_type') || 'asc';
-
-			let fetch_count = parseInt(el.getAttribute('data-fetch_count'));
-			
-			// let searchKey = '';
-			// let searchInput = document.querySelector("[data-engine-id='" + id + "'].template-search");
-			// if (searchInput && searchInput.value) searchKey = searchInput.value;
-
-			let item = {
-				el: el,
-				id: id,
-				eId: id, // + this.items.length,
-				type: type,
-				
-				attrName: mainAttr,
-				
-				collection: collection,
-				startIndex: 0,
-				options: {},	/** return options **/
-				fetch: {},
-				is_collection: fetch_collection,
-				search: {
-					type: 'or',
-					value: []
-				},
-				orders: [],
-				filters: []
-			}
-			
-			if (!isNaN(fetch_count) && fetch_count > 0) {
-				item.count = fetch_count;
-			}
+		if (!mainAttr) {
+			return;
+		}
 		
-			if (search_type) {
-				item.search.type = search_type;
-			}
+		let id = el.getAttribute(mainAttr);
+		
+		if (!id) return;
+		
+		let collection = el.getAttribute('data-fetch_collection') ? el.getAttribute('data-fetch_collection') : 'module_activity';
+		let fetch_name = el.getAttribute('data-fetch_name');
+		let fetch_value = el.getAttribute('data-fetch_value');
+		let fetch_collection = el.getAttribute('data-fetch_collection_list') == "true" ? true : false;
+		
+		let order_name = el.getAttribute('data-order_by')
+		let order_type = el.getAttribute('data-order_type') || 'asc';
+
+		let fetch_count = parseInt(el.getAttribute('data-fetch_count'));
+		
+		// let searchKey = '';
+		// let searchInput = document.querySelector("[data-engine-id='" + id + "'].template-search");
+		// if (searchInput && searchInput.value) searchKey = searchInput.value;
+
+		let item = {
+			el: el,
+			id: id,
+			eId: id, // + this.items.length,
+			type: type,
 			
-			if (order_name) {
-				item.orders.push({name: order_name, type: order_type == 'asc' ? 1 : -1 })
-			}
+			attrName: mainAttr,
 			
-			if (fetch_name && fetch_value) {
-				item.fetch = {
-					name: fetch_name,
-					value: fetch_value
-				}
+			collection: collection,
+			startIndex: 0,
+			options: {},	/** return options **/
+			fetch: {},
+			is_collection: fetch_collection,
+			search: {
+				type: 'or',
+				value: []
+			},
+			orders: [],
+			filters: []
+		}
+		
+		if (!isNaN(fetch_count) && fetch_count > 0) {
+			item.count = fetch_count;
+		}
+	
+		if (order_name) {
+			item.orders.push({name: order_name, type: order_type == 'asc' ? 1 : -1 })
+		}
+		
+		if (fetch_name && fetch_value) {
+			item.fetch = {
+				name: fetch_name,
+				value: fetch_value
 			}
-			
-			this._initFilter(item, id, mainAttr);
-			this._initOrder(item, id, mainAttr);
-			this.items.push(item);
-			this._initInputForm(item, mainAttr);
-			return item;
+		}
+		
+		this._initFilter(item, id, mainAttr);
+		this._initOrder(item, id, mainAttr);
+		this.items.push(item);
+		this._initInputForm(item, mainAttr);
+		
+		this._initExportImport(item, id, mainAttr);
+		return item;
 	},
 	
 	_initFilter: function(item, id, attrName) {
@@ -85,7 +82,7 @@ CoCreateFilter.prototype = {
 			let f_el = filter_objs[i];
 			let filter_name = f_el.getAttribute('data-filter_name');
 			let filter_operator = f_el.getAttribute('data-filter_operator') ? f_el.getAttribute('data-filter_operator') : 'contain';
-			let value_type = f_el.getAttribute('data-value_type') ? f_el.getAttribute('data-value_type') : 'string';
+			let value_type = f_el.getAttribute('data-filter_value_type') ? f_el.getAttribute('data-filter_value_type') : 'string';
 			let filter_type = f_el.getAttribute('data-filter_type');
 			let filter_value = f_el.getAttribute('data-filter_value');
 			if (!filter_value || filter_value == "") {
@@ -121,7 +118,6 @@ CoCreateFilter.prototype = {
 				continue ;
 			}
 			
-			
 			if (['A', 'BUTTON'].includes(f_el.tagName)) {
 				f_el.addEventListener('click', function(){
 					let name = this.getAttribute('data-order_by');
@@ -135,7 +131,86 @@ CoCreateFilter.prototype = {
 			} else {
 				this._applyOrder(item, order_name, order_value);
 			}
-		}			
+		}
+		
+		this._initToggleOrderEvent(item, id, attrName);
+	},
+	
+	_initToggleOrderEvent: function(item, id, attrName) {
+		let elements = document.querySelectorAll(`[${attrName}="${id}"][data-toggle_order]`)
+		const self =this;
+		elements.forEach((element) => {
+			element.addEventListener('click', function() {
+				let value = this.getAttribute('data-toggle_order') || '';
+				let order_name = this.getAttribute('data-order_by');
+				
+				value = value === 'asc' ? 'desc' : 'asc';
+
+				for (let i = 0; i < elements.length; i++) {
+					if (elements[i] !== element) {
+						elements[i].setAttribute('data-toggle_order', '');
+					}
+				}
+				
+				item.orders = [];
+				
+				self._applyOrder(item, order_name, value);
+				element.setAttribute('data-toggle_order', value);
+				
+				if (item.el) {
+					item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
+				}
+				
+			})
+		})
+	},
+	
+	_initExportImport: function(item, id, attrName) {
+		let export_button = document.querySelector(`[data-export_type][${attrName}="${id}"]`);
+		let import_button = document.querySelector(`[data-import="true"][${attrName}="${id}"]`);
+		
+		const self = this;
+		if (export_button) {
+			//. export_buttons action
+			export_button.addEventListener('click', function() {
+	
+				if (!item) return;
+				
+				let new_filter = self.makeFetchOptions(item)
+				
+				new_filter.export = {
+					collection: new_filter.collection,
+					type: export_button.getAttribute('data-export_type') || 'json'
+				}
+				CoCreate.readDocumentList(new_filter);
+			})
+			
+		}
+		
+		if (import_button) {
+			//. import button action
+			import_button.addEventListener('click', function() {
+				var input = document.createElement('input');
+				input.type = 'file';
+	
+				if (!item) return;
+				
+				let collection = item.collection;
+				
+				//. or 
+				// collection = btn.getAttribute('data-collection');
+	
+				input.onchange = e => {
+					var file = e.target.files[0];
+					CoCreate.importCollection({
+						collection: collection,
+						file: file
+					})
+				}
+				input.click();
+			})
+		}
+
 	},
 	
 	_applyOrder: function(item, name, value) {
@@ -270,7 +345,7 @@ CoCreateFilter.prototype = {
 			let filter_name = this.getAttribute('data-filter_name');
 			let filter_operator = this.getAttribute('data-filter_operator') || 'contain';
 			let filter_type = this.getAttribute('data-filter_type');
-			let value_type = this.getAttribute('data-value_type') || 'string';
+			let value_type = this.getAttribute('data-filter_value_type') || 'string';
 			clearTimeout(delayTimer);
 			delayTimer = setTimeout(function() {
 				
@@ -436,6 +511,4 @@ CoCreateFilter.prototype = {
 }
 
 var g_cocreateFilter = new CoCreateFilter();
-
-console.log(g_cocreateFilter);
 
