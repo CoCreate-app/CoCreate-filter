@@ -1,10 +1,107 @@
 
-function CoCreateFilter() {
-	this.items = [];
-}
+const CoCreateFilter = {
+	items: [],
+	ioInstance: null,
+	moduleAttribues: [],
+	
+	/** start init processing **/
+	init: function() {
+		this.__initIntesection()
+		this.__initSocket()
+		this.__initEvents()
+	},
+	
+	__initIntesection: function() {
+		const self = this;
+		this.ioInstance = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const attributeInfo = self.__getMainAttribue(entry.target);
+					if (attributeInfo.id) {
+						document.dispatchEvent(new CustomEvent('CoCreateFilter-loadMore', {
+							detail: {
+								attrName: attributeInfo.name,
+								attrId: attributeInfo.id
+							}
+						}));
+					}
+					self.ioInstance.unobserve(entry.target)
+				}
+			})
+		}, {
+			threshold: 1
+		})	
+	},
+	
+	__runLoadMore: function(attrName, id) {
+		if (!id || !attrName) return;
+		let item = this.items.find((item) => item.attrName === attrName && item.id === id)
+		if (!item) return;
+		
+		if (item.count > 0) {
+			this.fetchData(item)
+		}
+	},
+	
+	__getMainAttribue: function(el) {
+		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" )
+		if (attribute) {
+			return {
+				name : attribute,
+				id: el.getAttribute(attribute)
+			}
+		} else {
+			return {};
+		}
+	},
+	
+	__initSocket: function() {
+		const self = this;
+		CoCreate.listenMessage('readDocumentList', function(data) {
+			let item_id = data['element'];
+			let item = self.items.find((item) => item.id === item_id);
+			if (item) {
+				// eObj.startIndex += data.result.length;
+				const result_data = data['data'];
+				
+				//. set the intersection observe element
+				let element = document.querySelector(`[${item.attrName}="${item.id}"][data-fetch_type="scroll"]`)
+				if (result_data.length > 0 && element) {
+					self.ioInstance.observe(element)
+				}
+				
+				// /** render total count **/
+				const totalCount = data['operator'].total
+				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][data-fetch_type="total"]`)
+				
+				if (totalElements) {
+					totalElements.forEach((el) => el.innerHTML = totalCount)
+				}
+			}
+		})
+	},
+	
+	__initEvents: function() {
+		const self = this;
+		document.addEventListener('CoCreateFilter-loadMore', function(event) {
+			const attrId = event.detail.attrId;
+			const attrName = event.detail.attrName
+			self.__runLoadMore(attrName, attrId)
+		})
+		
+		let buttons = document.querySelectorAll('[data-fetch_type="loadmore"]');
+		buttons.forEach((btn) => {
+			btn.addEventListener('click', function(e) {
+				e.preventDefault();
+				const attributeInfo = self.__getMainAttribue(btn);
 
-CoCreateFilter.prototype = {
-	constructor: CoCreateFilter,
+				if (!attributeInfo.id) return;
+				self.__runLoadMore(attributeInfo.attrName, attributeInfo.attrId)
+			})
+		});
+	},
+	
+	/** ---  End --- **/
 	
 	setFilter: function(el, mainAttr, type) {
 			
@@ -16,20 +113,17 @@ CoCreateFilter.prototype = {
 		
 		if (!id) return;
 		
-		let collection = el.getAttribute('data-fetch_collection') ? el.getAttribute('data-fetch_collection') : 'module_activity';
-		let fetch_name = el.getAttribute('data-fetch_name');
-		let fetch_value = el.getAttribute('data-fetch_value');
-		let fetch_collection = el.getAttribute('data-fetch_collection_list') == "true" ? true : false;
+		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
+		
+		let collection = el.getAttribute('data-fetch_collection') || 'module_activity';
+		let fetch_type = el.getAttribute('data-fetch_value_type')
+		let fetch_collection = fetch_type == "collection" ? true : false;
 		
 		let order_name = el.getAttribute('data-order_by')
 		let order_type = el.getAttribute('data-order_type') || 'asc';
 
 		let fetch_count = parseInt(el.getAttribute('data-fetch_count'));
 		
-		// let searchKey = '';
-		// let searchInput = document.querySelector("[data-engine-id='" + id + "'].template-search");
-		// if (searchInput && searchInput.value) searchKey = searchInput.value;
-
 		let item = {
 			el: el,
 			id: id,
@@ -58,14 +152,7 @@ CoCreateFilter.prototype = {
 		if (order_name) {
 			item.orders.push({name: order_name, type: order_type == 'asc' ? 1 : -1 })
 		}
-		
-		if (fetch_name && fetch_value) {
-			item.fetch = {
-				name: fetch_name,
-				value: fetch_value
-			}
-		}
-		
+
 		this._initFilter(item, id, mainAttr);
 		this._initOrder(item, id, mainAttr);
 		this.items.push(item);
@@ -492,7 +579,6 @@ CoCreateFilter.prototype = {
 			"element": item.eId,
 			"metadata": "",
 			"operator" :  {
-				"fetch": item.fetch,
 				"filters": item.filters,
 				"orders": item.orders,
 				"search": item.search,
@@ -506,9 +592,7 @@ CoCreateFilter.prototype = {
 		}
 		return json;
 	}
-
-
 }
 
-var g_cocreateFilter = new CoCreateFilter();
+CoCreateFilter.init();
 
