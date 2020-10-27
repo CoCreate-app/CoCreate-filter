@@ -168,7 +168,7 @@ const CoCreateFilter = {
 			
 			let f_el = filter_objs[i];
 			let filter_name = f_el.getAttribute('data-filter_name');
-			let filter_operator = f_el.getAttribute('data-filter_operator') ? f_el.getAttribute('data-filter_operator') : 'contain';
+			let filter_operator = f_el.getAttribute('data-filter_operator') ? f_el.getAttribute('data-filter_operator') : '$contain';
 			let value_type = f_el.getAttribute('data-filter_value_type') ? f_el.getAttribute('data-filter_value_type') : 'string';
 			let filter_type = f_el.getAttribute('data-filter_type');
 			let filter_value = f_el.getAttribute('data-filter_value');
@@ -430,7 +430,7 @@ const CoCreateFilter = {
 		input.addEventListener('input', function(e) {
 			e.preventDefault();
 			let filter_name = this.getAttribute('data-filter_name');
-			let filter_operator = this.getAttribute('data-filter_operator') || 'contain';
+			let filter_operator = this.getAttribute('data-filter_operator') || '$contain';
 			let filter_type = this.getAttribute('data-filter_type');
 			let value_type = this.getAttribute('data-filter_value_type') || 'string';
 			clearTimeout(delayTimer);
