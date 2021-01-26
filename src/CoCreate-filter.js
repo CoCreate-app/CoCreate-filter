@@ -115,7 +115,7 @@ const CoCreateFilter = {
 		
 		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
 		
-		let collection = el.getAttribute('data-fetch_collection') || 'module_activity';
+		let collection = el.getAttribute('data-fetch_collection');
 		let fetch_type = el.getAttribute('data-fetch_value_type')
 		let fetch_collection = fetch_type == "collection" ? true : false;
 		
@@ -172,7 +172,7 @@ const CoCreateFilter = {
 			let value_type = f_el.getAttribute('data-filter_value_type') ? f_el.getAttribute('data-filter_value_type') : 'string';
 			let filter_type = f_el.getAttribute('data-filter_type');
 			let filter_value = f_el.getAttribute('data-filter_value');
-			if (!filter_value || filter_value == "") {
+			if (filter_value == null) {
 				continue ;
 			}
 			if (value_type !== "raw") {
@@ -319,7 +319,7 @@ const CoCreateFilter = {
 	},
 	
 	changeCollection: function(filter) {
-		let collection = filter.el.getAttribute('data-fetch_collection') ? filter.el.getAttribute('data-fetch_collection') : 'module_activity';
+		let collection = filter.el.getAttribute('data-fetch_collection');
 		filter.collection = collection;
 		filter.startIndex = 0;
 	},
@@ -577,7 +577,9 @@ const CoCreateFilter = {
 		let json = {
 			"collection": item.collection,
 			"element": item.eId,
-			"metadata": "",
+			"metadata": {
+				isRefresh: item.isRefresh
+			},
 			"operator" :  {
 				"filters": item.filters,
 				"orders": item.orders,
@@ -596,3 +598,4 @@ const CoCreateFilter = {
 
 CoCreateFilter.init();
 
+export default CoCreateFilter;
