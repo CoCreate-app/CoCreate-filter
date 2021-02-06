@@ -34,7 +34,6 @@ All updates to this library are documented in our [CHANGELOG](https://github.com
 
 If you are interested in the future direction of this project, please take a look at our open [issues](https://github.com/CoCreate-app/CoCreate-filter/issues) and [pull requests](https://github.com/CoCreate-app/CoCreate-filter/pulls). We would love to hear your feedback.
 
-
 <a name="about"></a>
 # About
 
