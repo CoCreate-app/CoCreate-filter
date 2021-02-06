@@ -4,6 +4,8 @@ const CoCreateFilter = {
 	ioInstance: null,
 	moduleAttribues: [],
 	
+	module_items : [],
+	
 	/** start init processing **/
 	init: function() {
 		this.__initIntesection()
@@ -57,7 +59,7 @@ const CoCreateFilter = {
 	
 	__initSocket: function() {
 		const self = this;
-		CoCreate.listenMessage('readDocumentList', function(data) {
+		CoCreate.crud.listenMessage('readDocumentList', function(data) {
 			let item_id = data['element'];
 			let item = self.items.find((item) => item.id === item_id);
 			if (item) {
@@ -269,7 +271,7 @@ const CoCreateFilter = {
 					collection: new_filter.collection,
 					type: export_button.getAttribute('data-export_type') || 'json'
 				}
-				CoCreate.readDocumentList(new_filter);
+				CoCreate.crud.readDocumentList(new_filter);
 			})
 			
 		}
@@ -289,7 +291,7 @@ const CoCreateFilter = {
 	
 				input.onchange = e => {
 					var file = e.target.files[0];
-					CoCreate.importCollection({
+					CoCreate.crud.importCollection({
 						collection: collection,
 						file: file
 					})
@@ -544,7 +546,7 @@ const CoCreateFilter = {
 	
 	fetchData:function (item) {
 		let json = this.makeFetchOptions(item);
-		CoCreate.readDocumentList(json);
+		CoCreate.crud.readDocumentList(json);
 	},
 	
 	getObjectByFilterId: function(obj, id) {
@@ -593,6 +595,46 @@ const CoCreateFilter = {
 			json['operator'].count = item.count;
 		}
 		return json;
+	},
+	
+	add: function({name, attribute, callback}) {
+		let elements = document.querySelectorAll(`[data-fetch_collection][${attribute}]`)
+		const self = this;
+		elements.forEach((el) => {
+			self.__initFilterElement(el, attribute, name);
+		});
+		
+		CoCreate.socket.listen('readDocumentList', function(data) {
+			callback.call(null, data);
+		})
+	},
+	
+	__initFilterElement: function(el, attribute, name) {
+		let _id = el.getAttribute(attribute)
+		const self = this;
+		if (!_id) return;
+		
+		//. restrict the duplication define
+		// if (this.module_items.some(x => x.name == name && x.id == _id)) {
+		// 	return;
+		// }
+		
+		let filter = this.setFilter(el, attribute, name)
+		
+		if (filter) {
+			this.module_items.push({
+				el: el,
+				filter: filter,
+				id: _id,
+				name: name
+			})
+			
+			el.addEventListener('changeFilterInput', function(e) {
+				self.fetchData(filter)
+			})
+			
+			this.fetchData(filter)
+		}
 	}
 }
 
