@@ -7,7 +7,7 @@ const CoCreateFilter = {
 	module_items : [],
 	
 	/** start init processing **/
-	init: function() {
+	__init: function() {
 		this.__initIntesection()
 		this.__initSocket()
 		this.__initEvents()
@@ -385,7 +385,7 @@ const CoCreateFilter = {
 		otherInputs = Array.prototype.slice.call(otherInputs);
 		formInputs = formInputs.concat(otherInputs);
 
-		console.log('input form', tmpSelector);
+		// console.log('input form', tmpSelector);
 		
 		for (let i=0; i < formInputs.length; i++) {
 			let input = formInputs[i];
@@ -597,7 +597,7 @@ const CoCreateFilter = {
 		return json;
 	},
 	
-	add: function({name, attribute, callback}) {
+	init: function({name, attribute, callback}) {
 		let elements = document.querySelectorAll(`[data-fetch_collection][${attribute}]`)
 		const self = this;
 		elements.forEach((el) => {
@@ -638,6 +638,6 @@ const CoCreateFilter = {
 	}
 }
 
-CoCreateFilter.init();
+CoCreateFilter.__init();
 
 export default CoCreateFilter;

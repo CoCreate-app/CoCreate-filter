@@ -55,14 +55,17 @@
                 console.log(data);
             }
 
-            CoCreate.filter.add({
+            CoCreate.filter.init({
                 name: 'test',
                 attribute: 'data-test_id',
                 callback: function(response) {
                     const {element, data, collection} = response;
                     // CoCreate.render.data(`[data-test_id='${element}'][data-fetch_collection='${collection}'] > .template`, data);
                     
-                    CoCreate.render.data(`[data-test_id='${element}'][data-fetch_collection='${collection}']`, response);
+                    CoCreate.render.data({
+                        selector: `[data-test_id='${element}'][data-fetch_collection='${collection}']`, 
+                        data: response
+                    });
                 }
             });
 
