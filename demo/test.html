@@ -54,6 +54,14 @@
                 console.log('render data--------------------------------------')
                 console.log(data);
             }
+            
+            function removeOldData(id, collection) {
+                let wrapper = document.querySelector(`[data-test_id='${id}'][data-fetch_collection='${collection}']`);
+                if (wrapper) {
+                	let elements = wrapper.querySelectorAll(".clone_data[data-test_id='" + id + "']");
+                	elements.forEach((el) => el.remove())
+                }
+            }
 
             CoCreate.filter.init({
                 name: 'test',
@@ -61,6 +69,7 @@
                 callback: function(response) {
                     const {element, data, collection} = response;
                     // CoCreate.render.data(`[data-test_id='${element}'][data-fetch_collection='${collection}'] > .template`, data);
+                    removeOldData(element, collection)
                     
                     CoCreate.render.data({
                         selector: `[data-test_id='${element}'][data-fetch_collection='${collection}']`, 

@@ -1,3 +1,5 @@
+import utils from '../../../CoCreateJS/src/utils';
+import {socket, crud} from '../../../CoCreateJS/src';
 
 const CoCreateFilter = {
 	items: [],
@@ -59,7 +61,7 @@ const CoCreateFilter = {
 	
 	__initSocket: function() {
 		const self = this;
-		CoCreate.crud.listenMessage('readDocumentList', function(data) {
+		crud.listenMessage('readDocumentList', function(data) {
 			let item_id = data['element'];
 			let item = self.items.find((item) => item.id === item_id);
 			if (item) {
@@ -271,7 +273,7 @@ const CoCreateFilter = {
 					collection: new_filter.collection,
 					type: export_button.getAttribute('data-export_type') || 'json'
 				}
-				CoCreate.crud.readDocumentList(new_filter);
+				crud.readDocumentList(new_filter);
 			})
 			
 		}
@@ -291,7 +293,7 @@ const CoCreateFilter = {
 	
 				input.onchange = e => {
 					var file = e.target.files[0];
-					CoCreate.crud.importCollection({
+					crud.importCollection({
 						collection: collection,
 						file: file
 					})
@@ -546,7 +548,7 @@ const CoCreateFilter = {
 	
 	fetchData:function (item) {
 		let json = this.makeFetchOptions(item);
-		CoCreate.crud.readDocumentList(json);
+		crud.readDocumentList(json);
 	},
 	
 	getObjectByFilterId: function(obj, id) {
@@ -604,7 +606,7 @@ const CoCreateFilter = {
 			self.__initFilterElement(el, attribute, name);
 		});
 		
-		CoCreate.socket.listen('readDocumentList', function(data) {
+		socket.listen('readDocumentList', function(data) {
 			callback.call(null, data);
 		})
 	},
