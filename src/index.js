@@ -1,5 +1,11 @@
-import utils from '../../../CoCreateJS/src/utils';
+import utils from '@cocreate/utils';
 import {socket, crud} from '../../../CoCreateJS/src';
+// import CoCreateSocket from '@cocreate/socket';
+// import CoCreateCrud from '@cocreate/crud';
+// import crudUtils from '@cocreate/crud/src/utils.crud.js'
+
+// let socket = new CoCreateSocket('ws');
+// let crud = CoCreateCrud(socket);
 
 const CoCreateFilter = {
 	items: [],
