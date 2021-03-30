@@ -1,11 +1,5 @@
 import utils from '@cocreate/utils';
-import {socket, crud} from '@cocreate/cocreatejs';
-// import CoCreateSocket from '@cocreate/socket';
-// import CoCreateCrud from '@cocreate/crud';
-// import crudUtils from '@cocreate/crud/src/utils.crud.js'
-
-// let socket = new CoCreateSocket('ws');
-// let crud = CoCreateCrud(socket);
+import crud from '@cocreate/crud';
 
 const CoCreateFilter = {
 	items: [],
@@ -67,7 +61,7 @@ const CoCreateFilter = {
 	
 	__initSocket: function() {
 		const self = this;
-		crud.listenMessage('readDocumentList', function(data) {
+		crud.listen('readDocumentList', function(data) {
 			let item_id = data['element'];
 			let item = self.items.find((item) => item.id === item_id);
 			if (item) {
@@ -612,7 +606,7 @@ const CoCreateFilter = {
 			self.__initFilterElement(el, attribute, name);
 		});
 		
-		socket.listen('readDocumentList', function(data) {
+		crud.listen('readDocumentList', function(data) {
 			callback.call(null, data);
 		})
 	},
