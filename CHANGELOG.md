@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.2...v1.0.3) (2021-03-30)
+
+
+### Bug Fixes
+
+* import paths using npm ([e048364](https://github.com/CoCreate-app/CoCreate-filter/commit/e0483645e7cf211e2fc987b4275df43ef13136cd))
+
 ## [1.0.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.1...v1.0.2) (2021-03-30)
 
 
