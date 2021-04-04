@@ -1,5 +1,5 @@
 import utils from '@cocreate/utils';
-import crud from '@cocreate/crud';
+import crud from '@cocreate/crud-client';
 
 const CoCreateFilter = {
 	items: [],
