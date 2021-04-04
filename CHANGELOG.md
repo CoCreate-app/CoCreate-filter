@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.4...v1.0.5) (2021-04-04)
+
+
+### Bug Fixes
+
+* Remove crud from package.json ([028e897](https://github.com/CoCreate-app/CoCreate-filter/commit/028e897453f3d213484f525fe6b9adfe682b1d2f))
+
 ## [1.0.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.3...v1.0.4) (2021-04-04)
 
 
