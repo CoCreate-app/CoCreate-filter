@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.3...v1.0.4) (2021-04-04)
+
+
+### Bug Fixes
+
+* update socket to socket-lient and crud to crud client" ([b4e92cb](https://github.com/CoCreate-app/CoCreate-filter/commit/b4e92cbf3f6d51bda2abc83ebaf0381c70e7af38))
+
 ## [1.0.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.2...v1.0.3) (2021-03-30)
 
 
