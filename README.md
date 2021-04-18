@@ -9,7 +9,7 @@ A simple filter component in vanilla javascript. Easily configured using HTML5 d
 
 ![CoCreate-filter](https://cdn.cocreate.app/docs/CoCreate-filter.gif)
 
-## [Docs & Demo](https://cocreate.app/docs/clone)
+## [Docs & Demo](https://cocreate.app/docs/filter)
 
 For a complete guide and working demo refer to the [doumentation](https://cocreate.app/docs/filter)
 
