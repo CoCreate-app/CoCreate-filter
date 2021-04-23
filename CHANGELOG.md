@@ -1,3 +1,11 @@
+## [1.0.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.5...v1.0.6) (2021-04-23)
+
+
+### Bug Fixes
+
+* ci and build process ([988e534](https://github.com/CoCreate-app/CoCreate-filter/commit/988e5348dbafc699ddb51fe25746825865bcd6eb))
+* npm publish and cdn deployment ([ed2ec5b](https://github.com/CoCreate-app/CoCreate-filter/commit/ed2ec5b5308d4f67ef86e6e551f0c310a8ad9376))
+
 ## [1.0.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.4...v1.0.5) (2021-04-04)
 
 
