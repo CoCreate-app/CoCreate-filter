@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.6...v1.0.7) (2021-04-23)
+
+
+### Bug Fixes
+
+* readme and documentation. Removed securitykeys ([2e00dea](https://github.com/CoCreate-app/CoCreate-filter/commit/2e00dea68180da03ea4c23d5064c03783e7d9fa4))
+
 ## [1.0.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.5...v1.0.6) (2021-04-23)
 
 
