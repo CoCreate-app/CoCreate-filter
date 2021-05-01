@@ -1,6 +1,6 @@
 # CoCreate-filter
 
-A simple filter component in vanilla javascript. Easily configured using HTML5 data-attributes and/or JavaScript API. Take it for a spin in our [playground!](https://cocreate.app/docs/filter)
+A JavaScript api define attributes for filtering color, description, text, price or any list of document stored in db. Great for creating custom components like fetch, calender, datatables etc. Take it for a spin in our [playground!](https://cocreate.app/docs/filter)
 
 ![GitHub file size in bytes](https://img.shields.io/github/size/CoCreate-app/CoCreate-filter/dist/CoCreate-filter.min.js?label=minified%20size&style=for-the-badge)
 ![GitHub latest release](https://img.shields.io/github/v/release/CoCreate-app/CoCreate-filter?style=for-the-badge)

@@ -1,7 +1,7 @@
 {
   "name": "@cocreate/filter",
   "version": "1.0.8",
-  "description": "A simple filter component in vanilla javascript. Easily configured using HTML5 data-attributes and/or JavaScript API. Filter a list of documents from db",
+  "description": "A JavaScript api define attributes for filtering color, description, text, price or any list of document stored in db. Great for creating custom components like fetch, calender, datatables etc.",
   "keywords": [
     "filter",
     "cocreate",
