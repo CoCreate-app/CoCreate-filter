@@ -1,3 +1,10 @@
+## [1.0.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.8...v1.0.9) (2021-05-08)
+
+
+### Bug Fixes
+
+* add css auto parse and save to docs. ([8f4a1b0](https://github.com/CoCreate-app/CoCreate-filter/commit/8f4a1b0a046d17f5cbe4c851f4118b24c2696093))
+
 ## [1.0.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.7...v1.0.8) (2021-04-27)
 
 
