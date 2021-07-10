@@ -1,3 +1,10 @@
+## [1.0.18](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.17...v1.0.18) (2021-07-10)
+
+
+### Bug Fixes
+
+* gitignore all logs ([18e6840](https://github.com/CoCreate-app/CoCreate-filter/commit/18e684035750db618378f09307d0ccfdacba5ba2))
+
 ## [1.0.17](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.16...v1.0.17) (2021-07-07)
 
 
