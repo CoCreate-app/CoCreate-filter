@@ -1,3 +1,18 @@
+## [1.0.20](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.19...v1.0.20) (2021-07-14)
+
+
+### Bug Fixes
+
+* upgrade all packages ([de002bd](https://github.com/CoCreate-app/CoCreate-filter/commit/de002bd67f8583fbb35119c55dbd823f4495f4e0))
+
+## [1.0.19](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.18...v1.0.19) (2021-07-13)
+
+
+### Bug Fixes
+
+* add yarn lockfile to git ignore ([f3bd7d1](https://github.com/CoCreate-app/CoCreate-filter/commit/f3bd7d11e3799e3d0fa4f12b1c777449d472abf0))
+* remove yarn.lock ([54f4a4b](https://github.com/CoCreate-app/CoCreate-filter/commit/54f4a4b4cdf1f694d98d9cd0d469e3c2f16a3bde))
+
 ## [1.0.18](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.17...v1.0.18) (2021-07-10)
 
 
