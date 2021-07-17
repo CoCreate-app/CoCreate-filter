@@ -1,3 +1,11 @@
+## [1.0.21](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.20...v1.0.21) (2021-07-17)
+
+
+### Bug Fixes
+
+* init and update demos scripts ([8c17746](https://github.com/CoCreate-app/CoCreate-filter/commit/8c17746be25a066c65b3146112fa22ac2860801d))
+* workflows ([4cd1227](https://github.com/CoCreate-app/CoCreate-filter/commit/4cd122700da13ba44c37ffeedbbb80740859eae5))
+
 ## [1.0.20](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.19...v1.0.20) (2021-07-14)
 
 
