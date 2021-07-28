@@ -79,16 +79,16 @@
 					
 	<div class="margin-top:10px">
 						<pre><code class="language-html">
-	&lt;div data-template_id=&quot;filter&quot; data-filter_name=&quot;name&quot; data-filter_value=&quot;testing&quot; data-filter_operator=&quot;$eq&quot;&gt;&lt;/div&gt;
-	&lt;div data-template_id=&quot;filter&quot; data-filter_name=&quot;age&quot; data-filter_value=&quot;10&quot; data-filter_operator=&quot;$gt&quot;&gt;&lt;/div&gt;
-	&lt;div data-template_id=&quot;filter&quot; data-order_by=&quot;age&quot; data-order_type=&quot;asc&quot;&gt;&lt;/div&gt;
+	&lt;div template_id=&quot;filter&quot; filter-name=&quot;name&quot; filter-value=&quot;testing&quot; filter-operator=&quot;$eq&quot;&gt;&lt;/div&gt;
+	&lt;div template_id=&quot;filter&quot; filter-name=&quot;age&quot; filter-value=&quot;10&quot; filter-operator=&quot;$gt&quot;&gt;&lt;/div&gt;
+	&lt;div template_id=&quot;filter&quot; order-by=&quot;age&quot; order-type=&quot;asc&quot;&gt;&lt;/div&gt;
 	...
-	&lt;input data-template_id=&quot;filter&quot; data-filter_name=&quot;description&quot; data-filter_operator=&quot;$in&quot;/&gt;
+	&lt;input template_id=&quot;filter&quot; filter-name=&quot;description&quot; filter-operator=&quot;$in&quot;/&gt;
 	....
 	
-	&lt;div data-fetch_collection=&quot;testing&quot; data-template_id=&quot;filter&quot;
-	        data-filter_name=&quot;filter&quot;
-	        data-filter_value=&quot;testing&quot;
+	&lt;div fetch-collection=&quot;testing&quot; template_id=&quot;filter&quot;
+	        filter-name=&quot;filter&quot;
+	        filter-value=&quot;testing&quot;
 	        data-fitler_operator=&quot;$ne&quot;
 	&gt;....&lt;/div&gt;
 					</code></pre> 
@@ -111,28 +111,28 @@
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
 			        		<h4><span>data-{container_id}</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge danger">required</span></h4>
 		        			<p>This attribute should be defined. This attribute name is difference for each component.</p>
-		        			<p>Template wrapper case: the attribute name is <code class="language-js">data-template_id</code></p>
+		        			<p>Template wrapper case: the attribute name is <code class="language-js">template_id</code></p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-			        		<h4><span>data-filter_name</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
+			        		<h4><span>filter-name</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
 		        			<p>Collections's field name for filter.</p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-			        		<h4><span>data-filter_value</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
-		        			<p>Collection's field value for filter. If data-filter_name defined, this attribute should defined too</p>
+			        		<h4><span>filter-value</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
+		        			<p>Collection's field value for filter. If filter-name defined, this attribute should defined too</p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-			        		<h4><span>data-filter_value_type</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
+			        		<h4><span>filter-value_type</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
 		        			<p>string | raw . Default value is string</p>
 		        			<p>raw case, it will make values array from string by "," separation </p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-			        		<h4><span>data-filter_operator</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
+			        		<h4><span>filter-operator</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
 		        			<p>Define the filter operator.</P>
 		        			<p>Operators: $contain | $range | $eq | $ne | $lt | $lte | $gt | $gte | $in | $nin | $geoWithin</p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-			        		<h4><span>data-order_by</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
+			        		<h4><span>order-by</span> <span class="cocreate-badge success">string</span> <span class="cocreate-badge warning">optional</span></h4>
 		        			<p>Field name to sorting.</p>
 						</li>
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
@@ -168,7 +168,7 @@
 							</div>
 							<div class="padding-left:1rem">
 								<p>- <strong>mainAttr</strong></strong> <span class="cocreate-badge warning">Type:string</span><span class="cocreate-badge danager">required</span></p>
-								<p>This is the container's attribute name. Ex: template wrapper case- <code class="language-js">data-template_id</code></p>
+								<p>This is the container's attribute name. Ex: template wrapper case- <code class="language-js">template_id</code></p>
 							</div>
 							<div class="padding-left:1rem">
 								<p>- <strong>type</strong><span class="cocreate-badge warning">Type:string</span><span class="cocreate-badge warning">optional</span></p>
@@ -207,8 +207,8 @@
 					<div class="position:sticky top:0 padding:15px_0px height:100vh">
 						<div class="container svColumn overflow:hidden card border-radius:2px width:auto height:100%" id="sandbox">
 							<div class="font-size:20px position:absolute top:10px right:10px opacity:0.6 z-index:7"> <a class="margin-right:10px" id="preview" data-show="preview" data-hide="code"><i class="far fa-eye"></i></a> <a class="margin-right:10px hidden" id="code" data-show="code" data-hide="preview"><i class="fas fa-code"></i></a>
-								<!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>--><a target="modal" href="module_activity_datatable.html" data-pass_collection="modules" data-pass_document_id="" data-pass_fetch_value="" data-pass_prefix="" data-pass_to="render" data-modal_width="600px" data-modal_height="400px"
-									data-modal_color="#229954" data-modal_header="false" class="margin-right:10px">
+								<!--<a class="margin-right:10px"><i class="far fa-window-maximize"></i></a>--><a target="modal" href="module_activity_datatable.html" pass-collection="modules" pass-document_id="" pass-fetch_value="" pass-prefix="" pass_to="render" modal-width="600px" modal-height="400px"
+									modal-color="#229954" modal-header="false" class="margin-right:10px">
 								<i class="fas fa-external-link-alt"></i>
 							 </a> <a class="margin-right:5px" data-fullscreen target="#sandbox"><i class="fas fa-expand"></i></a> </div>
 							<div class="svRow">

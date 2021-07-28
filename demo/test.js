@@ -5,7 +5,7 @@ const CoCreateFilterTesting = {
 	init: function() {
 		const self = this;
 		
-		let wrappers = document.querySelectorAll('[data-fetch_collection][data-test_id]')
+		let wrappers = document.querySelectorAll('[fetch-collection][data-test_id]')
 		
 		wrappers.forEach((el) => {
 			self.__initElement(el);

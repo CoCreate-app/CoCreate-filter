@@ -26,26 +26,26 @@
             <tr>
               <th class="position:relative name min-width:300px">
         		  <input type="text" class="floating-label"
-               	  data-filter_name="name" 
+               	  filter-name="name" 
                	  data-value_type="string"
-               	  data-filter_operator=""
-       			      data-template_id="datatable" 
+               	  filter-operator=""
+       			      template_id="datatable" 
                	  placeholder="Name">
                   <span class="position:absolute bottom:18px right:20px float:right font-size:18px z-index:6" >
-                    <a data-order_by="name" value="desc" data-template_id="datatable" data-show="#asc1" data-hide="#sort1" id="sort">
+                    <a order-by="name" value="desc" template_id="datatable" data-show="#asc1" data-hide="#sort1" id="sort">
                       <i class="fas fa-sort"></i>
                     </a>
                   </span>
               </th>
               <th class="position:relative min-width:300px">
           		  <input type="text" class="floating-label"
-               	  data-filter_name="_id" 
+               	  filter-name="_id" 
                	  data-value_type="string"
-               	  data-filter_operator=""
-       			      data-template_id="datatable" 
+               	  filter-operator=""
+       			      template_id="datatable" 
                	  placeholder="Document_id"/>
                   <span class="position:absolute bottom:18px right:20px float:right font-size:18px z-index:6" >
-                    <a data-order_by="name" value="desc" data-template_id="datatable" data-show="#asc" data-hide="#sort" id="sort">
+                    <a order-by="name" value="desc" template_id="datatable" data-show="#asc" data-hide="#sort" id="sort">
                       <i class="fas fa-sort"></i>
                     </a>
                   </span>
@@ -54,40 +54,40 @@
         </thead>
 
         <tbody
-          data-fetch_collection="users"
-          data-pass_to="me1234" 
-          data-fetch_name="" 
+          fetch-collection="users"
+          pass_to="me1234" 
+          fetch-name="" 
           data-fetch_value="" 
           data-fetch_count=""
-          data-order_by="name" 
-          data-order_type="asc"
-          data-template_id="datatable"
+          order-by="name" 
+          order-type="asc"
+          template_id="datatable"
           data-search_type="or">
           
           <tr class="template border:bottom">
   					<td>
   					  <div class="min-width:200px">
     					  <div class="icon-wrapper">
-    						  <span document_id="" data-pass_id="me1234" name="icon"></span>
+    						  <span document_id="" pass_id="me1234" name="icon"></span>
     					  </div>
     					  <div>
       						<a data-window_url="render.html" 
-      						   data-pass_collection="module_activity"
-      						   data-pass_module_id=""
-      						   data-pass_prefix="form_"
-      						   data-pass_to="form-fields" 
+      						   pass-collection="module_activity"
+      						   pass-module_id=""
+      						   pass-prefix="form_"
+      						   pass_to="form-fields" 
       						   data-window_ajax="false" 
       						   data-window_width="320px" 
       						   data-window_height="100%" 
       						   data-window_color="#229954" 
       						   data-window_x="" 
       						   data-window_y="">
-      						  <h4 name="name" data-pass_id="me1234" class="noMargins">Name</h4>
-      						  <div data-pass_collection="modules"
-          						   data-pass_module_id=""
-      						       data-pass_prefix="form_"
-          						   data-pass_to="render"
-          						   data-pass_id="render">
+      						  <h4 name="name" pass_id="me1234" class="noMargins">Name</h4>
+      						  <div pass-collection="modules"
+          						   pass-module_id=""
+      						       pass-prefix="form_"
+          						   pass_to="render"
+          						   pass_id="render">
       						    
       						  </div>
       						</a>
@@ -97,21 +97,21 @@
   					</td>
   					<td>
   					  <a data-window_url="render.html"
-  					     data-pass_module_id=""
-  					     data-pass_prefix="form_"
-  					     data-pass_collection="module_activity"
-  					     data-pass_to="form-fields"
+  					     pass-module_id=""
+  					     pass-prefix="form_"
+  					     pass-collection="module_activity"
+  					     pass_to="form-fields"
   					     data-window_ajax="false"
   					     data-window_width="320px"
   					     data-window_height="100%"
   					     data-window_color="#229954"
   					     data-window_x=""
   					     data-window_y="">
-  					     <b name="document_id" data-pass_id="me1234">Module Id</b>
-  						    <div data-pass_collection="module_activity"
-      						   data-pass_module_id=""
-  						       data-pass_prefix="form_"
-      						   data-pass_to="render">
+  					     <b name="document_id" pass_id="me1234">Module Id</b>
+  						    <div pass-collection="module_activity"
+      						   pass-module_id=""
+  						       pass-prefix="form_"
+      						   pass_to="render">
     						  </div>
   						</a>
   					</td>
@@ -123,14 +123,14 @@
   	</div>
 
 	  <a target="modal" href="render.html" 
-	     data-pass_collection="modules"
-	     data-pass_document_id=""
-	     data-pass_prefix="form_"
-	     data-pass_to="render"
-	     data-modal_width="320px" 
-	     data-modal_height="100%"
-	     data-modal_color="#229954"
-	     class="position:fixed bottom:15px right:15px padding:15px background:dodgerblue grow-hover round z-index:8" data-pass_id="render">
+	     pass-collection="modules"
+	     pass-document_id=""
+	     pass-prefix="form_"
+	     pass_to="render"
+	     modal-width="320px" 
+	     modal-height="100%"
+	     modal-color="#229954"
+	     class="position:fixed bottom:15px right:15px padding:15px background:dodgerblue grow-hover round z-index:8" pass_id="render">
 	    <i class="fa fa-plus"></i>
 		</a>
   

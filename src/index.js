@@ -119,12 +119,12 @@ const CoCreateFilter = {
 		
 		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
 		
-		let collection = el.getAttribute('data-fetch_collection');
+		let collection = el.getAttribute('fetch-collection');
 		let fetch_type = el.getAttribute('data-fetch_value_type')
 		let fetch_collection = fetch_type == "collection" ? true : false;
 		
-		let order_name = el.getAttribute('data-order_by')
-		let order_type = el.getAttribute('data-order_type') || 'asc';
+		let order_name = el.getAttribute('order-by')
+		let order_type = el.getAttribute('order-type') || 'asc';
 
 		let fetch_count = parseInt(el.getAttribute('data-fetch_count'));
 		
@@ -171,11 +171,11 @@ const CoCreateFilter = {
 		for (var i = 0; i < filter_objs.length; i++) {
 			
 			let f_el = filter_objs[i];
-			let filter_name = f_el.getAttribute('data-filter_name');
-			let filter_operator = f_el.getAttribute('data-filter_operator') ? f_el.getAttribute('data-filter_operator') : '$contain';
-			let value_type = f_el.getAttribute('data-filter_value_type') ? f_el.getAttribute('data-filter_value_type') : 'string';
-			let filter_type = f_el.getAttribute('data-filter_type');
-			let filter_value = f_el.getAttribute('data-filter_value');
+			let filter_name = f_el.getAttribute('filter-name');
+			let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
+			let value_type = f_el.getAttribute('filter-value_type') ? f_el.getAttribute('filter-value_type') : 'string';
+			let filter_type = f_el.getAttribute('filter-type');
+			let filter_value = f_el.getAttribute('filter-value');
 			if (filter_value == null) {
 				continue ;
 			}
@@ -203,7 +203,7 @@ const CoCreateFilter = {
 		for (var i = 0; i < filter_objs.length; i++) {
 			
 			let f_el = filter_objs[i];
-			let order_name = f_el.getAttribute('data-order_by');
+			let order_name = f_el.getAttribute('order-by');
 			let order_value = f_el.getAttribute('value');
 			if (!order_name || !order_value) {
 				continue ;
@@ -211,7 +211,7 @@ const CoCreateFilter = {
 			
 			if (['A', 'BUTTON'].includes(f_el.tagName)) {
 				f_el.addEventListener('click', function(){
-					let name = this.getAttribute('data-order_by');
+					let name = this.getAttribute('order-by');
 					let value = this.getAttribute('value');
 					_this._applyOrder(item, name, value)
 					if (item.el) {
@@ -233,7 +233,7 @@ const CoCreateFilter = {
 		elements.forEach((element) => {
 			element.addEventListener('click', function() {
 				let value = this.getAttribute('data-toggle_order') || '';
-				let order_name = this.getAttribute('data-order_by');
+				let order_name = this.getAttribute('order-by');
 				
 				value = value === 'asc' ? 'desc' : 'asc';
 
@@ -323,7 +323,7 @@ const CoCreateFilter = {
 	},
 	
 	changeCollection: function(filter) {
-		let collection = filter.el.getAttribute('data-fetch_collection');
+		let collection = filter.el.getAttribute('fetch-collection');
 		filter.collection = collection;
 		filter.startIndex = 0;
 	},
@@ -349,8 +349,8 @@ const CoCreateFilter = {
 		let values = [];
 		
 		for (var i = 0; i < template_inputs.length; i++) {
-			let filter_name = template_inputs[i].getAttribute('data-filter_name')
-			let order_name = template_inputs[i].getAttribute('data-order_by')
+			let filter_name = template_inputs[i].getAttribute('filter-name')
+			let order_name = template_inputs[i].getAttribute('order-by')
 			
 			let input = template_inputs[i];
 			let value_type = input.getAttribute('data-value_type') ? input.getAttribute('data-value_type') : 'string';
@@ -392,7 +392,7 @@ const CoCreateFilter = {
 		for (let i=0; i < formInputs.length; i++) {
 			let input = formInputs[i];
 			
-			let order_by = input.getAttribute('data-order_by');
+			let order_by = input.getAttribute('order-by');
 			
 			if (order_by) {
 				this._initOrderInput(item, input);
@@ -408,7 +408,7 @@ const CoCreateFilter = {
 			
 			e.preventDefault();
 			
-			let order_by = this.getAttribute('data-order_by');
+			let order_by = this.getAttribute('order-by');
 			let order_type = 0;
 			let idx = _instance.getOrderByName(item, order_by);
 			
@@ -433,10 +433,10 @@ const CoCreateFilter = {
 		var delayTimer;
 		input.addEventListener('input', function(e) {
 			e.preventDefault();
-			let filter_name = this.getAttribute('data-filter_name');
-			let filter_operator = this.getAttribute('data-filter_operator') || '$contain';
-			let filter_type = this.getAttribute('data-filter_type');
-			let value_type = this.getAttribute('data-filter_value_type') || 'string';
+			let filter_name = this.getAttribute('filter-name');
+			let filter_operator = this.getAttribute('filter-operator') || '$contain';
+			let filter_type = this.getAttribute('filter-type');
+			let value_type = this.getAttribute('filter-value_type') || 'string';
 			clearTimeout(delayTimer);
 			delayTimer = setTimeout(function() {
 				
@@ -491,7 +491,7 @@ const CoCreateFilter = {
 			
 			for (var i = 0; i < elements.length; i++) {
 				var el_name = elements[i].getAttribute('name');
-				var f_name = elements[i].getAttribute('data-filter_name');
+				var f_name = elements[i].getAttribute('filter-name');
 				if (el_name || !f_name) {
 					continue;
 				}
@@ -600,7 +600,7 @@ const CoCreateFilter = {
 	},
 	
 	init: function({name, attribute, callback}) {
-		let elements = document.querySelectorAll(`[data-fetch_collection][${attribute}]`)
+		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`)
 		const self = this;
 		elements.forEach((el) => {
 			self.__initFilterElement(el, attribute, name);
