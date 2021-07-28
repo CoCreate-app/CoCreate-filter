@@ -289,7 +289,7 @@ const CoCreateFilter = {
 				let collection = item.collection;
 				
 				//. or 
-				// collection = btn.getAttribute('data-collection');
+				// collection = btn.getAttribute('collection');
 	
 				input.onchange = e => {
 					var file = e.target.files[0];
