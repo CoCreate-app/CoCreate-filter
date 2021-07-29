@@ -69,14 +69,14 @@ const CoCreateFilter = {
 				const result_data = data['data'];
 				
 				//. set the intersection observe element
-				let element = document.querySelector(`[${item.attrName}="${item.id}"][data-fetch_type="scroll"]`)
+				let element = document.querySelector(`[${item.attrName}="${item.id}"][fetch-type="scroll"]`)
 				if (result_data.length > 0 && element) {
 					self.ioInstance.observe(element)
 				}
 				
 				// /** render total count **/
 				const totalCount = data['operator'].total
-				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][data-fetch_type="total"]`)
+				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][fetch-type="total"]`)
 				
 				if (totalElements) {
 					totalElements.forEach((el) => el.innerHTML = totalCount)
@@ -93,7 +93,7 @@ const CoCreateFilter = {
 			self.__runLoadMore(attrName, attrId)
 		})
 		
-		let buttons = document.querySelectorAll('[data-fetch_type="loadmore"]');
+		let buttons = document.querySelectorAll('[fetch-type="loadmore"]');
 		buttons.forEach((btn) => {
 			btn.addEventListener('click', function(e) {
 				e.preventDefault();
@@ -120,13 +120,13 @@ const CoCreateFilter = {
 		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
 		
 		let collection = el.getAttribute('fetch-collection');
-		let fetch_type = el.getAttribute('data-fetch_value_type')
+		let fetch_type = el.getAttribute('fetch-value_type')
 		let fetch_collection = fetch_type == "collection" ? true : false;
 		
 		let order_name = el.getAttribute('order-by')
 		let order_type = el.getAttribute('order-type') || 'asc';
 
-		let fetch_count = parseInt(el.getAttribute('data-fetch_count'));
+		let fetch_count = parseInt(el.getAttribute('fetch-count'));
 		
 		let item = {
 			el: el,
