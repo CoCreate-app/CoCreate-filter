@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.0...v1.1.1) (2021-08-02)
+
+
+### Bug Fixes
+
+* remove data- from attributes ([78a1ae8](https://github.com/CoCreate-app/CoCreate-filter/commit/78a1ae8544da082ff1c542108a52e028022bda41))
+* remove data- from fetch, pass and filter ([16e1bb8](https://github.com/CoCreate-app/CoCreate-filter/commit/16e1bb898f2680c981ceb4db689eab3954749cd3))
+* update data-fullscreen to fullscreen ([ec1efdc](https://github.com/CoCreate-app/CoCreate-filter/commit/ec1efdc71673b7a5f5888af2aa617ed449e712f3))
+
 # [1.1.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.0.21...v1.1.0) (2021-07-28)
 
 
