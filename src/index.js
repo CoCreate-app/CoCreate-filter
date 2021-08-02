@@ -228,25 +228,25 @@ const CoCreateFilter = {
 	},
 	
 	_initToggleOrderEvent: function(item, id, attrName) {
-		let elements = document.querySelectorAll(`[${attrName}="${id}"][data-toggle_order]`)
+		let elements = document.querySelectorAll(`[${attrName}="${id}"][toggle-order]`)
 		const self =this;
 		elements.forEach((element) => {
 			element.addEventListener('click', function() {
-				let value = this.getAttribute('data-toggle_order') || '';
+				let value = this.getAttribute('toggle-order') || '';
 				let order_name = this.getAttribute('order-by');
 				
 				value = value === 'asc' ? 'desc' : 'asc';
 
 				for (let i = 0; i < elements.length; i++) {
 					if (elements[i] !== element) {
-						elements[i].setAttribute('data-toggle_order', '');
+						elements[i].setAttribute('toggle-order', '');
 					}
 				}
 				
 				item.orders = [];
 				
 				self._applyOrder(item, order_name, value);
-				element.setAttribute('data-toggle_order', value);
+				element.setAttribute('toggle-order', value);
 				
 				if (item.el) {
 					item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
