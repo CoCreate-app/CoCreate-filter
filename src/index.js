@@ -257,25 +257,26 @@ const CoCreateFilter = {
 	},
 	
 	_initExportImport: function(item, id, attrName) {
-		let export_button = document.querySelector(`[data-export_type][${attrName}="${id}"]`);
+		let export_buttons = document.querySelectorAll(`[data-export_type][${attrName}="${id}"]`);
 		let import_button = document.querySelector(`[data-import="true"][${attrName}="${id}"]`);
 		
 		const self = this;
-		if (export_button) {
+		if (export_buttons) {
 			//. export_buttons action
-			export_button.addEventListener('click', function() {
-	
-				if (!item) return;
-				
-				let new_filter = self.makeFetchOptions(item)
-				
-				new_filter.export = {
-					collection: new_filter.collection,
-					type: export_button.getAttribute('data-export_type') || 'json'
-				}
-				crud.readDocumentList(new_filter);
-			})
-			
+			for(let export_button of export_buttons) {
+				export_button.addEventListener('click', function() {
+		
+					if (!item) return;
+					
+					let new_filter = self.makeFetchOptions(item)
+					
+					new_filter.export = {
+						collection: new_filter.collection,
+						type: export_button.getAttribute('data-export_type') || 'json'
+					}
+					crud.readDocumentList(new_filter);
+				})
+			}
 		}
 		
 		if (import_button) {
