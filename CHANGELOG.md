@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.1...v1.1.2) (2021-08-12)
+
+
+### Bug Fixes
+
+* update data-module_id to document_id ([7e4b3e3](https://github.com/CoCreate-app/CoCreate-filter/commit/7e4b3e3342a050f991715cf2b8d293234dc2d211))
+
 ## [1.1.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.0...v1.1.1) (2021-08-02)
 
 
