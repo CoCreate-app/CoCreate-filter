@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
 		<title>filters | CoCreate</title>
-        <link rel="stylesheet" href="../index.css" collection="files" document_id="60972231624235187e4d6979" name="src" type="text/css" data-save="true" data-parse="true" />
 	</head>
 
 	<style>
@@ -74,19 +73,22 @@
 					<a data-btn_type="column-visibility" template_id="datatable"><i class="far fa-eye"></i></a>
 				</li>
 				<li class="margin-right:15px">
-					<a data-export_type="csv" template_id="datatable"><i class="fas fa-file-csv"></i></a>
+					<a actions="export" export-type="csv" template_id="datatable"><i class="fas fa-file-csv"></i></a>
+				</li>
+				<!--<li class="margin-right:15px">-->
+				<!--	<a actions="export" template_id="datatable"><i class="fas fa-file-download"></i></a>-->
+				<!--</li>-->
+				<li class="margin-right:15px">
+					<a actions="export" template_id="datatable"><i class="fas fa-file-download"></i></a>
 				</li>
 				<li class="margin-right:15px">
-					<a data-export_type="json" template_id="datatable"><i class="fas fa-file-download"></i></a>
-				</li>
-				<li class="margin-right:15px">
-					<a data-import="true" template_id="datatable"><i class="fas fa-file-upload"></i></a>
+					<a actions="import" collection="apples5"><i class="fas fa-file-upload"></i></a>
 				</li>
 				<li class="margin-right:15px">
 					<a data-btn_type="copy" template_id="datatable"><i class="far fa-copy"></i></a>
 				</li>
 				<li class="margin-right:15px">
-					<a data-btn_type="print" template_id="datatable"><i class="fas fa-print"></i></a>
+					<a actions="print" print-target='tbody[template_id="datatable"]'><i class="fas fa-print"></i></a>
 				</li>
 
 			</ul>
@@ -113,7 +115,7 @@
 					</td>
 				</tr>
 
-				<tbody template_id="datatable" fetch-collection="blocks" order-by="name" order-type="asc">
+				<tbody template_id="datatable" fetch-collection="apples5" order-by="name" order-type="asc">
 
 					<tr class="template background:whitesmoke:hover border-bottom:1px_solid_darkgray" template_id="datatable" document_id="{{data._id}}" toggle="selected">
 						<td class="padding:10px">
@@ -152,7 +154,14 @@
 			</a>
 		</button>
 
-
+        <!--<script>-->
+        <!--    var config = {                 -->
+        <!--        apiKey: 'c2b08663-06e3-440c-ef6f-13978b42883a',                 -->
+        <!--        organization_Id: '5de0387b12e200ea63204d6c',                 -->
+                <!--// host: 'general.cocreate.app'  -->
+        <!--        host: 'server.cocreate.app:8088'-->
+        <!--    }         -->
+        <!--</script>-->
 		<!--<script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>-->
 		<script src="../../../CoCreateJS/dist/CoCreate.js"></script>
 

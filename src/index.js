@@ -1,4 +1,4 @@
-import utils from '@cocreate/utils';
+import action from '@cocreate/action';
 import crud from '@cocreate/crud-client';
 
 const CoCreateFilter = {
@@ -162,7 +162,7 @@ const CoCreateFilter = {
 		this.items.push(item);
 		this._initInputForm(item, mainAttr);
 		
-		this._initExportImport(item, id, mainAttr);
+		// this._initExportImport(item, id, mainAttr);
 		return item;
 	},
 	
@@ -256,54 +256,6 @@ const CoCreateFilter = {
 		})
 	},
 	
-	_initExportImport: function(item, id, attrName) {
-		let export_buttons = document.querySelectorAll(`[data-export_type][${attrName}="${id}"]`);
-		let import_button = document.querySelector(`[data-import="true"][${attrName}="${id}"]`);
-		
-		const self = this;
-		if (export_buttons) {
-			//. export_buttons action
-			for(let export_button of export_buttons) {
-				export_button.addEventListener('click', function() {
-		
-					if (!item) return;
-					
-					let new_filter = self.makeFetchOptions(item)
-					
-					new_filter.export = {
-						collection: new_filter.collection,
-						type: export_button.getAttribute('data-export_type') || 'json'
-					}
-					crud.readDocumentList(new_filter);
-				})
-			}
-		}
-		
-		if (import_button) {
-			//. import button action
-			import_button.addEventListener('click', function() {
-				var input = document.createElement('input');
-				input.type = 'file';
-	
-				if (!item) return;
-				
-				let collection = item.collection;
-				
-				//. or 
-				// collection = btn.getAttribute('collection');
-	
-				input.onchange = e => {
-					var file = e.target.files[0];
-					crud.importCollection({
-						collection: collection,
-						file: file
-					})
-				}
-				input.click();
-			})
-		}
-
-	},
 	
 	_applyOrder: function(item, name, value) {
 		
@@ -638,9 +590,78 @@ const CoCreateFilter = {
 			
 			this.fetchData(filter)
 		}
+	},
+	
+	exportAction: async function(btn) {
+		const item_id = btn.getAttribute('template_id');
+		let item = this.items.find((item) => item.id === item_id);
+		if (!item) return;
+		
+		let new_filter = this.makeFetchOptions(item)
+		new_filter.operator.startIndex = 0;
+		new_filter.operator.search.startIndex = 0;
+		
+		let data = await crud.readDocumentList(new_filter);
+		this.exportFile(data);
+	},
+	
+	exportFile: function(data) {
+		if (window.document) {
+			const file_name = data.collection || 'downloadFile';
+			var a = document.createElement("a");
+			a.style = "display: none";
+			let exportData = JSON.stringify(data.data);
+			let blob = new Blob([exportData], { type: "application/json" });	
+			let url = window.URL.createObjectURL(blob);
+			a.href = url;
+			a.download = file_name;
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+			a.remove()		
+		}
+    	document.dispatchEvent(new CustomEvent('exported', {
+			detail: {}
+		}))
+
+	},
+
+	importAction: function(btn) {
+		const collection = btn.getAttribute('collection');
+		if (!collection) { 
+			console.log('collection is required'); 
+			return;
+		}				
+		var input = document.createElement('input');
+		input.type = 'file';
+
+		input.onchange = e => {
+			var file = e.target.files[0];
+			crud.importCollection({
+				collection: collection,
+				file: file
+			})
+		}
+		input.click();
 	}
 }
 
 CoCreateFilter.__init();
+
+action.init({
+	action: "import",
+	endEvent: "imported",
+	callback: (btn, data) => {
+		CoCreateFilter.importAction(btn)
+	},
+})
+
+action.init({
+	action: "export",
+	endEvent: "exported",
+	callback: (btn, data) => {
+		CoCreateFilter.exportAction(btn)
+	},
+})
 
 export default CoCreateFilter;
