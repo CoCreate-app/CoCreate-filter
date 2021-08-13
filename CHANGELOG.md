@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.2...v1.1.3) (2021-08-13)
+
+
+### Bug Fixes
+
+* export triggered by actions ([d01dc7e](https://github.com/CoCreate-app/CoCreate-filter/commit/d01dc7e6f6fbb320c5204b1141ad3e8c56ea17d9))
+* update to  docs ([552b99a](https://github.com/CoCreate-app/CoCreate-filter/commit/552b99a946c763d9e960998785ca79ab8de52d6a))
+
 ## [1.1.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.1...v1.1.2) (2021-08-12)
 
 
