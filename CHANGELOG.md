@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.3...v1.1.4) (2021-08-14)
+
+
+### Bug Fixes
+
+* rename data-element_id to element_id ([95658d3](https://github.com/CoCreate-app/CoCreate-filter/commit/95658d35ff2a11248ae76dcaa1cb516b78768d02))
+
 ## [1.1.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.2...v1.1.3) (2021-08-13)
 
 
