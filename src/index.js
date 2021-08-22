@@ -306,7 +306,7 @@ const CoCreateFilter = {
 			let order_name = template_inputs[i].getAttribute('order-by')
 			
 			let input = template_inputs[i];
-			let value_type = input.getAttribute('data-value_type') ? input.getAttribute('data-value_type') : 'string';
+			let value_type = input.getAttribute('filter-value_type') ? input.getAttribute('filter-value_type') : 'string';
 			let value = null;
 			
 			if (!filter_name && !order_name) {
