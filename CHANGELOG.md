@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.10...v1.1.11) (2021-09-06)
+
+
+### Bug Fixes
+
+* selector bug ([d8b6096](https://github.com/CoCreate-app/CoCreate-filter/commit/d8b609690c0ba830e9587b64d56b485caa4b3812))
+
 ## [1.1.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.9...v1.1.10) (2021-09-04)
 
 
