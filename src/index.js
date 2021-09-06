@@ -282,9 +282,9 @@ const CoCreateFilter = {
 	},
 	
 	_makeSearchOption: function(id, attrName) {
-		let forms = document.querySelectorAll('form[' + attrName + '=' + id + ']');
+		let forms = document.querySelectorAll(`form[${attrName}="${id}"]`);
 		
-		let tmpSelector = '[' + attrName + '=' + id + ']';
+		let tmpSelector = `[${attrName}="${id}"]`;
 		let otherInputs = document.querySelectorAll('input' + tmpSelector + ',textarea' + tmpSelector + ', select' + tmpSelector);
 		
 		let template_inputs = [];
