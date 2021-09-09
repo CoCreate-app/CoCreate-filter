@@ -1,3 +1,10 @@
+## [1.1.13](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.12...v1.1.13) (2021-09-09)
+
+
+### Bug Fixes
+
+* CoCreate.config directory, path, name and  public ([26a2ee4](https://github.com/CoCreate-app/CoCreate-filter/commit/26a2ee40cafbc5bc8cd84ba279ffc57751225489))
+
 ## [1.1.12](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.11...v1.1.12) (2021-09-08)
 
 
