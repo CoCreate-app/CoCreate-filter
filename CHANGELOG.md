@@ -1,3 +1,10 @@
+## [1.1.19](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.18...v1.1.19) (2021-09-14)
+
+
+### Bug Fixes
+
+* add cocreate.app to domains ([e7178f6](https://github.com/CoCreate-app/CoCreate-filter/commit/e7178f68981dbed6401e9b289a442e9471fedf51))
+
 ## [1.1.18](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.17...v1.1.18) (2021-09-13)
 
 
