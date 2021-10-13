@@ -1,3 +1,10 @@
+## [1.1.28](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.27...v1.1.28) (2021-10-13)
+
+
+### Bug Fixes
+
+* update packages ([8ca6e0d](https://github.com/CoCreate-app/CoCreate-filter/commit/8ca6e0d3dc34f6f8f934af1d5e707d8e2e68ddd5))
+
 ## [1.1.27](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.26...v1.1.27) (2021-10-06)
 
 
