@@ -1,3 +1,10 @@
+## [1.1.36](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.35...v1.1.36) (2021-10-16)
+
+
+### Bug Fixes
+
+* update socket package to fix bug in docs ([2f52d6f](https://github.com/CoCreate-app/CoCreate-filter/commit/2f52d6fbc545134e998cd5021d58d63a673b0db6))
+
 ## [1.1.35](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.34...v1.1.35) (2021-10-16)
 
 
