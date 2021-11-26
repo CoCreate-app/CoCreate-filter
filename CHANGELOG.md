@@ -1,3 +1,11 @@
+## [1.1.53](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.52...v1.1.53) (2021-11-26)
+
+
+### Bug Fixes
+
+* docs sidenav width ([fc7e20a](https://github.com/CoCreate-app/CoCreate-filter/commit/fc7e20a9bf50308849eab597d9bc4f1104eb793b))
+* updated action dependency to actions ([2685cc8](https://github.com/CoCreate-app/CoCreate-filter/commit/2685cc88c7dee49959cbf0c05e8087da1cf5e47a))
+
 ## [1.1.52](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.51...v1.1.52) (2021-11-26)
 
 
