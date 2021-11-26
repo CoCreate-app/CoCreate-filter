@@ -1,3 +1,10 @@
+## [1.1.54](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.53...v1.1.54) (2021-11-26)
+
+
+### Bug Fixes
+
+* doc missing main tag ([e2fc82f](https://github.com/CoCreate-app/CoCreate-filter/commit/e2fc82f0ebb8ca9f3ab6e945b9dad37baa9967d8))
+
 ## [1.1.53](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.52...v1.1.53) (2021-11-26)
 
 
