@@ -4,13 +4,13 @@ module.exports = {
         "organization_Id": "5ff747727005da1c272740ab",
         "host": "general.cocreate.app"
     },
-    
-    "sources": [{
+    "sources": [
+        {
             "entry": "./docs/index.html",
             "collection": "files",
             "document_id": "601f17585803e43d0058907f",
             "key": "src",
-            "data":{
+            "data": {
                 "name": "index.html",
                 "path": "/docs/filter/index.html",
                 "domains": [
@@ -23,21 +23,5 @@ module.exports = {
                 "website_id": "5ffbceb7f11d2d00103c4535"
             }
         }
-    ],
-
-	"extract": {
-		"directory": "./src/",
-		"extensions": [
-			"js",
-			"css",
-			"html"
-		],
-		"ignores": [
-			"node_modules",
-			"vendor",
-			"bower_components",
-			"archive"
-		]
-	}
+    ]
 }
-
