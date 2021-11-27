@@ -1,3 +1,10 @@
+## [1.1.55](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.54...v1.1.55) (2021-11-27)
+
+
+### Bug Fixes
+
+* update docs api and cocreateJS script ([ec71f25](https://github.com/CoCreate-app/CoCreate-filter/commit/ec71f25c09f1a8deb582cf8675fe7807b0af275f))
+
 ## [1.1.54](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.53...v1.1.54) (2021-11-26)
 
 
