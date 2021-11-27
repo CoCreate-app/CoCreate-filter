@@ -1,3 +1,11 @@
+## [1.1.57](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.56...v1.1.57) (2021-11-27)
+
+
+### Bug Fixes
+
+* actions import typo ([be7fbf1](https://github.com/CoCreate-app/CoCreate-filter/commit/be7fbf1d1590b464dca59ad8235b42f5fec4a19f))
+* update dependencies ([5c54696](https://github.com/CoCreate-app/CoCreate-filter/commit/5c546965c050710796b7852459206a78df10f0bc))
+
 ## [1.1.56](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.55...v1.1.56) (2021-11-27)
 
 
