@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.59...v1.2.0) (2021-12-23)
+
+
+### Features
+
+* deleteDocumentsAction ([3f6312c](https://github.com/CoCreate-app/CoCreate-filter/commit/3f6312cc532928d245b6f8e03f830b915f25f609))
+
 ## [1.1.59](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.1.58...v1.1.59) (2021-12-15)
 
 
