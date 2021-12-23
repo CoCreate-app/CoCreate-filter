@@ -643,10 +643,34 @@ const CoCreateFilter = {
 			})
 		}
 		input.click();
-	}
-}
+	},
+	
+	__deleteDocumentsAction: function(btn) {
+		const collection = btn.getAttribute('collection');
+		if(crud.checkAttrValue(collection)) {
+			const dataTemplateid = btn.getAttribute('template_id');
+			if(!dataTemplateid) return;
 
-CoCreateFilter.__init();
+			const selectedEls = document.querySelectorAll(`.selected[templateid="${dataTemplateid}"]`);
+
+			selectedEls.forEach((el) => {
+				const document_id = el.getAttribute('document_id');
+
+				if(crud.checkAttrValue(document_id)) {
+					crud.deleteDocument({
+						collection,
+						document_id,
+						'metadata': ''
+					});
+				}
+			});
+
+			document.dispatchEvent(new CustomEvent('deletedDocuments', {
+				detail: {}
+			}));
+		}
+	},
+}
 
 action.init({
 	action: "import",
@@ -664,4 +688,14 @@ action.init({
 	},
 })
 
+action.init({
+	action: "deleteDocuments",
+	endEvent: "deletedDocuments",
+	callback: (btn, data) => {
+		CoCreateFilter.__deleteDocumentsAction(btn);
+	}
+});
+
+CoCreateFilter.__init();
+ 
 export default CoCreateFilter;
