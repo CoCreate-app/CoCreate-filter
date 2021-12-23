@@ -173,7 +173,7 @@ const CoCreateFilter = {
 			let f_el = filter_objs[i];
 			let filter_name = f_el.getAttribute('filter-name');
 			let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
-			let value_type = f_el.getAttribute('filter-value_type') ? f_el.getAttribute('filter-value_type') : 'string';
+			let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
 			let filter_type = f_el.getAttribute('filter-type');
 			let filter_value = f_el.getAttribute('filter-value');
 			if (filter_value == null) {
@@ -306,7 +306,7 @@ const CoCreateFilter = {
 			let order_name = template_inputs[i].getAttribute('order-by')
 			
 			let input = template_inputs[i];
-			let value_type = input.getAttribute('filter-value_type') ? input.getAttribute('filter-value_type') : 'string';
+			let value_type = input.getAttribute('filter-value-type') ? input.getAttribute('filter-value-type') : 'string';
 			let value = null;
 			
 			if (!filter_name && !order_name) {
@@ -389,7 +389,7 @@ const CoCreateFilter = {
 			let filter_name = this.getAttribute('filter-name');
 			let filter_operator = this.getAttribute('filter-operator') || '$contain';
 			let filter_type = this.getAttribute('filter-type');
-			let value_type = this.getAttribute('filter-value_type') || 'string';
+			let value_type = this.getAttribute('filter-value-type') || 'string';
 			clearTimeout(delayTimer);
 			delayTimer = setTimeout(function() {
 				
