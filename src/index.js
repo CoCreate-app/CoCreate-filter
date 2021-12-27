@@ -281,6 +281,12 @@ const CoCreateFilter = {
 		filter.startIndex = 0;
 	},
 	
+	changeFilter: function(filter) {
+		let filterId = filter['id'];
+		this._initFilter(filter, filterId, filter.attrName)
+		filter.startIndex = 0;
+	},
+	
 	_makeSearchOption: function(id, attrName) {
 		let forms = document.querySelectorAll(`form[${attrName}="${id}"]`);
 		
@@ -318,7 +324,7 @@ const CoCreateFilter = {
 						value = Number(value);
 					}
 					if (value && !values.includes(value)) {
-						values.push(value)
+						values.push(value);
 					}
 				}
 			}
@@ -373,7 +379,7 @@ const CoCreateFilter = {
 				order_type = [];
 			}
 			
-			_instance.insertArrayObject(item.orders, idx, {name: order_by, type: order_type}, order_type)
+			_instance.insertArrayObject(item.orders, idx, {name: order_by, type: order_type}, order_type);
 			
 			if (item.el) {
 				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
