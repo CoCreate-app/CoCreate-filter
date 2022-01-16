@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.3.1...v1.3.2) (2022-01-16)
+
+
+### Bug Fixes
+
+* update class overflow:overlay to overflow:auto ([ad4462a](https://github.com/CoCreate-app/CoCreate-filter/commit/ad4462a240b241ffd2acf417c813ac46921650e5))
+
 ## [1.3.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.3.0...v1.3.1) (2022-01-01)
 
 
