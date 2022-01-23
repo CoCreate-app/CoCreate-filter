@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.3.2...v1.4.0) (2022-01-23)
+
+
+### Features
+
+* fetch-collections attribute to return a list of collections ([ce502da](https://github.com/CoCreate-app/CoCreate-filter/commit/ce502da50521c3266bc469e478bce38031ea6f25))
+
 ## [1.3.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.3.1...v1.3.2) (2022-01-16)
 
 
