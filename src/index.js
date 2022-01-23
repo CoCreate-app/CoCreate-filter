@@ -120,8 +120,7 @@ const CoCreateFilter = {
 		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
 		
 		let collection = el.getAttribute('fetch-collection');
-		let fetch_type = el.getAttribute('fetch-value_type')
-		let fetch_collection = fetch_type == "collection" ? true : false;
+		let is_collection = el.hasAttribute('fetch-collections');
 		
 		let order_name = el.getAttribute('order-by')
 		let order_type = el.getAttribute('order-type') || 'asc';
@@ -140,7 +139,7 @@ const CoCreateFilter = {
 			startIndex: 0,
 			options: {},	/** return options **/
 			fetch: {},
-			is_collection: fetch_collection,
+			is_collection,
 			search: {
 				type: 'or',
 				value: []
