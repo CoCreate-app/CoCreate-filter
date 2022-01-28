@@ -1,3 +1,5 @@
+/*globals IntersectionObserver, CustomEvent*/
+import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
 
@@ -8,14 +10,13 @@ const CoCreateFilter = {
 	
 	module_items : [],
 	
-	/** start init processing **/
 	__init: function() {
-		this.__initIntesection()
+		this.__initIntersection()
 		this.__initSocket()
 		this.__initEvents()
 	},
 	
-	__initIntesection: function() {
+	__initIntersection: function() {
 		const self = this;
 		this.ioInstance = new IntersectionObserver((entries, observer) => {
 			entries.forEach(entry => {
@@ -104,8 +105,6 @@ const CoCreateFilter = {
 			})
 		});
 	},
-	
-	/** ---  End --- **/
 	
 	setFilter: function(el, mainAttr, type) {
 			
@@ -274,17 +273,12 @@ const CoCreateFilter = {
 		this.insertArrayObject(item.orders, idx, {name: name, type: order_type}, order_type)
 	},
 	
-	changeCollection: function(filter) {
-		let collection = filter.el.getAttribute('fetch-collection');
-		filter.collection = collection;
-		filter.startIndex = 0;
-	},
-	
-	changeFilter: function(filter) {
-		let filterId = filter['id'];
-		this._initFilter(filter, filterId, filter.attrName)
-		filter.startIndex = 0;
-	},
+	// changeFilter: function(filter) {
+	// 	let filterId = filter['id'];
+	// 	filter.startIndex = 0;
+	// 	filter.collection = filter.el.getAttribute('fetch-collection');
+	// 	this._initFilter(filter, filterId, filter.attrName)
+	// },
 	
 	_makeSearchOption: function(id, attrName) {
 		let forms = document.querySelectorAll(`form[${attrName}="${id}"]`);
@@ -355,7 +349,7 @@ const CoCreateFilter = {
 			if (order_by) {
 				this._initOrderInput(item, input);
 			} else {
-				this._initFilterInput(item, input, item.id);
+				this._initFilterInput(item, input);
 			}
 		}
 	},
@@ -386,7 +380,7 @@ const CoCreateFilter = {
 		})
 	},
 
-	_initFilterInput: function (item, input, id) {
+	_initFilterInput: function (item, input) {
 		var _instance = this;
 		var delayTimer;
 		input.addEventListener('input', function(e) {
@@ -399,7 +393,7 @@ const CoCreateFilter = {
 			delayTimer = setTimeout(function() {
 				
 				if (!filter_name) {
-					item.search.value = _instance._makeSearchOption(id, item.attrName);
+					item.search.value = _instance._makeSearchOption(item.id, item.attrName);
 				} else {
 					
 					let idx = _instance.getFilterByName(item, filter_name, filter_operator);
@@ -441,6 +435,7 @@ const CoCreateFilter = {
 
 		})
 	},
+	
 	setCheckboxName: function (id, attrName) {
 		var forms = document.querySelectorAll('form[' + attrName + '="' + id + '"]')
 		for (var k = 0; k < forms.length; k++) {
@@ -496,8 +491,7 @@ const CoCreateFilter = {
 		}
 		return -1;
 	},
-	
-	
+
 	defineEvent: function(item) {
 		item.el.addEventListener('fetchFilterData', function(event) {
 			console.log(event);
@@ -574,11 +568,6 @@ const CoCreateFilter = {
 		const self = this;
 		if (!_id) return;
 		
-		//. restrict the duplication define
-		// if (this.module_items.some(x => x.name == name && x.id == _id)) {
-		// 	return;
-		// }
-		
 		let filter = this.setFilter(el, attribute, name)
 		
 		if (filter) {
@@ -595,6 +584,61 @@ const CoCreateFilter = {
 			
 			this.fetchData(filter)
 		}
+	},
+	
+	filterItem: function(item, filters) {
+		//. $contain, $range, $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $geoWithin
+		let flag = true;
+		if (!item || !filters) {
+			return false;
+		}
+		if (Array.isArray(item)) return false;
+		filters.forEach(({name, operator, type, value}) => {
+			
+			const fieldValue = item[name];
+			if(fieldValue === undefined) return;
+			switch (operator) {
+				case '$contain':
+					// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
+					if (!fieldValue.includes(value[0])) flag = false; 
+					break;
+				case '$range':
+					if (value[0] !== null && value[1] !== null) {
+						if (value[0] > fieldValue || value[1] <= fieldValue)
+							flag = false;
+					} else if (item.value[0] == null && value[1] >= fieldValue) {
+						flag = false;
+					} else if (item.value[1] == null && value[0] <= fieldValue) {
+						flag = false;
+					}
+					break;
+				case '$eq':
+					if (fieldValue != value[0]) flag = false; 
+					break;
+				case '$ne':
+					if (fieldValue == value[0]) flag = false;
+					break;
+				case '$lt':
+					if (fieldValue >= value[0]) flag = false;
+					break;
+				case '$lte':
+					if (fieldValue > value[0]) flag = false;
+					break;
+				case '$gt':
+					if (fieldValue <= value[0]) flag = false;
+					break;
+				case '$gte':
+					if (fieldValue < value[0]) flag = false;
+					break;
+				case '$in':
+					if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
+					break;
+				case '$nin':
+					if (Array.isArray(fieldValue) && fieldValue.some(x => value.includes(x))) flag = false;
+					break;
+			}
+		});
+		return flag;
 	},
 	
 	exportAction: async function(btn) {
@@ -676,6 +720,32 @@ const CoCreateFilter = {
 		}
 	},
 }
+
+// will update item.filter and fetchData, missing a method to find attribute and id
+observer.init({ 
+	name: 'CoCreateFetchInit', 
+	observe: ['addedNodes'],
+	target: '[filter-name], [filter-value]',
+	callback: function(mutation) {
+		let el = mutation.target;
+		let attr = CoCreateFilter.__getMainAttribue(el);
+		let item = CoCreateFilter.getObjectByFilterId(this.items, attr.id);
+		CoCreateFilter._initFilterInput(item, mutation.target);
+	}
+});
+
+// will update item.filter and fetchData, missing a method to find attribute and id
+observer.init({ 
+	name: 'CoCreateFilterObserver', 
+	observe: ['attributes'],
+	attributeName: ['filter-name', 'filter-value'],
+	callback: function(mutation) {
+		let el = mutation.target;
+		let attr = el.CoCreateFilter.__getMainAttribue();
+		let item = CoCreateFilter.getObjectByFilterId(this.items, attr.id);
+		CoCreateFilter._initFilterInput(item, mutation.target);
+	}
+});
 
 action.init({
 	action: "import",
