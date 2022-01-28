@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.4.0...v1.5.0) (2022-01-28)
+
+
+### Features
+
+* checkFilter function to return true or fase if filter should be applied. Added @cocreate/observer ([4ee811e](https://github.com/CoCreate-app/CoCreate-filter/commit/4ee811e66066402fcce502689ad3dfbc72c4d046))
+
 # [1.4.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.3.2...v1.4.0) (2022-01-23)
 
 
