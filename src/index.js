@@ -49,6 +49,11 @@ const CoCreateFilter = {
 	},
 	
 	__getMainAttribue: function(el) {
+		if (el.hasAttribute('template_id'))
+			return {
+				name : 'template_id',
+				id: el.getAttribute('template_id')
+			}
 		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" )
 		if (attribute) {
 			return {
@@ -164,8 +169,12 @@ const CoCreateFilter = {
 		return item;
 	},
 	
-	_initFilter: function(item, id, attrName) {
-		let filter_objs = item.el.getRootNode().querySelectorAll('[' + attrName + '="' + id + '"]');
+	_initFilter: function(item, id, attrName, element) {
+		let filter_objs;
+		if(element)
+			filter_objs = [element];
+		else
+			filter_objs = item.el.getRootNode().querySelectorAll('[' + attrName + '="' + id + '"]');
 		for (var i = 0; i < filter_objs.length; i++) {
 			
 			let f_el = filter_objs[i];
@@ -722,30 +731,31 @@ const CoCreateFilter = {
 }
 
 // will update item.filter and fetchData, missing a method to find attribute and id
-observer.init({ 
-	name: 'CoCreateFetchInit', 
-	observe: ['addedNodes'],
-	target: '[filter-name], [filter-value]',
-	callback: function(mutation) {
-		let el = mutation.target;
-		let attr = CoCreateFilter.__getMainAttribue(el);
-		let item = CoCreateFilter.getObjectByFilterId(this.items, attr.id);
-		CoCreateFilter._initFilterInput(item, mutation.target);
-	}
-});
+// observer.init({ 
+// 	name: 'CoCreateFetchInit', 
+// 	observe: ['addedNodes'],
+// 	target: '[filter-name], [filter-value]',
+// 	callback: function(mutation) {
+// 		let el = mutation.target;
+// 		if (el.hasAttribute('fetch-collection')) return;
+// 		let attr = CoCreateFilter.__getMainAttribue(el);
+// 		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
+// 		CoCreateFilter._initFilterInput(item, mutation.target);
+// 	}
+// });
 
 // will update item.filter and fetchData, missing a method to find attribute and id
-observer.init({ 
-	name: 'CoCreateFilterObserver', 
-	observe: ['attributes'],
-	attributeName: ['filter-name', 'filter-value'],
-	callback: function(mutation) {
-		let el = mutation.target;
-		let attr = el.CoCreateFilter.__getMainAttribue();
-		let item = CoCreateFilter.getObjectByFilterId(this.items, attr.id);
-		CoCreateFilter._initFilterInput(item, mutation.target);
-	}
-});
+// observer.init({ 
+// 	name: 'CoCreateFilterObserver', 
+// 	observe: ['attributes'],
+// 	attributeName: ['filter-name', 'filter-value'],
+// 	callback: function(mutation) {
+// 		let el = mutation.target;
+// 		let attr = el.CoCreateFilter.__getMainAttribue();
+// 		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
+// 		CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
+// 	}
+// });
 
 action.init({
 	action: "import",
