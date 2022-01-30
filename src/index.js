@@ -202,6 +202,9 @@ const CoCreateFilter = {
 				this.insertArrayObject(item.filters, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type})
 			}
 		}
+		if (element) {
+			item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
+		}
 	},
 	
 	_initOrder: function(item, id, attrName) {
@@ -514,13 +517,13 @@ const CoCreateFilter = {
 	
 	getObjectByFilterId: function(obj, id) {
 		for (var i = 0; i < obj.length; i++) {
-			let filter = obj[i].filter;
+			let filter = obj[i];
 			if (!filter) {
 				continue;
 			}
 			
 			if (filter.id == id) {
-				return obj[i];
+				return filter;
 			}
 		}
 	},
@@ -732,7 +735,7 @@ const CoCreateFilter = {
 
 // will update item.filter and fetchData, missing a method to find attribute and id
 // observer.init({ 
-// 	name: 'CoCreateFetchInit', 
+// 	name: 'CoCreateFilterInit', 
 // 	observe: ['addedNodes'],
 // 	target: '[filter-name], [filter-value]',
 // 	callback: function(mutation) {
@@ -740,22 +743,23 @@ const CoCreateFilter = {
 // 		if (el.hasAttribute('fetch-collection')) return;
 // 		let attr = CoCreateFilter.__getMainAttribue(el);
 // 		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
-// 		CoCreateFilter._initFilterInput(item, mutation.target);
+// 			CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
 // 	}
 // });
 
 // will update item.filter and fetchData, missing a method to find attribute and id
-// observer.init({ 
-// 	name: 'CoCreateFilterObserver', 
-// 	observe: ['attributes'],
-// 	attributeName: ['filter-name', 'filter-value'],
-// 	callback: function(mutation) {
-// 		let el = mutation.target;
-// 		let attr = el.CoCreateFilter.__getMainAttribue();
-// 		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
-// 		CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
-// 	}
-// });
+observer.init({ 
+	name: 'CoCreateFilterObserver', 
+	observe: ['attributes'],
+	attributeName: ['filter-name', 'filter-value'],
+	callback: function(mutation) {
+		let el = mutation.target;
+		let attr = CoCreateFilter.__getMainAttribue(el);
+		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
+		if (item)
+			CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
+	}
+});
 
 action.init({
 	action: "import",
