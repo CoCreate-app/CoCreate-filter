@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.5.3...v1.6.0) (2022-02-02)
+
+
+### Features
+
+* Now uses one querySelector, adds events to elements if element does not already have event, observe new filter nodes and changes to filter attributes ([d4ad78b](https://github.com/CoCreate-app/CoCreate-filter/commit/d4ad78bdbf04d8fba245e91d2bd8a6ba84394ab4))
+
 ## [1.5.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.5.2...v1.5.3) (2022-02-01)
 
 
