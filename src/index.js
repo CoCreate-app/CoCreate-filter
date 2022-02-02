@@ -7,13 +7,13 @@ const CoCreateFilter = {
 	items: [],
 	ioInstance: null,
 	moduleAttribues: [],
-	
+	filterEvents: new Map(),
 	module_items : [],
 	
 	__init: function() {
-		this.__initIntersection()
-		this.__initSocket()
-		this.__initEvents()
+		this.__initIntersection();
+		this.__initSocket();
+		this.__initEvents();
 	},
 	
 	__initIntersection: function() {
@@ -21,7 +21,7 @@ const CoCreateFilter = {
 		this.ioInstance = new IntersectionObserver((entries, observer) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					const attributeInfo = self.__getMainAttribue(entry.target);
+					const attributeInfo = self.getMainAttribue(entry.target);
 					if (attributeInfo.id) {
 						document.dispatchEvent(new CustomEvent('CoCreateFilter-loadMore', {
 							detail: {
@@ -30,38 +30,21 @@ const CoCreateFilter = {
 							}
 						}));
 					}
-					self.ioInstance.unobserve(entry.target)
+					self.ioInstance.unobserve(entry.target);
 				}
-			})
+			});
 		}, {
 			threshold: 1
-		})	
+		});	
 	},
 	
 	__runLoadMore: function(attrName, id) {
 		if (!id || !attrName) return;
-		let item = this.items.find((item) => item.attrName === attrName && item.id === id)
+		let item = this.items.find((item) => item.attrName === attrName && item.id === id);
 		if (!item) return;
 		
 		if (item.count > 0) {
-			this.fetchData(item)
-		}
-	},
-	
-	__getMainAttribue: function(el) {
-		if (el.hasAttribute('template_id'))
-			return {
-				name : 'template_id',
-				id: el.getAttribute('template_id')
-			}
-		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" )
-		if (attribute) {
-			return {
-				name : attribute,
-				id: el.getAttribute(attribute)
-			}
-		} else {
-			return {};
+			this.fetchData(item);
 		}
 	},
 	
@@ -75,39 +58,39 @@ const CoCreateFilter = {
 				const result_data = data['data'];
 				
 				//. set the intersection observe element
-				let element = document.querySelector(`[${item.attrName}="${item.id}"][fetch-type="scroll"]`)
+				let element = document.querySelector(`[${item.attrName}="${item.id}"][fetch-type="scroll"]`);
 				if (result_data.length > 0 && element) {
-					self.ioInstance.observe(element)
+					self.ioInstance.observe(element);
 				}
 				
 				// /** render total count **/
-				const totalCount = data['operator'].total
-				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][fetch-type="total"]`)
+				const totalCount = data['operator'].total;
+				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][fetch-type="total"]`);
 				
 				if (totalElements) {
-					totalElements.forEach((el) => el.innerHTML = totalCount)
+					totalElements.forEach((el) => el.innerHTML = totalCount);
 				}
 			}
-		})
+		});
 	},
 	
 	__initEvents: function() {
 		const self = this;
 		document.addEventListener('CoCreateFilter-loadMore', function(event) {
 			const attrId = event.detail.attrId;
-			const attrName = event.detail.attrName
-			self.__runLoadMore(attrName, attrId)
-		})
+			const attrName = event.detail.attrName;
+			self.__runLoadMore(attrName, attrId);
+		});
 		
 		let buttons = document.querySelectorAll('[fetch-type="loadmore"]');
 		buttons.forEach((btn) => {
 			btn.addEventListener('click', function(e) {
 				e.preventDefault();
-				const attributeInfo = self.__getMainAttribue(btn);
+				const attributeInfo = self.getMainAttribue(btn);
 
 				if (!attributeInfo.id) return;
-				self.__runLoadMore(attributeInfo.attrName, attributeInfo.attrId)
-			})
+				self.__runLoadMore(attributeInfo.attrName, attributeInfo.attrId);
+			});
 		});
 	},
 	
@@ -121,12 +104,12 @@ const CoCreateFilter = {
 		
 		if (!id) return;
 		
-		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr)
+		if (!this.moduleAttribues.includes(mainAttr)) this.moduleAttribues.push(mainAttr);
 		
 		let collection = el.getAttribute('fetch-collection');
 		let is_collection = el.hasAttribute('fetch-collections');
 		
-		let order_name = el.getAttribute('order-by')
+		let order_name = el.getAttribute('order-by');
 		let order_type = el.getAttribute('order-type') || 'asc';
 
 		let fetch_count = parseInt(el.getAttribute('fetch-count'));
@@ -150,128 +133,77 @@ const CoCreateFilter = {
 			},
 			orders: [],
 			filters: []
-		}
+		};
 		
 		if (!isNaN(fetch_count) && fetch_count > 0) {
 			item.count = fetch_count;
 		}
 	
 		if (order_name) {
-			item.orders.push({name: order_name, type: order_type == 'asc' ? 1 : -1 })
+			item.orders.push({name: order_name, type: order_type == 'asc' ? 1 : -1 });
 		}
-
-		this._initFilter(item, id, mainAttr);
-		this._initOrder(item, id, mainAttr);
-		this.items.push(item);
-		this._initInputForm(item, mainAttr);
 		
-		// this._initExportImport(item, id, mainAttr);
+		this.setCheckboxName(item.id, item.attrName);
+		this._initFilter(item);
+		this.items.push(item);
+	
 		return item;
 	},
 	
-	_initFilter: function(item, id, attrName, element) {
-		let filter_objs;
+	_initFilter: function(item, element, event) {
+		let elements;
 		if(element)
-			filter_objs = [element];
+			elements = [element];
 		else
-			filter_objs = item.el.getRootNode().querySelectorAll('[' + attrName + '="' + id + '"]');
-		for (var i = 0; i < filter_objs.length; i++) {
-			
-			let f_el = filter_objs[i];
+			elements = this.queryFilters(item);
+		for (var i = 0; i < elements.length; i++) {
+			let f_el = elements[i];
 			let filter_name = f_el.getAttribute('filter-name');
-			let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
-			let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
-			let filter_type = f_el.getAttribute('filter-type');
-			let filter_value = f_el.getAttribute('filter-value');
-			if (filter_value == null) {
-				continue ;
+			let order_name = f_el.getAttribute('order-by');
+			if(!this.filterEvents.has(f_el)){
+				this.filterEvents.set(f_el, true);
+				var setEvent = true;
 			}
-			if (value_type !== "raw") {
-				filter_value = filter_value.replace(/\s/g, '').split(',');
+			if (order_name){
+				this._applyOrder(item, f_el);
+				if(setEvent)
+					this._initOrderEvent(item, f_el);
 			}
-	
-			if (!filter_name) {
-				item.search.value = this._makeSearchOption(id, attrName);
-			} else {
-				let idx = this.getFilterByName(item, filter_name, filter_operator);
-				if (value_type != 'string') {
-					for (let i = 0; i < filter_value.length; i++) {
-						filter_value[i] = Number(filter_value[i]);
-					}
-				}
-				this.insertArrayObject(item.filters, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type})
+			if (filter_name){
+				this._applyFilter(item, f_el, filter_name, event);
+				if(setEvent)
+					this.initInputEvent(item, f_el);
 			}
+			else{
+				this._applySearch(item, f_el);
+				if(setEvent)
+					this.initInputEvent(item, f_el);
+			}	
 		}
 		if (element) {
 			item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
 		}
 	},
 	
-	_initOrder: function(item, id, attrName) {
-		let filter_objs = item.el.getRootNode().querySelectorAll('[' + attrName + '="' + id + '"]');
-		const _this = this;
-		for (var i = 0; i < filter_objs.length; i++) {
-			
-			let f_el = filter_objs[i];
-			let order_name = f_el.getAttribute('order-by');
-			let order_value = f_el.getAttribute('value');
-			if (!order_name || !order_value) {
-				continue ;
-			}
-			
-			if (['A', 'BUTTON'].includes(f_el.tagName)) {
-				f_el.addEventListener('click', function(){
-					let name = this.getAttribute('order-by');
-					let value = this.getAttribute('value');
-					_this._applyOrder(item, name, value)
-					if (item.el) {
-						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
-					}
-				});
-				//. apply click event
-			} else {
-				this._applyOrder(item, order_name, order_value);
-			}
-		}
+	queryFilters: function(item) {
+		let tmpSelector = '[' + item.attrName + '="' + item.id + '"]';
+		let formInputs = item.el.getRootNode().querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
+		let otherInputs = item.el.getRootNode().querySelectorAll(tmpSelector);
+	
+		formInputs = Array.prototype.slice.call(formInputs);
+		otherInputs = Array.prototype.slice.call(otherInputs);
+		let elements = formInputs.concat(otherInputs);
 		
-		this._initToggleOrderEvent(item, id, attrName);
+		return elements;
 	},
 	
-	_initToggleOrderEvent: function(item, id, attrName) {
-		let elements = document.querySelectorAll(`[${attrName}="${id}"][toggle-order]`)
-		const self =this;
-		elements.forEach((element) => {
-			element.addEventListener('click', function() {
-				let value = this.getAttribute('toggle-order') || '';
-				let order_name = this.getAttribute('order-by');
-				
-				value = value === 'asc' ? 'desc' : 'asc';
-
-				for (let i = 0; i < elements.length; i++) {
-					if (elements[i] !== element) {
-						elements[i].setAttribute('toggle-order', '');
-					}
-				}
-				
-				item.orders = [];
-				
-				self._applyOrder(item, order_name, value);
-				element.setAttribute('toggle-order', value);
-				
-				if (item.el) {
-					item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
-				}
-				
-			})
-		})
-	},
-	
-	
-	_applyOrder: function(item, name, value) {
+	_applyOrder: function(item, element, value) {
+		let f_el = element;
+		let name = f_el.getAttribute('order-by');
+		if (!value)
+			value = f_el.getAttribute('value') || '';
 		
-		if (!value) {
-			return;
-		}
+		if (!value) return;
 		let order_type = 0;
 		let idx = this.getOrderByName(item, name);
 		
@@ -282,99 +214,121 @@ const CoCreateFilter = {
 		} else {
 			order_type = [];
 		}
-		this.insertArrayObject(item.orders, idx, {name: name, type: order_type}, order_type)
+		this.insertArrayObject(item.orders, idx, {name: name, type: order_type}, order_type);
 	},
-	
-	// changeFilter: function(filter) {
-	// 	let filterId = filter['id'];
-	// 	filter.startIndex = 0;
-	// 	filter.collection = filter.el.getAttribute('fetch-collection');
-	// 	this._initFilter(filter, filterId, filter.attrName)
-	// },
-	
-	_makeSearchOption: function(id, attrName) {
-		let forms = document.querySelectorAll(`form[${attrName}="${id}"]`);
-		
-		let tmpSelector = `[${attrName}="${id}"]`;
-		let otherInputs = document.querySelectorAll('input' + tmpSelector + ',textarea' + tmpSelector + ', select' + tmpSelector);
-		
-		let template_inputs = [];
 
-		for (let i=0; i < forms.length; i++) {
-			let form = forms[i];
-			let formInputs = form.querySelectorAll('input, textarea, select');
-			formInputs = Array.prototype.slice.call(formInputs)
-			template_inputs = template_inputs.concat(formInputs);
+	_applyFilter: function(item, element, filter_name, event) {
+		let f_el = element;	
+		let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
+		let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
+		let filter_type = f_el.getAttribute('filter-type');
+		let filter_value = f_el.getAttribute('filter-value');
+		
+		if (filter_value) {
+			if (value_type !== "raw")
+				filter_value = filter_value.replace(/\s/g, '').split(',');
 		}
+		else {
+			let inputType = f_el.type;
+			filter_value = [];
 		
-		otherInputs = Array.prototype.slice.call(otherInputs);
-		template_inputs = template_inputs.concat(otherInputs)
-		
-		let values = [];
-		
-		for (var i = 0; i < template_inputs.length; i++) {
-			let filter_name = template_inputs[i].getAttribute('filter-name')
-			let order_name = template_inputs[i].getAttribute('order-by')
-			
-			let input = template_inputs[i];
-			let value_type = input.getAttribute('filter-value-type') ? input.getAttribute('filter-value-type') : 'string';
-			let value = null;
-			
-			if (!filter_name && !order_name) {
-				if (input.type == 'checkbox' && !input.checked) {
-					value = null;
-				} else {
-					value = input.value;
-					if (value_type != 'string') {
-						value = Number(value);
-					}
-					if (value && !values.includes(value)) {
-						values.push(value);
-					}
+			if (inputType == 'checkbox') {
+				var inputGroup = document.querySelectorAll("input[name=" + f_el.name + "]:checked");
+				for (var i = 0; i < inputGroup.length; i++) {
+					filter_value.push(inputGroup[i].value);
+				}
+	
+			} else if (inputType == 'raido') {
+				
+			} else if (inputType == 'range') {
+				filter_value = [Number(f_el.min), Number(f_el.value)];
+			} else {
+				var value = f_el.value;
+				if (value_type != 'string') {
+					value = Number(value);
+				}
+				if (value != "none") {
+					filter_value = [value];
+				}
+				
+				if (value_type === "raw") {
+					filter_value = value;
 				}
 			}
 		}
-		return values;
+		if (filter_value == '' && !event) 
+			return;
+		let idx = this.getFilterByName(item, filter_name, filter_operator);
+		if (value_type != 'string') {
+			for (let i = 0; i < filter_value.length; i++) {
+				filter_value[i] = Number(filter_value[i]);
+			}
+		}
+		this.insertArrayObject(item.filters, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type});
 	},
 	
-	_initInputForm: function(item, attrName) {
-	
-		if (!item) return;
-	
-		let tmpSelector = '[' + attrName + '="' + item.id + '"]';
-		let formInputs = item.el.getRootNode().querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
-		let otherInputs = item.el.getRootNode().querySelectorAll('input' + tmpSelector + ',textarea' + tmpSelector + ', select' + tmpSelector);
-	
-		this.setCheckboxName(item.id, attrName);
+	_applySearch: function(item, element) {
+		let input = element;
+		let value_type = input.getAttribute('filter-value-type') ? input.getAttribute('filter-value-type') : 'string';
+		let value = null;
 		
-		formInputs = Array.prototype.slice.call(formInputs);
-		otherInputs = Array.prototype.slice.call(otherInputs);
-		formInputs = formInputs.concat(otherInputs);
-
-		// console.log('input form', tmpSelector);
-		
-		for (let i=0; i < formInputs.length; i++) {
-			let input = formInputs[i];
-			
-			let order_by = input.getAttribute('order-by');
-			
-			if (order_by) {
-				this._initOrderInput(item, input);
-			} else {
-				this._initFilterInput(item, input);
+		if (input.type == 'checkbox' && !input.checked) {
+			value = null;
+		} else {
+			value = input.value;
+			if (value_type != 'string') {
+				value = Number(value);
+			}
+		}
+		if (value && !item.search.value.includes(value)) {
+			item.search.value.push(value);
+		}
+	},
+	
+	_initOrderEvent: function(item, element) {
+		const self = this;
+		if (element.hasAttribute('toggle-order'))
+			this._initToggleOrderEvent(item, element);
+		else{
+			if (['A', 'BUTTON'].includes(element.tagName)) {
+				element.addEventListener('click', function(){
+					self._applyOrder(item, element);
+					if (item.el) {
+						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+					}
+				});
+			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
+				this._initOrderChangeEvent(item, element);
 			}
 		}
 	},
 	
-	_initOrderInput: function(item, input) {
-		var _instance = this;
+	_initToggleOrderEvent: function(item, element) {
+		const self = this;
+		element.addEventListener('click', function() {
+			let value = this.getAttribute('toggle-order') || '';
+			value = value === 'asc' ? 'desc' : 'asc';
+
+			item.orders = [];
+			
+			self._applyOrder(item, element, value);
+			element.setAttribute('toggle-order', value);
+			
+			if (item.el) {
+				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+			}
+		});
+	},
+	
+	_initOrderChangeEvent: function(item, input) {
+		const self = this;
 		input.addEventListener('change', function(e) {
 			
 			e.preventDefault();
 			
 			let order_by = this.getAttribute('order-by');
 			let order_type = 0;
-			let idx = _instance.getOrderByName(item, order_by);
+			let idx = self.getOrderByName(item, order_by);
 			
 			if (this.value == 'asc') {
 				order_type = 1;   
@@ -384,72 +338,34 @@ const CoCreateFilter = {
 				order_type = [];
 			}
 			
-			_instance.insertArrayObject(item.orders, idx, {name: order_by, type: order_type}, order_type);
+			self.insertArrayObject(item.orders, idx, {name: order_by, type: order_type}, order_type);
 			
 			if (item.el) {
-				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }))
+				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 			}
-		})
+		});
 	},
 
-	_initFilterInput: function (item, input) {
+	initInputEvent: function (item, input) {
 		var _instance = this;
 		var delayTimer;
-		input.addEventListener('input', function(e) {
-			e.preventDefault();
-			let filter_name = this.getAttribute('filter-name');
-			let filter_operator = this.getAttribute('filter-operator') || '$contain';
-			let filter_type = this.getAttribute('filter-type');
-			let value_type = this.getAttribute('filter-value-type') || 'string';
-			clearTimeout(delayTimer);
-			delayTimer = setTimeout(function() {
-				
-				if (!filter_name) {
-					item.search.value = _instance._makeSearchOption(item.id, item.attrName);
-				} else {
-					
-					let idx = _instance.getFilterByName(item, filter_name, filter_operator);
-			
-					let inputType = input.type;
-					let filterValue = [];
-				
-					if (inputType == 'checkbox') {
-						var inputGroup = document.querySelectorAll("input[name=" + input.name + "]:checked");
-						for (var i = 0; i < inputGroup.length; i++) {
-							filterValue.push(inputGroup[i].value);
-						}
-			
-					} else if (inputType == 'raido') {
-						
-					} else if (inputType == 'range') {
-						filterValue = [Number(input.min), Number(input.value)];
-					} else {
-						var value = input.value;
-						if (value_type != 'string') {
-							value = Number(value);
-						}
-						if (value != "none") {
-							filterValue = [value];
-						}
-						
-						if (value_type === "raw") {
-							filterValue = value;
-						}
-					}
-					
-					_instance.insertArrayObject(item.filters, idx, {name: filter_name, value: filterValue, operator: filter_operator, type: filter_type})
-				}
-				if (item.el) {
-					item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }))
-				}
-			
-			}, 500);
-
-		})
+		let contenteditable = input.getAttribute('contenteditable');
+		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(input.tagName) || contenteditable != undefined && contenteditable != 'false'){
+			input.addEventListener('input', function(e) {
+				e.preventDefault();
+				clearTimeout(delayTimer);
+				delayTimer = setTimeout(function() {
+					let element = e.target;
+					if (element.hasAttribute('template_id') || element.form && element.form.hasAttribute('template_id'))
+						_instance._initFilter(item, element, e);
+				}, 500);
+	
+			});
+		}
 	},
 	
 	setCheckboxName: function (id, attrName) {
-		var forms = document.querySelectorAll('form[' + attrName + '="' + id + '"]')
+		var forms = document.querySelectorAll('form[' + attrName + '="' + id + '"]');
 		for (var k = 0; k < forms.length; k++) {
 			
 			var elements = forms[k].querySelectorAll('input[type=checkbox], form input[type=radio]');
@@ -466,15 +382,6 @@ const CoCreateFilter = {
 		}
 	},
 	
-	getFilterByName: function (item, filterName, filterOperator) {
-		for (var i = 0; i < item.filters.length; i++) {
-			var f = item.filters[i];
-			if (f.name == filterName && f.operator == filterOperator) {
-				return i;
-			}
-		}
-		return -1;
-	},
 	
 	insertArrayObject: function(data, idx, obj, value) {
 		if (!value) {
@@ -495,6 +402,38 @@ const CoCreateFilter = {
 		return data;
 	},
 	
+	fetchData:function (item) {
+		let json = this.makeFetchOptions(item);
+		crud.readDocumentList(json);
+	},
+	
+	getMainAttribue: function(el) {
+		if (el.hasAttribute('template_id'))
+			return {
+				name : 'template_id',
+				id: el.getAttribute('template_id')
+			};
+		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" );
+		if (attribute) {
+			return {
+				name : attribute,
+				id: el.getAttribute(attribute)
+			};
+		} else {
+			return {};
+		}
+	},
+	
+	getFilterByName: function (item, filterName, filterOperator) {
+		for (var i = 0; i < item.filters.length; i++) {
+			var f = item.filters[i];
+			if (f.name == filterName && f.operator == filterOperator) {
+				return i;
+			}
+		}
+		return -1;
+	},
+	
 	getOrderByName: function(item, name) {
 		for (var i = 0; i < item.orders.length; i++) {
 			if (item.orders[i].name == name) {
@@ -504,18 +443,7 @@ const CoCreateFilter = {
 		return -1;
 	},
 
-	defineEvent: function(item) {
-		item.el.addEventListener('fetchFilterData', function(event) {
-			console.log(event);
-		});
-	},
-	
-	fetchData:function (item) {
-		let json = this.makeFetchOptions(item);
-		crud.readDocumentList(json);
-	},
-	
-	getObjectByFilterId: function(obj, id) {
+	getItemById: function(obj, id) {
 		for (var i = 0; i < obj.length; i++) {
 			let filter = obj[i];
 			if (!filter) {
@@ -528,7 +456,7 @@ const CoCreateFilter = {
 		}
 	},
 	
-	getObjectByElement: function(obj, el) {
+	getItemByElement: function(obj, el) {
 		for (var i = 0; i < obj.length; i++) {
 			let filter = obj[i].filter;
 			if (!filter) {
@@ -555,7 +483,7 @@ const CoCreateFilter = {
 				"startIndex": item.startIndex,
 			},
 			"is_collection": item.is_collection
-		}
+		};
 		
 		if (item.count) {
 			json['operator'].count = item.count;
@@ -564,23 +492,23 @@ const CoCreateFilter = {
 	},
 	
 	init: function({name, attribute, callback}) {
-		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`)
+		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`);
 		const self = this;
 		elements.forEach((el) => {
 			self.__initFilterElement(el, attribute, name);
 		});
-		
-		crud.listen('readDocumentList', function(data) {
-			callback.call(null, data);
-		})
+		if (callback)
+			crud.listen('readDocumentList', function(data) {
+				callback.call(null, data);
+			});
 	},
 	
 	__initFilterElement: function(el, attribute, name) {
-		let _id = el.getAttribute(attribute)
+		let _id = el.getAttribute(attribute);
 		const self = this;
 		if (!_id) return;
 		
-		let filter = this.setFilter(el, attribute, name)
+		let filter = this.setFilter(el, attribute, name);
 		
 		if (filter) {
 			this.module_items.push({
@@ -588,13 +516,13 @@ const CoCreateFilter = {
 				filter: filter,
 				id: _id,
 				name: name
-			})
+			});
 			
 			el.addEventListener('changeFilterInput', function(e) {
-				self.fetchData(filter)
-			})
+				self.fetchData(filter);
+			});
 			
-			this.fetchData(filter)
+			this.fetchData(filter);
 		}
 	},
 	
@@ -658,7 +586,7 @@ const CoCreateFilter = {
 		let item = this.items.find((item) => item.id === item_id);
 		if (!item) return;
 		
-		let new_filter = this.makeFetchOptions(item)
+		let new_filter = this.makeFetchOptions(item);
 		new_filter.operator.startIndex = 0;
 		new_filter.operator.search.startIndex = 0;
 		
@@ -679,11 +607,11 @@ const CoCreateFilter = {
 			document.body.appendChild(a);
 			a.click();
 			window.URL.revokeObjectURL(url);
-			a.remove()		
+			a.remove();		
 		}
     	document.dispatchEvent(new CustomEvent('exported', {
 			detail: {}
-		}))
+		}));
 
 	},
 
@@ -701,8 +629,8 @@ const CoCreateFilter = {
 			crud.importCollection({
 				collection: collection,
 				file: file
-			})
-		}
+			});
+		};
 		input.click();
 	},
 	
@@ -731,33 +659,32 @@ const CoCreateFilter = {
 			}));
 		}
 	},
-}
+};
 
-// will update item.filter and fetchData, missing a method to find attribute and id
-// observer.init({ 
-// 	name: 'CoCreateFilterInit', 
-// 	observe: ['addedNodes'],
-// 	target: '[filter-name], [filter-value]',
-// 	callback: function(mutation) {
-// 		let el = mutation.target;
-// 		if (el.hasAttribute('fetch-collection')) return;
-// 		let attr = CoCreateFilter.__getMainAttribue(el);
-// 		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
-// 			CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
-// 	}
-// });
+observer.init({ 
+	name: 'CoCreateFilterInit', 
+	observe: ['addedNodes'],
+	target: '[filter-name], [order-by]',
+	callback: function(mutation) {
+		let el = mutation.target;
+		if (el.hasAttribute('fetch-collection')) return;
+		let attr = CoCreateFilter.getMainAttribue(el);
+		let item = CoCreateFilter.getItemById(CoCreateFilter.items, attr.id);
+		if (item)
+			CoCreateFilter._initFilter(item, mutation.target);
+	}
+});
 
-// will update item.filter and fetchData, missing a method to find attribute and id
 observer.init({ 
 	name: 'CoCreateFilterObserver', 
 	observe: ['attributes'],
 	attributeName: ['filter-name', 'filter-value'],
 	callback: function(mutation) {
 		let el = mutation.target;
-		let attr = CoCreateFilter.__getMainAttribue(el);
-		let item = CoCreateFilter.getObjectByFilterId(CoCreateFilter.items, attr.id);
+		let attr = CoCreateFilter.getMainAttribue(el);
+		let item = CoCreateFilter.getItemById(CoCreateFilter.items, attr.id);
 		if (item)
-			CoCreateFilter._initFilter(item, attr.id, attr.name, mutation.target);
+			CoCreateFilter._initFilter(item, mutation.target);
 	}
 });
 
