@@ -536,7 +536,7 @@ const CoCreateFilter = {
 		filters.forEach(({name, operator, type, value}) => {
 			
 			const fieldValue = item[name];
-			if(fieldValue === undefined) return;
+			// if(fieldValue === undefined) return;
 			switch (operator) {
 				case '$contain':
 					// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
