@@ -1,3 +1,11 @@
+## [1.6.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.1...v1.6.2) (2022-02-06)
+
+
+### Bug Fixes
+
+* removed if(fieldValue === undefined) return from function filterItem ([f176e29](https://github.com/CoCreate-app/CoCreate-filter/commit/f176e29a6ee9925a42507a894fb3d578cb488912))
+* test actions ([fd3564d](https://github.com/CoCreate-app/CoCreate-filter/commit/fd3564d5fec626e0ef8842afea6759c66442a84e))
+
 ## [1.6.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.0...v1.6.1) (2022-02-03)
 
 
