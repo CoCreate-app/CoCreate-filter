@@ -153,9 +153,9 @@ const CoCreateFilter = {
 	_initFilter: function(item, element, event) {
 		let elements = this.queryFilters(item);
 		if (elements){
-			item.orders = [];
+			// item.orders = [];
 			item.filters = [];
-			item.search = {};
+			// item.search = {};
 		}
 		
 		for (var i = 0; i < elements.length; i++) {
