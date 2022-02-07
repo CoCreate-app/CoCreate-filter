@@ -151,11 +151,13 @@ const CoCreateFilter = {
 	},
 	
 	_initFilter: function(item, element, event) {
-		let elements;
-		if(element)
-			elements = [element];
-		else
-			elements = this.queryFilters(item);
+		let elements = this.queryFilters(item);
+		if (elements){
+			item.orders = [];
+			item.filters = [];
+			item.search = {};
+		}
+		
 		for (var i = 0; i < elements.length; i++) {
 			let f_el = elements[i];
 			let filter_name = f_el.getAttribute('filter-name');
@@ -187,8 +189,8 @@ const CoCreateFilter = {
 	
 	queryFilters: function(item) {
 		let tmpSelector = '[' + item.attrName + '="' + item.id + '"]';
-		let formInputs = item.el.getRootNode().querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
-		let otherInputs = item.el.getRootNode().querySelectorAll(tmpSelector);
+		let formInputs = item.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
+		let otherInputs = item.el.ownerDocument.querySelectorAll(tmpSelector);
 	
 		formInputs = Array.prototype.slice.call(formInputs);
 		otherInputs = Array.prototype.slice.call(otherInputs);
