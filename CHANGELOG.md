@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.2...v1.6.3) (2022-02-07)
+
+
+### Bug Fixes
+
+* when fiter is updated rest filters, orders and searches ([f77c5ab](https://github.com/CoCreate-app/CoCreate-filter/commit/f77c5abc904a02447b98828a87085cb5d98623ac))
+
 ## [1.6.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.1...v1.6.2) (2022-02-06)
 
 
