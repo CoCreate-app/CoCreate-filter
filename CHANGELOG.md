@@ -1,3 +1,10 @@
+## [1.6.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.5...v1.6.6) (2022-02-10)
+
+
+### Bug Fixes
+
+* fix bug cannot read event ([7b15b23](https://github.com/CoCreate-app/CoCreate-filter/commit/7b15b23ffd6c4b35a8c17f36550b6b6c52f24767))
+
 ## [1.6.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.4...v1.6.5) (2022-02-10)
 
 
