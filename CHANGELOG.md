@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.4...v1.6.5) (2022-02-10)
+
+
+### Bug Fixes
+
+* if filter value empty check if event.target matches element. if true apply filter ([113c814](https://github.com/CoCreate-app/CoCreate-filter/commit/113c814f649fb5d835ed80de0100f292af9ed6d4))
+
 ## [1.6.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.3...v1.6.4) (2022-02-07)
 
 
