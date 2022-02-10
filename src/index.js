@@ -258,7 +258,7 @@ const CoCreateFilter = {
 				}
 			}
 		}
-		if (filter_value == '' && !event || event.target !== f_el) 
+		if (filter_value == '' && !event || event && event.target !== f_el) 
 			return;
 		let idx = this.getFilterByName(item, filter_name, filter_operator);
 		if (value_type != 'string') {
