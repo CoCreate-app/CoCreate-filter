@@ -690,7 +690,7 @@ observer.init({
 });
 
 action.init({
-	action: "import",
+	name: "import",
 	endEvent: "imported",
 	callback: (btn, data) => {
 		CoCreateFilter.importAction(btn)
@@ -698,7 +698,7 @@ action.init({
 })
 
 action.init({
-	action: "export",
+	name: "export",
 	endEvent: "exported",
 	callback: (btn, data) => {
 		CoCreateFilter.exportAction(btn)
@@ -706,7 +706,7 @@ action.init({
 })
 
 action.init({
-	action: "deleteDocuments",
+	name: "deleteDocuments",
 	endEvent: "deletedDocuments",
 	callback: (btn, data) => {
 		CoCreateFilter.__deleteDocumentsAction(btn);
