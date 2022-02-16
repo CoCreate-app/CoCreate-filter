@@ -1,3 +1,10 @@
+## [1.6.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.6...v1.6.7) (2022-02-16)
+
+
+### Bug Fixes
+
+* update action param to name ([88821b5](https://github.com/CoCreate-app/CoCreate-filter/commit/88821b5e643ecb6fcb8dafff748a819e85c042f2))
+
 ## [1.6.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.5...v1.6.6) (2022-02-10)
 
 
