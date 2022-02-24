@@ -1,3 +1,10 @@
+## [1.6.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.8...v1.6.9) (2022-02-24)
+
+
+### Bug Fixes
+
+* CoCreate.config replace CoCreate.app with * ([2d7f54a](https://github.com/CoCreate-app/CoCreate-filter/commit/2d7f54a76c0f4e36c86fe086ff74812f59b1745c))
+
 ## [1.6.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.7...v1.6.8) (2022-02-16)
 
 
