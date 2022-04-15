@@ -1,3 +1,10 @@
+## [1.6.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.9...v1.6.10) (2022-04-15)
+
+
+### Bug Fixes
+
+* removed [] from placeholder {{...}} ([58f3152](https://github.com/CoCreate-app/CoCreate-filter/commit/58f31525d23c4871e5dd6f84fdc418fd6ff86f16))
+
 ## [1.6.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.8...v1.6.9) (2022-02-24)
 
 
