@@ -1,3 +1,10 @@
+## [1.6.11](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.10...v1.6.11) (2022-05-06)
+
+
+### Bug Fixes
+
+* update config organization_Id to organization_id ([4ce5c67](https://github.com/CoCreate-app/CoCreate-filter/commit/4ce5c67b8fca2bfe142529012824568134cbb008))
+
 ## [1.6.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.9...v1.6.10) (2022-04-15)
 
 
