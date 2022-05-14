@@ -50,7 +50,7 @@ const CoCreateFilter = {
 	
 	__initSocket: function() {
 		const self = this;
-		crud.listen('readDocumentList', function(data) {
+		crud.listen('readDocuments', function(data) {
 			let item_id = data['element'];
 			let item = self.items.find((item) => item.id === item_id);
 			if (item) {
@@ -406,7 +406,7 @@ const CoCreateFilter = {
 	
 	fetchData:function (item) {
 		let json = this.makeFetchOptions(item);
-		crud.readDocumentList(json);
+		crud.readDocuments(json);
 	},
 	
 	getMainAttribue: function(el) {
@@ -500,7 +500,7 @@ const CoCreateFilter = {
 			self.__initFilterElement(el, attribute, name);
 		});
 		if (callback)
-			crud.listen('readDocumentList', function(data) {
+			crud.listen('readDocuments', function(data) {
 				callback.call(null, data);
 			});
 	},
@@ -591,7 +591,7 @@ const CoCreateFilter = {
 		new_filter.operator.startIndex = 0;
 		new_filter.operator.search.startIndex = 0;
 		
-		let data = await crud.readDocumentList(new_filter);
+		let data = await crud.readDocuments(new_filter);
 		this.exportFile(data);
 	},
 	

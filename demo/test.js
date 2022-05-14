@@ -16,7 +16,7 @@ const CoCreateFilterTesting = {
 	
 	__initSocketEvent: function() {
 		const self = this;
-		CoCreate.socket.listen('readDocumentList', function(data) {
+		CoCreate.socket.listen('readDocuments', function(data) {
 			self.__renderData(data)
 		})
 
