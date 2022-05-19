@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.0...v1.7.1) (2022-05-19)
+
+
+### Bug Fixes
+
+* update document_id on link index.css ([408252f](https://github.com/CoCreate-app/CoCreate-filter/commit/408252f40610ef197f8d0efd51ce6266a579eb2c))
+
 # [1.7.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.6.11...v1.7.0) (2022-05-14)
 
 
