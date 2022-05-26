@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.2...v1.7.3) (2022-05-26)
+
+
+### Bug Fixes
+
+* reset search.value array onchange to resolve bug of items in list not filtering ([a720f3e](https://github.com/CoCreate-app/CoCreate-filter/commit/a720f3e379dc38bee2b7e66a229d4845bc66096d))
+
 ## [1.7.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.1...v1.7.2) (2022-05-23)
 
 
