@@ -155,7 +155,7 @@ const CoCreateFilter = {
 		if (elements){
 			// item.orders = [];
 			item.filters = [];
-			// item.search = {};
+			item.search.value = [];
 		}
 		
 		for (var i = 0; i < elements.length; i++) {
