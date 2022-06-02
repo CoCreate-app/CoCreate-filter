@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.3...v1.7.4) (2022-06-02)
+
+
+### Bug Fixes
+
+* update padding of datables td element ([4587dc6](https://github.com/CoCreate-app/CoCreate-filter/commit/4587dc6490c406a507a7fcf5f6577ef038ed85c0))
+
 ## [1.7.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.2...v1.7.3) (2022-05-26)
 
 
