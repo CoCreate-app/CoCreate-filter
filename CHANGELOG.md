@@ -1,3 +1,12 @@
+## [1.7.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.4...v1.7.5) (2022-06-12)
+
+
+### Bug Fixes
+
+* update dependencies ([e3bf0bd](https://github.com/CoCreate-app/CoCreate-filter/commit/e3bf0bd768a0c3ea5f35f6a2343ec5e87df6f5a6))
+* update docs css document_id ([de0b7d6](https://github.com/CoCreate-app/CoCreate-filter/commit/de0b7d6fb799961da357fe4e996957e8e9f6d80e))
+* update modal btn to actions ([2132d73](https://github.com/CoCreate-app/CoCreate-filter/commit/2132d7305b01a35b1e8f3226ccc256c5e70e852f))
+
 ## [1.7.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.3...v1.7.4) (2022-06-02)
 
 
