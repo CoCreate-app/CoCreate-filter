@@ -1,3 +1,10 @@
+## [1.7.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.6...v1.7.7) (2022-06-19)
+
+
+### Bug Fixes
+
+* update templates to use placeholder ([37c0113](https://github.com/CoCreate-app/CoCreate-filter/commit/37c011384acaa53d82927f97e362b5ecb7f63d1b))
+
 ## [1.7.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.5...v1.7.6) (2022-06-18)
 
 
