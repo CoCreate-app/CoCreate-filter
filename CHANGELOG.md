@@ -1,3 +1,11 @@
+## [1.7.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.7...v1.7.8) (2022-07-25)
+
+
+### Bug Fixes
+
+* if !value get Attribute order-type ([c543a02](https://github.com/CoCreate-app/CoCreate-filter/commit/c543a021dcab084dadb1cc8cf7fd16a7d52b1019))
+* if fieldvalue required for contain ([203a65c](https://github.com/CoCreate-app/CoCreate-filter/commit/203a65ca3e779fa2a84302205d1c48e46637fc73))
+
 ## [1.7.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.6...v1.7.7) (2022-06-19)
 
 
