@@ -203,7 +203,7 @@ const CoCreateFilter = {
 		let f_el = element;
 		let name = f_el.getAttribute('order-by');
 		if (!value)
-			value = f_el.getAttribute('value') || '';
+			value = f_el.getAttribute('value') || f_el.getAttribute('order-type');
 		
 		if (!value) return;
 		let order_type = 0;
