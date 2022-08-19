@@ -109,8 +109,8 @@ const CoCreateFilter = {
 		let collection = el.getAttribute('fetch-collection');
 		let is_collection = el.hasAttribute('fetch-collections');
 		
-		let order_name = el.getAttribute('order-by');
-		let order_type = el.getAttribute('order-type') || 'asc';
+		let order_name = el.getAttribute('filter-order-name');
+		let order_type = el.getAttribute('filter-order-type') || 'asc';
 
 		let fetch_count = parseInt(el.getAttribute('fetch-count'));
 		
@@ -161,7 +161,7 @@ const CoCreateFilter = {
 		for (var i = 0; i < elements.length; i++) {
 			let f_el = elements[i];
 			let filter_name = f_el.getAttribute('filter-name');
-			let order_name = f_el.getAttribute('order-by');
+			let order_name = f_el.getAttribute('filter-order-name');
 			if(!this.filterEvents.has(f_el)){
 				this.filterEvents.set(f_el, true);
 				var setEvent = true;
@@ -201,14 +201,14 @@ const CoCreateFilter = {
 	
 	_applyOrder: function(item, element, value) {
 		let f_el = element;
-		let name = f_el.getAttribute('order-by');
+		let name = f_el.getAttribute('filter-order-name');
 		if (!value)
-			value = f_el.getAttribute('value') || f_el.getAttribute('order-type');
+			value = f_el.getAttribute('value') || f_el.getAttribute('filter-order-type');
 		
 		if (!value) return;
 		let order_type = 0;
 		let idx = this.getOrderByName(item, name);
-		
+		5
 		if (value == 'asc') {
 			order_type = 1;   
 		} else if (value == 'desc') {
@@ -328,7 +328,7 @@ const CoCreateFilter = {
 			
 			e.preventDefault();
 			
-			let order_by = this.getAttribute('order-by');
+			let order_by = this.getAttribute('filter-order-name');
 			let order_type = 0;
 			let idx = self.getOrderByName(item, order_by);
 			
@@ -665,7 +665,7 @@ const CoCreateFilter = {
 observer.init({ 
 	name: 'CoCreateFilterInit', 
 	observe: ['addedNodes'],
-	target: '[filter-name], [order-by]',
+	target: '[filter-name], [filter-order-name]',
 	callback: function(mutation) {
 		let el = mutation.target;
 		if (el.hasAttribute('fetch-collection')) return;
