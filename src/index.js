@@ -406,7 +406,10 @@ const CoCreateFilter = {
 	
 	fetchData:function (item) {
 		let json = this.makeFetchOptions(item);
-		crud.readDocuments(json);
+		if (item['is_collection'])
+			crud.readCollections(json);
+		else
+			crud.readDocuments(json);
 	},
 	
 	getMainAttribue: function(el) {
