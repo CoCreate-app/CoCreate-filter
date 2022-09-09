@@ -1,13 +1,14 @@
-function filterData(result, data, operator) {
-	if (operator['search']['type'] == 'and') {
-		result = andSearch(result, operator['search']['value']);
+function filterData(result, data) {
+	let filter = data.filter;
+	if (filter['search']['type'] == 'and') {
+		result = andSearch(result, filter['search']['value']);
 	} else {
-		result = orSearch(result, operator['search']['value']);
+		result = orSearch(result, filter['search']['value']);
 	}
 	
 	const total = result.length;
-	const startIndex = operator.startIndex;
-	const count = operator.count;
+	const startIndex = filter.startIndex;
+	const count = filter.count;
 	let result_data = [];
 	
 	if (data.created_ids && data.created_ids.length > 0) {
@@ -28,10 +29,9 @@ function filterData(result, data, operator) {
 		
 		result_data = result;
 	}
-	operator.startIndex = startIndex
-	operator.count = count
-	operator.total
-	= total
+	filter['startIndex'] = startIndex
+	filter['count'] = count
+	filter['total'] = total
 	return result_data
 }
 
@@ -132,7 +132,8 @@ function andSearch(results, search) {
 	}
 	
 	return tmp;
-}	
+}
+	
 function sortData(data, sort) {
 	let orderField = Object.keys(sort)[0]
 	if (orderField) {
