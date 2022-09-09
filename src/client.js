@@ -482,9 +482,6 @@ const CoCreateFilter = {
 	makeFetchOptions: function(item) {
 		let json = {
 			"collection": item.collection,
-			"metadata": {
-				isRefresh: item.isRefresh
-			},
 			"filter" :  {
 				"id": item.filter.id,
 				"query": item.filter.query,
