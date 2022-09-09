@@ -2,6 +2,7 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
+import {filterData, andSearch, orSearch, sortData, queryData} from './filter'
 
 const CoCreateFilter = {
 	items: [],
@@ -9,7 +10,8 @@ const CoCreateFilter = {
 	moduleAttribues: [],
 	filterEvents: new Map(),
 	module_items : [],
-	
+	// ...filter,
+
 	__init: function() {
 		this.__initIntersection();
 		this.__initSocket();
@@ -530,61 +532,7 @@ const CoCreateFilter = {
 			this.fetchData(filter);
 		}
 	},
-	
-	filterItem: function(item, filters) {
-		//. $contain, $range, $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $geoWithin
-		let flag = true;
-		if (!item || !filters) {
-			return false;
-		}
-		if (Array.isArray(item)) return false;
-		filters.forEach(({name, operator, type, value}) => {
-			
-			const fieldValue = item[name];
-			switch (operator) {
-				case '$contain':
-					// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-					if (fieldValue && !fieldValue.includes(value[0])) flag = false; 
-					break;
-				case '$range':
-					if (value[0] !== null && value[1] !== null) {
-						if (value[0] > fieldValue || value[1] <= fieldValue)
-							flag = false;
-					} else if (item.value[0] == null && value[1] >= fieldValue) {
-						flag = false;
-					} else if (item.value[1] == null && value[0] <= fieldValue) {
-						flag = false;
-					}
-					break;
-				case '$eq':
-					if (fieldValue != value[0]) flag = false; 
-					break;
-				case '$ne':
-					if (fieldValue == value[0]) flag = false;
-					break;
-				case '$lt':
-					if (fieldValue >= value[0]) flag = false;
-					break;
-				case '$lte':
-					if (fieldValue > value[0]) flag = false;
-					break;
-				case '$gt':
-					if (fieldValue <= value[0]) flag = false;
-					break;
-				case '$gte':
-					if (fieldValue < value[0]) flag = false;
-					break;
-				case '$in':
-					if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-					break;
-				case '$nin':
-					if (Array.isArray(fieldValue) && fieldValue.some(x => value.includes(x))) flag = false;
-					break;
-			}
-		});
-		return flag;
-	},
-	
+		
 	exportAction: async function(btn) {
 		const item_id = btn.getAttribute('template_id');
 		let item = this.items.find((item) => item.id === item_id);
@@ -718,4 +666,12 @@ action.init({
 
 CoCreateFilter.__init();
  
-export default CoCreateFilter;
+// export default CoCreateFilter;
+module.exports = {
+	...CoCreateFilter,
+	filterData,
+	andSearch,
+	orSearch,
+	sortData,
+	queryData
+  };
