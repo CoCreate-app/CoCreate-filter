@@ -1,5 +1,4 @@
-function filterData(result, data) {
-	let filter = data.filter;
+function searchData(result, filter) {
 	if (filter['search']['type'] == 'and') {
 		result = andSearch(result, filter['search']['value']);
 	} else {
@@ -135,28 +134,28 @@ function andSearch(results, search) {
 }
 	
 function sortData(data, sort) {
-	let orderField = Object.keys(sort)[0]
-	if (orderField) {
-		let orderType = sort[orderField];
-		let orderValueType = "";
+	let name = Object.keys(sort)[0]
+	if (name) {
+		let sortType = sort[name];
+		let sortValueType = "";
 		let sortData;
-		if (orderType == '-1') {
-			if (orderValueType == 'number')
+		if (sortType == '-1') {
+			if (sortValueType == 'number')
 				sortData = data.sort((a, b) => 
-					b[orderField] - a[orderField]
+					b[name] - a[name]
 				);
 			else
 				sortData = data.sort((a, b) => 
-					b[orderField].localeCompare(a[orderField])
+					b[name].localeCompare(a[name])
 				);
 		} else {
-			if (orderValueType == 'number')
+			if (sortValueType == 'number')
 				sortData = data.sort((a, b) => 
-					a[orderField] - b[orderField]
+					a[name] - b[name]
 				);
 			else
 				sortData = data.sort((a, b) => 
-					a[orderField].localeCompare(b[orderField])
+					a[name].localeCompare(b[name])
 				);
 			
 		}
@@ -172,15 +171,15 @@ function queryData(item, query) {
 	}
 	if (Array.isArray(item)) return false;
 	query.forEach(({name, operator, type, value}) => {
-		
+		// ToDo: if fieldValue is an array check for each
 		const fieldValue = item[name];
 		switch (operator) {
 			case '$contain':
 				// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-				if (fieldValue && !fieldValue.includes(value[0])) flag = false; 
+				if (fieldValue && !fieldValue.includes(value)) flag = false; 
 				break;
 			case '$range':
-				if (value[0] !== null && value[1] !== null) {
+				if (value !== null && value !== null) {
 					if (value[0] > fieldValue || value[1] <= fieldValue)
 						flag = false;
 				} else if (item.value[0] == null && value[1] >= fieldValue) {
@@ -190,22 +189,22 @@ function queryData(item, query) {
 				}
 				break;
 			case '$eq':
-				if (fieldValue != value[0]) flag = false; 
+				if (fieldValue != value) flag = false; 
 				break;
 			case '$ne':
-				if (fieldValue == value[0]) flag = false;
+				if (fieldValue == value) flag = false;
 				break;
 			case '$lt':
-				if (fieldValue >= value[0]) flag = false;
+				if (fieldValue >= value) flag = false;
 				break;
 			case '$lte':
-				if (fieldValue > value[0]) flag = false;
+				if (fieldValue > value) flag = false;
 				break;
 			case '$gt':
-				if (fieldValue <= value[0]) flag = false;
+				if (fieldValue <= value) flag = false;
 				break;
 			case '$gte':
-				if (fieldValue < value[0]) flag = false;
+				if (fieldValue < value) flag = false;
 				break;
 			case '$in':
 				if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
@@ -219,7 +218,7 @@ function queryData(item, query) {
 }
 
 module.exports = {
-	filterData,
+	searchData,
 	andSearch,
 	orSearch,
 	sortData,

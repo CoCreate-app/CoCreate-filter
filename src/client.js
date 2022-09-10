@@ -2,7 +2,7 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
-import {filterData, andSearch, orSearch, sortData, queryData} from './filter'
+import {searchData, andSearch, orSearch, sortData, queryData} from './filter'
 
 const CoCreateFilter = {
 	items: [],
@@ -230,12 +230,13 @@ const CoCreateFilter = {
 		let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
 		let filter_type = f_el.getAttribute('filter-type');
 		let filter_value = f_el.getAttribute('filter-value');
-		
-		if (filter_value) {
-			if (value_type !== "raw")
-				filter_value = filter_value.replace(/\s/g, '').split(',');
-		}
-		else {
+		// ToDo: if filter value is an array check for each
+		// if (Array.isArray(filter_value)) {}
+		// if (filter_value) {
+			// if (value_type !== "raw")
+			// 	filter_value = filter_value.replace(/\s/g, '');
+		// }
+		if (!filter_value) {
 			let inputType = f_el.type;
 			filter_value = [];
 		
@@ -668,7 +669,7 @@ CoCreateFilter.__init();
 // export default CoCreateFilter;
 module.exports = {
 	...CoCreateFilter,
-	filterData,
+	searchData,
 	andSearch,
 	orSearch,
 	sortData,
