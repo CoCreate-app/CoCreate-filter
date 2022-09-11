@@ -268,9 +268,13 @@ const CoCreateFilter = {
 			return;
 		let idx = this.getFilterByName(item, filter_name, filter_operator);
 		if (value_type != 'string') {
-			for (let i = 0; i < filter_value.length; i++) {
-				filter_value[i] = Number(filter_value[i]);
+			if (Array.isArray(filter_value)) {
+				for (let i = 0; i < filter_value.length; i++) {
+					filter_value[i] = Number(filter_value[i]);
+				}
 			}
+			else
+				filter_value = Number(filter_value)
 		}
 		this.insertArrayObject(item.filter.query, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type});
 	},

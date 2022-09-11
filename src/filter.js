@@ -1,21 +1,21 @@
-function searchData(result, filter) {
+function searchData(data, filter) {
 	if (filter['search']['type'] == 'and') {
-		result = andSearch(result, filter['search']['value']);
+		data = andSearch(data, filter['search']['value']);
 	} else {
-		result = orSearch(result, filter['search']['value']);
+		data = orSearch(data, filter['search']['value']);
 	}
 	
-	const total = result.length;
+	const total = data.length;
 	const startIndex = filter.startIndex;
 	const count = filter.count;
 	let result_data = [];
 	
 	if (data.created_ids && data.created_ids.length > 0) {
-		let _nn = (count) ? startIndex : result.length;
+		let _nn = (count) ? startIndex : data.length;
 		
 		for (let ii = 0; ii < _nn; ii++) {
 			
-			const selected_item = result[ii];
+			const selected_item = data[ii];
 			data.created_ids.forEach((fetch_id, index) => {
 				if (fetch_id == selected_item['_id']) {
 					result_data.push({ item: selected_item, position: ii })
@@ -23,10 +23,10 @@ function searchData(result, filter) {
 			})
 		}
 	} else {
-		if (startIndex) result = result.slice(startIndex, total);
-		if (count) result = result.slice(0, count)
+		if (startIndex) data = data.slice(startIndex, total);
+		if (count) data = data.slice(0, count)
 		
-		result_data = result;
+		result_data = data;
 	}
 	filter['startIndex'] = startIndex
 	filter['count'] = count
