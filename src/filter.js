@@ -157,9 +157,10 @@ function sortData(data, sort) {
 				sortData = data.sort((a, b) => 
 					a[name].localeCompare(b[name])
 				);
-			
 		}
 		return sortData;
+	} else {
+		return data;
 	}
 }	
 

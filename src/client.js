@@ -10,7 +10,6 @@ const CoCreateFilter = {
 	moduleAttribues: [],
 	filterEvents: new Map(),
 	module_items : [],
-	// ...filter,
 
 	__init: function() {
 		this.__initIntersection();
@@ -42,10 +41,10 @@ const CoCreateFilter = {
 	
 	__runLoadMore: function(attrName, id) {
 		if (!id || !attrName) return;
-		let item = this.items.find((item) => item.attrName === attrName && item.id === id);
+		let item = this.items.find((item) => item.filter.attrName === attrName && item.filter.id === id);
 		if (!item) return;
 		
-		if (item.count > 0) {
+		if (item.filter.count > 0) {
 			this.fetchData(item);
 		}
 	},
@@ -54,20 +53,20 @@ const CoCreateFilter = {
 		const self = this;
 		crud.listen('readDocuments', function(data) {
 			let item_id = data.filter.id;
-			let item = self.items.find((item) => item.id === item_id);
+			let item = self.items.find((item) => item.filter.id === item_id);
 			if (item) {
 				// eObj.startIndex += data.result.length;
 				const result_data = data['data'];
 				
 				//. set the intersection observe element
-				let element = document.querySelector(`[${item.attrName}="${item.id}"][fetch-type="scroll"]`);
+				let element = document.querySelector(`[${item.filter.attrName}="${item.filter.id}"][fetch-type="scroll"]`);
 				if (result_data.length > 0 && element) {
 					self.ioInstance.observe(element);
 				}
 				
 				// /** render total count **/
 				const totalCount = data.filter.total;
-				const totalElements = document.querySelectorAll(`[${item.attrName}="${item.id}"][fetch-type="total"]`);
+				const totalElements = document.querySelectorAll(`[${item.filter.attrName}="${item.filter.id}"][fetch-type="total"]`);
 				
 				if (totalElements) {
 					totalElements.forEach((el) => el.innerHTML = totalCount);
@@ -96,21 +95,20 @@ const CoCreateFilter = {
 		});
 	},
 	
-	setFilter: function(el, mainAttr, type) {
+	setFilter: function(el, attrName) {
 			
-		if (!mainAttr) {
+		if (!attrName) {
 			return;
 		}
 		
-		let id = el.getAttribute(mainAttr);
+		let id = el.getAttribute(attrName);
 		
 		if (!id) return;
 		
-		if (!this.moduleAttribues.includes(mainAttr)) 
-			this.moduleAttribues.push(mainAttr);
+		if (!this.moduleAttribues.includes(attrName)) 
+			this.moduleAttribues.push(attrName);
 		
 		let collection = el.getAttribute('fetch-collection');
-		let is_collection = el.hasAttribute('fetch-collections');
 		
 		let order_name = el.getAttribute('filter-order-name');
 		let order_type = el.getAttribute('filter-order-type') || 'asc';
@@ -118,37 +116,30 @@ const CoCreateFilter = {
 		let fetch_count = parseInt(el.getAttribute('fetch-count'));
 		
 		let item = {
-			el: el,
-			id: id,
-			type: type,
-			
-			attrName: mainAttr,
-			
-			collection: collection,
-			startIndex: 0,
-			options: {},	/** return options **/
-			fetch: {},
-			is_collection,
+			collection,
 			filter: {
 				id,
+				el,
 				search: {
 					type: 'or',
 					value: []
 				},
 				sort: [],
-				query: []
+				query: [],
+				startIndex: 0,
+				attrName
 			}
 		};
 		
 		if (!isNaN(fetch_count) && fetch_count > 0) {
-			item.count = fetch_count;
+			item.filter.count = fetch_count;
 		}
 	
 		if (order_name) {
 			item.filter.sort.push({name: order_name, type: order_type == 'asc' ? 1 : -1 });
 		}
 		
-		this.setCheckboxName(item.id, item.attrName);
+		this.setCheckboxName(item.filter.id, item.filter.attrName);
 		this._initFilter(item);
 		this.items.push(item);
 	
@@ -188,14 +179,14 @@ const CoCreateFilter = {
 			}	
 		}
 		if (element) {
-			item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
+			item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
 		}
 	},
 	
 	queryFilters: function(item) {
-		let tmpSelector = '[' + item.attrName + '="' + item.id + '"]';
-		let formInputs = item.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
-		let otherInputs = item.el.ownerDocument.querySelectorAll(tmpSelector);
+		let tmpSelector = '[' + item.filter.attrName + '="' + item.filter.id + '"]';
+		let formInputs = item.filter.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
+		let otherInputs = item.filter.el.ownerDocument.querySelectorAll(tmpSelector);
 	
 		formInputs = Array.prototype.slice.call(formInputs);
 		otherInputs = Array.prototype.slice.call(otherInputs);
@@ -212,7 +203,7 @@ const CoCreateFilter = {
 		
 		if (!value) return;
 		let order_type = 0;
-		let idx = this.getOrderByName(item, name);
+		let idx = this.getSortByName(item, name);
 		5
 		if (value == 'asc') {
 			order_type = 1;   
@@ -305,8 +296,8 @@ const CoCreateFilter = {
 			if (['A', 'BUTTON'].includes(element.tagName)) {
 				element.addEventListener('click', function(){
 					self._applyOrder(item, element);
-					if (item.el) {
-						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+					if (item.filter.el) {
+						item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 					}
 				});
 			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
@@ -326,8 +317,8 @@ const CoCreateFilter = {
 			self._applyOrder(item, element, value);
 			element.setAttribute('toggle-order', value);
 			
-			if (item.el) {
-				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+			if (item.filter.el) {
+				item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 			}
 		});
 	},
@@ -340,7 +331,7 @@ const CoCreateFilter = {
 			
 			let order_by = this.getAttribute('filter-order-name');
 			let order_type = 0;
-			let idx = self.getOrderByName(item, order_by);
+			let idx = self.getSortByName(item, order_by);
 			
 			if (this.value == 'asc') {
 				order_type = 1;   
@@ -352,8 +343,8 @@ const CoCreateFilter = {
 			
 			self.insertArrayObject(item.filter.sort, idx, {name: order_by, type: order_type}, order_type);
 			
-			if (item.el) {
-				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+			if (item.filter.el) {
+				item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 			}
 		});
 	},
@@ -415,11 +406,10 @@ const CoCreateFilter = {
 	},
 	
 	fetchData:function (item) {
-		let json = this.makeFetchOptions(item);
-		if (item['is_collection'])
-			crud.readCollections(json);
+		if (item.filter['is_collection'])
+			crud.readCollections(item);
 		else
-			crud.readDocuments(json);
+			crud.readDocuments(item);
 	},
 	
 	getMainAttribue: function(el) {
@@ -449,7 +439,7 @@ const CoCreateFilter = {
 		return -1;
 	},
 	
-	getOrderByName: function(item, name) {
+	getSortByName: function(item, name) {
 		for (var i = 0; i < item.filter.sort.length; i++) {
 			if (item.filter.sort[i].name == name) {
 				return i;
@@ -460,48 +450,12 @@ const CoCreateFilter = {
 
 	getItemById: function(obj, id) {
 		for (var i = 0; i < obj.length; i++) {
-			let filter = obj[i];
-			if (!filter) {
-				continue;
-			}
-			
-			if (filter.id == id) {
-				return filter;
-			}
-		}
-	},
-	
-	getItemByElement: function(obj, el) {
-		for (var i = 0; i < obj.length; i++) {
-			let filter = obj[i].filter;
-			if (!filter) {
-				continue;
-			}
-			
-			if (filter.el.isSameNode(el)) {
+			if (obj[i].filter.id == id) {
 				return obj[i];
 			}
 		}
 	},
-	
-	makeFetchOptions: function(item) {
-		let json = {
-			"collection": item.collection,
-			"filter" :  {
-				"id": item.filter.id,
-				"query": item.filter.query,
-				"sort": item.filter.sort,
-				"search": item.filter.search,
-				"startIndex": item.startIndex,
-			}
-		};
 		
-		if (item.count) {
-			json['filter'].count = item.count;
-		}
-		return json;
-	},
-	
 	init: function({name, attribute, callback}) {
 		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`);
 		const self = this;
@@ -539,14 +493,12 @@ const CoCreateFilter = {
 		
 	exportAction: async function(btn) {
 		const item_id = btn.getAttribute('template_id');
-		let item = this.items.find((item) => item.id === item_id);
+		let item = this.items.find((item) => item.filter.id === item_id);
 		if (!item) return;
 		
-		let new_filter = this.makeFetchOptions(item);
-		new_filter.operator.startIndex = 0;
-		new_filter.operator.search.startIndex = 0;
+		item.filter.startIndex = 0;
 		
-		let data = await crud.readDocuments(new_filter);
+		let data = await crud.readDocuments(item);
 		this.exportFile(data);
 	},
 	
