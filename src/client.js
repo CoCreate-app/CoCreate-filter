@@ -5,7 +5,7 @@ import crud from '@cocreate/crud-client';
 import {searchData, andSearch, orSearch, sortData, queryData} from './filter'
 
 const CoCreateFilter = {
-	items: [],
+	items: new Map(),
 	ioInstance: null,
 	moduleAttribues: [],
 	filterEvents: new Map(),
@@ -40,9 +40,11 @@ const CoCreateFilter = {
 	},
 	
 	__runLoadMore: function(attrName, id) {
-		if (!id || !attrName) return;
-		let item = this.items.find((item) => item.filter.attrName === attrName && item.filter.id === id);
-		if (!item) return;
+		if (!id || !attrName) 
+			return;
+		let item = this.items.get(id)
+		if (!item || item.filter.attrName !== attrName) 
+			return;
 		
 		if (item.filter.count > 0) {
 			this.fetchData(item);
@@ -53,9 +55,8 @@ const CoCreateFilter = {
 		const self = this;
 		crud.listen('readDocuments', function(data) {
 			let item_id = data.filter.id;
-			let item = self.items.find((item) => item.filter.id === item_id);
+			let item = self.items.get(item_id);
 			if (item) {
-				// eObj.startIndex += data.result.length;
 				const result_data = data['data'];
 				
 				//. set the intersection observe element
@@ -141,8 +142,8 @@ const CoCreateFilter = {
 		
 		this.setCheckboxName(item.filter.id, item.filter.attrName);
 		this._initFilter(item);
-		this.items.push(item);
-	
+		this.items.set(item.filter.id, item);
+		el.filter = item
 		return item;
 	},
 	
@@ -447,14 +448,6 @@ const CoCreateFilter = {
 		}
 		return -1;
 	},
-
-	getItemById: function(obj, id) {
-		for (var i = 0; i < obj.length; i++) {
-			if (obj[i].filter.id == id) {
-				return obj[i];
-			}
-		}
-	},
 		
 	init: function({name, attribute, callback}) {
 		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`);
@@ -493,7 +486,7 @@ const CoCreateFilter = {
 		
 	exportAction: async function(btn) {
 		const item_id = btn.getAttribute('template_id');
-		let item = this.items.find((item) => item.filter.id === item_id);
+		let item = this.items.get(item_id)
 		if (!item) return;
 		
 		item.filter.startIndex = 0;
@@ -577,7 +570,7 @@ observer.init({
 		let el = mutation.target;
 		if (el.hasAttribute('fetch-collection')) return;
 		let attr = CoCreateFilter.getMainAttribue(el);
-		let item = CoCreateFilter.getItemById(CoCreateFilter.items, attr.id);
+		let item = CoCreateFilter.items.get(attr.id);
 		if (item)
 			CoCreateFilter._initFilter(item, mutation.target);
 	}
@@ -590,7 +583,7 @@ observer.init({
 	callback: function(mutation) {
 		let el = mutation.target;
 		let attr = CoCreateFilter.getMainAttribue(el);
-		let item = CoCreateFilter.getItemById(CoCreateFilter.items, attr.id);
+		let item = CoCreateFilter.items.get(attr.id);
 		if (item)
 			CoCreateFilter._initFilter(item, mutation.target);
 	}
@@ -622,7 +615,6 @@ action.init({
 
 CoCreateFilter.__init();
  
-// export default CoCreateFilter;
 module.exports = {
 	...CoCreateFilter,
 	searchData,
