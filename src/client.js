@@ -120,7 +120,6 @@ const CoCreateFilter = {
 			collection,
 			filter: {
 				id,
-				el,
 				search: {
 					type: 'or',
 					value: []
@@ -129,7 +128,8 @@ const CoCreateFilter = {
 				query: [],
 				startIndex: 0,
 				attrName
-			}
+			},
+			el
 		};
 		
 		if (!isNaN(fetch_count) && fetch_count > 0) {
@@ -143,7 +143,7 @@ const CoCreateFilter = {
 		this.setCheckboxName(item.filter.id, item.filter.attrName);
 		this._initFilter(item);
 		this.items.set(item.filter.id, item);
-		el.filter = item
+		// el.filter = item
 		return item;
 	},
 	
@@ -180,14 +180,14 @@ const CoCreateFilter = {
 			}	
 		}
 		if (element) {
-			item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
+			item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
 		}
 	},
 	
 	queryFilters: function(item) {
 		let tmpSelector = '[' + item.filter.attrName + '="' + item.filter.id + '"]';
-		let formInputs = item.filter.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
-		let otherInputs = item.filter.el.ownerDocument.querySelectorAll(tmpSelector);
+		let formInputs = item.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
+		let otherInputs = item.el.ownerDocument.querySelectorAll(tmpSelector);
 	
 		formInputs = Array.prototype.slice.call(formInputs);
 		otherInputs = Array.prototype.slice.call(otherInputs);
@@ -297,8 +297,8 @@ const CoCreateFilter = {
 			if (['A', 'BUTTON'].includes(element.tagName)) {
 				element.addEventListener('click', function(){
 					self._applyOrder(item, element);
-					if (item.filter.el) {
-						item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+					if (item.el) {
+						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 					}
 				});
 			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
@@ -318,8 +318,8 @@ const CoCreateFilter = {
 			self._applyOrder(item, element, value);
 			element.setAttribute('toggle-order', value);
 			
-			if (item.filter.el) {
-				item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+			if (item.el) {
+				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 			}
 		});
 	},
@@ -344,8 +344,8 @@ const CoCreateFilter = {
 			
 			self.insertArrayObject(item.filter.sort, idx, {name: order_by, type: order_type}, order_type);
 			
-			if (item.filter.el) {
-				item.filter.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+			if (item.el) {
+				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
 			}
 		});
 	},
@@ -407,10 +407,13 @@ const CoCreateFilter = {
 	},
 	
 	fetchData:function (item) {
+		let Item = {...item}
+		delete Item.el
+
 		if (item.filter['is_collection'])
-			crud.readCollections(item);
+			crud.readCollections(Item);
 		else
-			crud.readDocuments(item);
+			crud.readDocuments(Item);
 	},
 	
 	getMainAttribue: function(el) {
