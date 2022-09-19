@@ -144,35 +144,41 @@
 			return tmp;
 		}
 			
-		function sortData(data, sort) {
-			let name = Object.keys(sort)[0]
-			if (name) {
-				let sortType = sort[name];
-				let sortValueType = "";
-				let sortData;
-				if (sortType == '-1') {
-					if (sortValueType == 'number')
-						sortData = data.sort((a, b) => 
-							b[name] - a[name]
-						);
-					else
-						sortData = data.sort((a, b) => 
-							b[name].localeCompare(a[name])
-						);
-				} else {
-					if (sortValueType == 'number')
-						sortData = data.sort((a, b) => 
-							a[name] - b[name]
-						);
-					else
-						sortData = data.sort((a, b) => 
-							a[name].localeCompare(b[name])
-						);
+		function sortData(data, sorts) {
+			if (!Array.isArray(sorts))
+				sorts= [sorts]
+			for (let sort of sorts) {
+				let name = sort.name
+				if (name) {
+					let sortType = sort[name];
+					let sortValueType = sort.valueType;
+					let sortData;
+					if (sortType == '-1') {
+						if (sortValueType == 'number')
+							sortData = data.sort((a, b) => 
+								b[name] - a[name]
+							);
+						else
+							sortData = data.sort((a, b) => 
+								b[name].localeCompare(a[name])
+							);
+					} else {
+						if (sortValueType == 'number')
+							sortData = data.sort((a, b) => 
+								a[name] - b[name]
+							);
+						else
+							sortData = data.sort((a, b) => {
+								// ToDo occasionally there is no value to compare
+								if(a[name])
+									a[name].localeCompare(b[name])
+								}
+							);
+					}
+					return sortData;
 				}
-				return sortData;
-			} else {
-				return data;
 			}
+			return data;
 		}	
 
 		function queryData(item, query) {

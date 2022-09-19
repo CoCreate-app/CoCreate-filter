@@ -203,6 +203,8 @@ const CoCreateFilter = {
 			value = f_el.getAttribute('value') || f_el.getAttribute('filter-order-type');
 		
 		if (!value) return;
+		let valueType = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
+
 		let order_type = 0;
 		let idx = this.getSortByName(item, name);
 		5
@@ -213,7 +215,7 @@ const CoCreateFilter = {
 		} else {
 			order_type = [];
 		}
-		this.insertArrayObject(item.filter.sort, idx, {name: name, type: order_type}, order_type);
+		this.insertArrayObject(item.filter.sort, idx, {name: name, type: order_type, valueType }, order_type);
 	},
 
 	_applyFilter: function(item, element, filter_name, event) {
