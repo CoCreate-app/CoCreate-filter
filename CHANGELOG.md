@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.0...v1.8.1) (2022-09-22)
+
+
+### Bug Fixes
+
+* contain applied as default case ([0772ebc](https://github.com/CoCreate-app/CoCreate-filter/commit/0772ebc27ee1c6458e4f8abc9ce93a63a134bd8f))
+
 # [1.8.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.10...v1.8.0) (2022-09-22)
 
 
