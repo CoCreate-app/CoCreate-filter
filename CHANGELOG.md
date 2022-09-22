@@ -1,3 +1,23 @@
+# [1.8.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.10...v1.8.0) (2022-09-22)
+
+
+### Bug Fixes
+
+* apply filter-value-type to filter-order, improvements to sortData function ([afe7142](https://github.com/CoCreate-app/CoCreate-filter/commit/afe7142849f68125fa29093c2014686970047c4e))
+* items array converted to map ([cc2ad3b](https://github.com/CoCreate-app/CoCreate-filter/commit/cc2ad3b26bac1abd8f72cb4ad34f3deb2f5123aa))
+* moved item.filter.el to item.el inorder to remove el from shallow copy . ([a704bf2](https://github.com/CoCreate-app/CoCreate-filter/commit/a704bf29c53c9500014580563be048e934a46552))
+* removed metadata.isRefresh ([b0fe4ae](https://github.com/CoCreate-app/CoCreate-filter/commit/b0fe4aecea35ef161af5f4d1adf7ada13d11ff9b))
+* rename variable results to data. supports filter value array and object ([6369e11](https://github.com/CoCreate-app/CoCreate-filter/commit/6369e11b3f51ef0c1f9a445e36757d82cece3ade))
+* renamed filterData to searchData ([549bff2](https://github.com/CoCreate-app/CoCreate-filter/commit/549bff29a690eaa94e45c87d05208e2acd1fe5a6))
+* support for server or browser ([0e0d91e](https://github.com/CoCreate-app/CoCreate-filter/commit/0e0d91e5562e800d9b01ce942d47fad7a9003ab3))
+* update to item.filter ([d992647](https://github.com/CoCreate-app/CoCreate-filter/commit/d9926470f622c927d7f3e03a565da401eb048d4c))
+
+
+### Features
+
+* filters.js accessible by server-side. operator param renamed to filter. all filter related params are nested in filter ([b4a4d3d](https://github.com/CoCreate-app/CoCreate-filter/commit/b4a4d3d90de92496e2f50441c86b9ff65222ecec))
+* utility functions for quering and sorting data ([16354ad](https://github.com/CoCreate-app/CoCreate-filter/commit/16354adb26f3a8956ee9137f6a4ba208eba93611))
+
 ## [1.7.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.7.9...v1.7.10) (2022-09-01)
 
 
