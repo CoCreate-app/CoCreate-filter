@@ -230,6 +230,10 @@
 					case '$nin':
 						if (Array.isArray(fieldValue) && fieldValue.some(x => value.includes(x))) flag = false;
 						break;
+					default:
+						// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
+						if (fieldValue && !fieldValue.includes(value)) flag = false; 
+						break;
 				}
 			});
 			return flag;
