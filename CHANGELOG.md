@@ -1,3 +1,10 @@
+## [1.8.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.6...v1.8.7) (2022-09-30)
+
+
+### Bug Fixes
+
+* export default ([3b2061e](https://github.com/CoCreate-app/CoCreate-filter/commit/3b2061ec72657714cb698951be9231987cbba1da))
+
 ## [1.8.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.5...v1.8.6) (2022-09-30)
 
 
