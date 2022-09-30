@@ -620,7 +620,7 @@ action.init({
 
 CoCreateFilter.__init();
  
-module.exports = {
+export default {
 	...CoCreateFilter,
 	searchData,
 	andSearch,
