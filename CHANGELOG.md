@@ -1,3 +1,11 @@
+## [1.8.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.9...v1.8.10) (2022-10-02)
+
+
+### Bug Fixes
+
+* bump @cocreate/hosting and @cocreate/socket-client ([a6615d9](https://github.com/CoCreate-app/CoCreate-filter/commit/a6615d9e878b5fc3dc49ba87f9907c673031cddb))
+* set default operator to $contain ([d39676d](https://github.com/CoCreate-app/CoCreate-filter/commit/d39676d3bb5304f8782f8bc93dbd41994a535e1e))
+
 ## [1.8.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.8...v1.8.9) (2022-10-01)
 
 
