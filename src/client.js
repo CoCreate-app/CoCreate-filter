@@ -222,6 +222,7 @@ const CoCreateFilter = {
 		let f_el = element;	
 		let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
 		let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
+		// filter_type used for $center $box etc
 		let filter_type = f_el.getAttribute('filter-type');
 		let filter_value = f_el.getAttribute('filter-value');
 		// ToDo: if filter value is an array check for each
