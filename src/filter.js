@@ -169,7 +169,7 @@
 							);
 						else
 							sortData = data.sort((a, b) => {
-								// ToDo occasionally there is no value to compare
+								// ToDo: occasionally there is no value to compare
 								if(a[name])
 									a[name].localeCompare(b[name])
 								}
