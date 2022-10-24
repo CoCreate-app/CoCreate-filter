@@ -10,39 +10,43 @@
   	}
 }(typeof self !== 'undefined' ? self : this, function (wnd) {
 		function searchData(data, filter) {
-			if (filter['search']['type'] == 'and') {
-				data = andSearch(data, filter['search']['value']);
-			} else {
-				data = orSearch(data, filter['search']['value']);
-			}
-			
-			const total = data.length;
-			const startIndex = filter.startIndex;
-			const count = filter.count;
-			let result_data = [];
-			
-			if (data.created_ids && data.created_ids.length > 0) {
-				let _nn = (count) ? startIndex : data.length;
-				
-				for (let ii = 0; ii < _nn; ii++) {
-					
-					const selected_item = data[ii];
-					data.created_ids.forEach((fetch_id, index) => {
-						if (fetch_id == selected_item['_id']) {
-							result_data.push({ item: selected_item, position: ii })
-						}
-					})
+			if (filter && filter.search) {
+				if (filter['search']['type'] == 'and') {
+					data = andSearch(data, filter['search']['value']);
+				} else {
+					data = orSearch(data, filter['search']['value']);
 				}
-			} else {
-				if (startIndex) data = data.slice(startIndex, total);
-				if (count) data = data.slice(0, count)
 				
-				result_data = data;
+				const total = data.length;
+				const startIndex = filter.startIndex;
+				const count = filter.count;
+				let result_data = [];
+				
+				if (data.created_ids && data.created_ids.length > 0) {
+					let _nn = (count) ? startIndex : data.length;
+					
+					for (let ii = 0; ii < _nn; ii++) {
+						
+						const selected_item = data[ii];
+						data.created_ids.forEach((fetch_id, index) => {
+							if (fetch_id == selected_item['_id']) {
+								result_data.push({ item: selected_item, position: ii })
+							}
+						})
+					}
+				} else {
+					if (startIndex) data = data.slice(startIndex, total);
+					if (count) data = data.slice(0, count)
+					
+					result_data = data;
+				}
+				filter['startIndex'] = startIndex
+				filter['count'] = count
+				filter['total'] = total
+				return result_data
+			} else {
+				return data
 			}
-			filter['startIndex'] = startIndex
-			filter['count'] = count
-			filter['total'] = total
-			return result_data
 		}
 
 		//. or operator
@@ -247,21 +251,3 @@
 	}
 
 }));
-
-	// return {
-	// 	searchData,
-	// 	andSearch,
-	// 	orSearch,
-	// 	sortData,
-	// 	queryData
-	// }
-		
-// }
-// export = {
-// 	searchData,
-// 	andSearch,
-// 	orSearch,
-// 	sortData,
-// 	queryData
-//   };
-  
