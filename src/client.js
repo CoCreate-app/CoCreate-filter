@@ -1,8 +1,14 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
-import crud from '@cocreate/crud-client';
+import CRUD from '@cocreate/crud-client';
 import {searchData, andSearch, orSearch, sortData, queryData} from './filter'
+
+let crud
+if(CRUD && CRUD.default)
+	crud = CRUD.default
+else
+	crud = CRUD
 
 const CoCreateFilter = {
 	items: new Map(),
@@ -414,9 +420,9 @@ const CoCreateFilter = {
 		delete Item.el
 
 		if (item.filter['is_collection'])
-			crud.readCollections(Item);
+			crud.readCollection(Item);
 		else
-			crud.readDocuments(Item);
+			crud.readDocument(Item);
 	},
 	
 	getMainAttribue: function(el) {
@@ -497,7 +503,7 @@ const CoCreateFilter = {
 		
 		item.filter.startIndex = 0;
 		
-		let data = await crud.readDocuments(item);
+		let data = await crud.readDocument(item);
 		this.exportFile(data);
 	},
 	
@@ -555,8 +561,9 @@ const CoCreateFilter = {
 				if(crud.checkAttrValue(document_id)) {
 					crud.deleteDocument({
 						collection,
-						document_id,
-						'metadata': ''
+						data: {
+							_id: document_id
+						}
 					});
 				}
 			});
