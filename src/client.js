@@ -63,7 +63,7 @@ const CoCreateFilter = {
 			let item_id = data.filter.id;
 			let item = self.items.get(item_id);
 			if (item) {
-				const result_data = data['data'];
+				const result_data = data.document;
 				
 				//. set the intersection observe element
 				let element = document.querySelector(`[${item.filter.attrName}="${item.filter.id}"][fetch-type="scroll"]`);
@@ -468,7 +468,7 @@ const CoCreateFilter = {
 			self.__initFilterElement(el, attribute, name);
 		});
 		if (callback)
-			crud.listen('readDocuments', function(data) {
+			crud.listen('readDocument', function(data) {
 				callback.call(null, data);
 			});
 	},
@@ -512,7 +512,7 @@ const CoCreateFilter = {
 			const file_name = data.collection || 'downloadFile';
 			var a = document.createElement("a");
 			a.style = "display: none";
-			let exportData = JSON.stringify(data.data);
+			let exportData = JSON.stringify(data.document);
 			let blob = new Blob([exportData], { type: "application/json" });	
 			let url = window.URL.createObjectURL(blob);
 			a.href = url;
@@ -561,7 +561,7 @@ const CoCreateFilter = {
 				if(crud.checkAttrValue(document_id)) {
 					crud.deleteDocument({
 						collection,
-						data: {
+						document: {
 							_id: document_id
 						}
 					});
