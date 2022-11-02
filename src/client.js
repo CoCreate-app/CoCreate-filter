@@ -138,8 +138,8 @@ const CoCreateFilter = {
 		// 	item.type = 'name'
 		// }
 
-		let sortName = el.getAttribute('filter-order-name');
-		let sortType = el.getAttribute('filter-order-type') || 'asc';
+		let sortName = el.getAttribute('filter-sort-name');
+		let sortType = el.getAttribute('filter-sort-type') || 'asc';
 		let fetchCount = parseInt(el.getAttribute('fetch-count'));
 
 		item.filter = {
@@ -164,7 +164,6 @@ const CoCreateFilter = {
 			item.filter.type = 'document'
 		if (item.name)
 			item.filter.type = 'name'
-
 
 		if (!isNaN(fetchCount) && fetchCount > 0) {
 			item.filter.count = fetchCount;
@@ -195,7 +194,7 @@ const CoCreateFilter = {
 		for (var i = 0; i < elements.length; i++) {
 			let el = elements[i];
 			let filter_name = el.getAttribute('filter-name');
-			let sortName = el.getAttribute('filter-order-name');
+			let sortName = el.getAttribute('filter-sort-name');
 			if (!this.filterEvents.has(el)) {
 				this.filterEvents.set(el, true);
 				var setEvent = true;
@@ -234,9 +233,9 @@ const CoCreateFilter = {
 	},
 	
 	_applySort: function(item, element, value) {
-		let name = element.getAttribute('filter-order-name');
+		let name = element.getAttribute('filter-sort-name');
 		if (!value)
-			value = element.getAttribute('value') || element.getAttribute('filter-order-type');
+			value = element.getAttribute('value') || element.getAttribute('filter-sort-type');
 		
 		if (!value) return;
 		let valueType = element.getAttribute('filter-value-type') ? element.getAttribute('filter-value-type') : 'string';
@@ -371,7 +370,7 @@ const CoCreateFilter = {
 			
 			e.preventDefault();
 			
-			let sortName = this.getAttribute('filter-order-name');
+			let sortName = this.getAttribute('filter-sort-name');
 			let sortType = 0;
 			let idx = self.getSortByName(item, sortName);
 			
@@ -567,7 +566,7 @@ const CoCreateFilter = {
 observer.init({ 
 	name: 'CoCreateFilterInit', 
 	observe: ['addedNodes'],
-	target: '[filter-name], [filter-order-name]',
+	target: '[filter-name], [filter-sort-name]',
 	callback: function(mutation) {
 		let el = mutation.target;
 		if (el.hasAttribute('fetch-collection')) return;
