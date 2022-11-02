@@ -16,7 +16,7 @@ const CoCreateFilterTesting = {
 	
 	__initSocketEvent: function() {
 		const self = this;
-		CoCreate.socket.listen('readDocuments', function(data) {
+		CoCreate.socket.listen('readDocument', function(data) {
 			self.__renderData(data)
 		})
 
@@ -34,7 +34,7 @@ const CoCreateFilterTesting = {
 		let id = el.getAttribute('data-test_id');
 		if (!id) return;
 		
-		let filter = CoCreate.filter.setFilter(el, this.attrName, 'test');
+		let filter = CoCreate.filter.init(el, this.attrName, 'test');
 		
 		if (filter) {
 			this.items.push({
@@ -43,7 +43,7 @@ const CoCreateFilterTesting = {
 				id: id
 			})
 			
-			el.addEventListener("changeFilterInput", function(e) {
+			el.addEventListener("filterData", function(e) {
 				// self.__removeOldData(item.el)
 				// item.filter.startIndex = 0;
 				// item.filter.isRefresh = true;

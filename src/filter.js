@@ -41,7 +41,8 @@
 					result_data = data;
 				}
 				filter['startIndex'] = startIndex
-				filter['count'] = count
+				if (count)
+					filter['count'] = count
 				filter['total'] = total
 				return result_data
 			} else {

@@ -15,7 +15,6 @@ const CoCreateFilter = {
 	ioInstance: null,
 	moduleAttribues: [],
 	filterEvents: new Map(),
-	module_items : [],
 
 	__init: function() {
 		this.__initIntersection();
@@ -28,15 +27,10 @@ const CoCreateFilter = {
 		this.ioInstance = new IntersectionObserver((entries, observer) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					const attributeInfo = self.getMainAttribue(entry.target);
-					if (attributeInfo.id) {
-						document.dispatchEvent(new CustomEvent('CoCreateFilter-loadMore', {
-							detail: {
-								attrName: attributeInfo.name,
-								attrId: attributeInfo.id
-							}
-						}));
-					}
+					const {attribute, id} = self.getMainAttribue(entry.target);
+					if (attribute, id)
+						self.__runLoadMore(attribute, id);
+		
 					self.ioInstance.unobserve(entry.target);
 				}
 			});
@@ -45,35 +39,36 @@ const CoCreateFilter = {
 		});	
 	},
 	
-	__runLoadMore: function(attrName, id) {
-		if (!id || !attrName) 
+	__runLoadMore: function(attribute, id) {
+		if (!id || !attribute) 
 			return;
 		let item = this.items.get(id)
-		if (!item || item.filter.attrName !== attrName) 
+		if (!item || item.filter.attribute !== attribute) 
 			return;
 		
 		if (item.filter.count > 0) {
-			this.fetchData(item);
+			item.el.dispatchEvent(new CustomEvent("filterData", { detail: filter }));
 		}
 	},
 	
 	__initSocket: function() {
 		const self = this;
-		crud.listen('readDocuments', function(data) {
+		crud.listen('readDocument', function(data) {
+			if (!data.filter || data.filter.id) return;
 			let item_id = data.filter.id;
 			let item = self.items.get(item_id);
 			if (item) {
 				const result_data = data.document;
 				
 				//. set the intersection observe element
-				let element = document.querySelector(`[${item.filter.attrName}="${item.filter.id}"][fetch-type="scroll"]`);
+				let element = document.querySelector(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="scroll"]`);
 				if (result_data.length > 0 && element) {
 					self.ioInstance.observe(element);
 				}
 				
 				// /** render total count **/
 				const totalCount = data.filter.total;
-				const totalElements = document.querySelectorAll(`[${item.filter.attrName}="${item.filter.id}"][fetch-type="total"]`);
+				const totalElements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="total"]`);
 				
 				if (totalElements) {
 					totalElements.forEach((el) => el.innerHTML = totalCount);
@@ -84,72 +79,108 @@ const CoCreateFilter = {
 	
 	__initEvents: function() {
 		const self = this;
-		document.addEventListener('CoCreateFilter-loadMore', function(event) {
-			const attrId = event.detail.attrId;
-			const attrName = event.detail.attrName;
-			self.__runLoadMore(attrName, attrId);
-		});
 		
 		let buttons = document.querySelectorAll('[fetch-type="loadmore"]');
 		buttons.forEach((btn) => {
 			btn.addEventListener('click', function(e) {
 				e.preventDefault();
-				const attributeInfo = self.getMainAttribue(btn);
 
-				if (!attributeInfo.id) return;
-				self.__runLoadMore(attributeInfo.attrName, attributeInfo.attrId);
+				const {attribute, id} = self.getMainAttribue(btn);
+				if (attribute, id);
+					self.__runLoadMore(attribute, id);
 			});
 		});
 	},
 	
-	setFilter: function(el, attrName) {
-			
-		if (!attrName) {
-			return;
-		}
+	init: function(el, attribute) {	
+		if (!el || !attribute) return;
 		
-		let id = el.getAttribute(attrName);
+		let id = el.getAttribute(attribute);
 		
 		if (!id) return;
 		
-		if (!this.moduleAttribues.includes(attrName)) 
-			this.moduleAttribues.push(attrName);
+		if (!this.moduleAttribues.includes(attribute)) 
+			this.moduleAttribues.push(attribute);
 		
-		let collection = el.getAttribute('fetch-collection');
-		
-		let order_name = el.getAttribute('filter-order-name');
-		let order_type = el.getAttribute('filter-order-type') || 'asc';
 
-		let fetch_count = parseInt(el.getAttribute('fetch-count'));
-		
-		let item = {
-			collection,
-			filter: {
-				id,
-				search: {
-					type: 'or',
-					value: []
-				},
-				sort: [],
-				query: [],
-				startIndex: 0,
-				attrName
+		let item = {el};
+
+		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
+		// let attributes = window.CoCreateConfig.attributes;
+		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
+
+		for (let attribute of el.attributes) {
+			let variable = attributes[attribute.name]
+			if (variable) {
+				let object = {[variable]: attribute.value}
+				if (object[variable]) {
+					if (object[variable].includes(",")) {
+						const array = object[variable].split(',');
+						for (let i = 0; i < array.length; i++)
+						array[i].trim()
+						item[variable] = array
+					} else {
+						item[variable] = [object[variable]]
+					}
+				} else {
+					item[variable] = [];
+				}
+	
+			} 
+		}
+
+		// if (el.hasAttribute('fetch-name')) {
+		// 	let name = el.getAttribute('fetch-name');
+		// 	if (name)
+		// 		item.name = name;
+		// 	else
+		// 		item.name = 'names';
+		// 	item.type = 'name'
+		// }
+
+		let sortName = el.getAttribute('filter-order-name');
+		let sortType = el.getAttribute('filter-order-type') || 'asc';
+		let fetchCount = parseInt(el.getAttribute('fetch-count'));
+
+		item.filter = {
+			attribute,
+			id,
+			search: {
+				type: 'or',
+				value: []
 			},
-			el
-		};
-		
-		if (!isNaN(fetch_count) && fetch_count > 0) {
-			item.filter.count = fetch_count;
+			sort: [],
+			query: [],
+			startIndex: 0
+		}
+
+		if (item.database)
+			item.filter.type = 'database'
+		if (item.collection)
+			item.filter.type = 'collection'
+		if (item.index)
+			item.filter.type = 'index'
+		if (item.document)
+			item.filter.type = 'document'
+		if (item.name)
+			item.filter.type = 'name'
+
+
+		if (!isNaN(fetchCount) && fetchCount > 0) {
+			item.filter.count = fetchCount;
 		}
 	
-		if (order_name) {
-			item.filter.sort.push({name: order_name, type: order_type == 'asc' ? 1 : -1 });
+		if (sortName) {
+			item.filter.sort.push({name: sortName, type: sortType == 'asc' ? 1 : -1 });
 		}
 		
-		this.setCheckboxName(item.filter.id, item.filter.attrName);
-		this._initFilter(item);
+		if (!this.items.has(item.filter.id)) {
+			this.setCheckboxName(item.filter.id, item.filter.attribute);
+			this._initFilter(item);
+		}
+
 		this.items.set(item.filter.id, item);
-		// el.filter = item
+		el.filter = item.filter
 		return item;
 	},
 	
@@ -162,36 +193,36 @@ const CoCreateFilter = {
 		}
 		
 		for (var i = 0; i < elements.length; i++) {
-			let f_el = elements[i];
-			let filter_name = f_el.getAttribute('filter-name');
-			let order_name = f_el.getAttribute('filter-order-name');
-			if(!this.filterEvents.has(f_el)){
-				this.filterEvents.set(f_el, true);
+			let el = elements[i];
+			let filter_name = el.getAttribute('filter-name');
+			let sortName = el.getAttribute('filter-order-name');
+			if (!this.filterEvents.has(el)) {
+				this.filterEvents.set(el, true);
 				var setEvent = true;
 			}
-			if (order_name){
-				this._applyOrder(item, f_el);
+			if (sortName) {
+				this._applySort(item, el);
 				if(setEvent)
-					this._initOrderEvent(item, f_el);
+					this._initSortEvent(item, el);
 			}
-			if (filter_name){
-				this._applyFilter(item, f_el, filter_name, event);
+			if (filter_name) {
+				this._applyQuery(item, el, filter_name, event);
 				if(setEvent)
-					this.initInputEvent(item, f_el);
-			}
-			else{
-				this._applySearch(item, f_el);
+					this.initInputEvent(item, el);
+			} else {
+				this._applySearch(item, el);
 				if(setEvent)
-					this.initInputEvent(item, f_el);
+					this.initInputEvent(item, el);
 			}	
 		}
 		if (element) {
-			item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'filter'} }));
+			item.filter.startIndex = 0;
+			item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'filter'} }));
 		}
 	},
 	
 	queryFilters: function(item) {
-		let tmpSelector = '[' + item.filter.attrName + '="' + item.filter.id + '"]';
+		let tmpSelector = '[' + item.filter.attribute + '="' + item.filter.id + '"]';
 		let formInputs = item.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
 		let otherInputs = item.el.ownerDocument.querySelectorAll(tmpSelector);
 	
@@ -202,35 +233,34 @@ const CoCreateFilter = {
 		return elements;
 	},
 	
-	_applyOrder: function(item, element, value) {
-		let f_el = element;
-		let name = f_el.getAttribute('filter-order-name');
+	_applySort: function(item, element, value) {
+		let name = element.getAttribute('filter-order-name');
 		if (!value)
-			value = f_el.getAttribute('value') || f_el.getAttribute('filter-order-type');
+			value = element.getAttribute('value') || element.getAttribute('filter-order-type');
 		
 		if (!value) return;
-		let valueType = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
+		let valueType = element.getAttribute('filter-value-type') ? element.getAttribute('filter-value-type') : 'string';
 
-		let order_type = 0;
+		let sortType = 0;
 		let idx = this.getSortByName(item, name);
-		5
+		
 		if (value == 'asc') {
-			order_type = 1;   
+			sortType = 1;   
 		} else if (value == 'desc') {
-			order_type = -1;
+			sortType = -1;
 		} else {
-			order_type = [];
+			sortType = [];
 		}
-		this.insertArrayObject(item.filter.sort, idx, {name: name, type: order_type, valueType }, order_type);
+		this.insertArrayObject(item.filter.sort, idx, {name: name, type: sortType, valueType }, sortType);
 	},
 
-	_applyFilter: function(item, element, filter_name, event) {
-		let f_el = element;	
-		let filter_operator = f_el.getAttribute('filter-operator') ? f_el.getAttribute('filter-operator') : '$contain';
-		let value_type = f_el.getAttribute('filter-value-type') ? f_el.getAttribute('filter-value-type') : 'string';
+	_applyQuery: function(item, element, filter_name, event) {
+		let el = element;	
+		let filter_operator = el.getAttribute('filter-operator') ? el.getAttribute('filter-operator') : '$contain';
+		let value_type = el.getAttribute('filter-value-type') ? el.getAttribute('filter-value-type') : 'string';
 		// filter_type used for $center $box etc
-		let filter_type = f_el.getAttribute('filter-type');
-		let filter_value = f_el.getAttribute('filter-value');
+		let filter_type = el.getAttribute('filter-type');
+		let filter_value = el.getAttribute('filter-value');
 		// ToDo: if filter value is an array check for each
 		// if (Array.isArray(filter_value)) {}
 		// if (filter_value) {
@@ -238,11 +268,11 @@ const CoCreateFilter = {
 			// 	filter_value = filter_value.replace(/\s/g, '');
 		// }
 		if (!filter_value) {
-			let inputType = f_el.type;
+			let inputType = el.type;
 			filter_value = [];
 		
 			if (inputType == 'checkbox') {
-				var inputGroup = document.querySelectorAll("input[name=" + f_el.name + "]:checked");
+				var inputGroup = document.querySelectorAll("input[name=" + el.name + "]:checked");
 				for (var i = 0; i < inputGroup.length; i++) {
 					filter_value.push(inputGroup[i].value);
 				}
@@ -250,9 +280,9 @@ const CoCreateFilter = {
 			} else if (inputType == 'raido') {
 				
 			} else if (inputType == 'range') {
-				filter_value = [Number(f_el.min), Number(f_el.value)];
+				filter_value = [Number(el.min), Number(el.value)];
 			} else {
-				var value = f_el.value;
+				var value = el.value;
 				if (value_type != 'string') {
 					value = Number(value);
 				}
@@ -265,9 +295,9 @@ const CoCreateFilter = {
 				}
 			}
 		}
-		if (filter_value == '' && !event || event && event.target !== f_el) 
+		if (filter_value == '' && !event || event && event.target !== el) 
 			return;
-		let idx = this.getFilterByName(item, filter_name, filter_operator);
+		let idx = this.getQueryByName(item, filter_name, filter_operator);
 		if (value_type != 'string') {
 			if (Array.isArray(filter_value)) {
 				for (let i = 0; i < filter_value.length; i++) {
@@ -281,14 +311,14 @@ const CoCreateFilter = {
 	},
 	
 	_applySearch: function(item, element) {
-		let input = element;
-		let value_type = input.getAttribute('filter-value-type') ? input.getAttribute('filter-value-type') : 'string';
+		let el = element;
+		let value_type = el.getAttribute('filter-value-type') ? el.getAttribute('filter-value-type') : 'string';
 		let value = null;
 		
-		if (input.type == 'checkbox' && !input.checked) {
+		if (el.type == 'checkbox' && !el.checked) {
 			value = null;
 		} else {
-			value = input.value;
+			value = el.value;
 			if (value_type != 'string') {
 				value = Number(value);
 			}
@@ -298,25 +328,26 @@ const CoCreateFilter = {
 		}
 	},
 	
-	_initOrderEvent: function(item, element) {
+	_initSortEvent: function(item, element) {
 		const self = this;
 		if (element.hasAttribute('toggle-order'))
-			this._initToggleOrderEvent(item, element);
+			this._initSortToggleEvent(item, element);
 		else{
 			if (['A', 'BUTTON'].includes(element.tagName)) {
 				element.addEventListener('click', function(){
-					self._applyOrder(item, element);
+					self._applySort(item, element);
 					if (item.el) {
-						item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+						item.filter.startIndex = 0;
+						item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
 					}
 				});
 			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
-				this._initOrderChangeEvent(item, element);
+				this._initSortChangeEvent(item, element);
 			}
 		}
 	},
 	
-	_initToggleOrderEvent: function(item, element) {
+	_initSortToggleEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function() {
 			let value = this.getAttribute('toggle-order') || '';
@@ -324,47 +355,49 @@ const CoCreateFilter = {
 
 			item.filter.sort = [];
 			
-			self._applyOrder(item, element, value);
+			self._applySort(item, element, value);
 			element.setAttribute('toggle-order', value);
 			
 			if (item.el) {
-				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+				item.filter.startIndex = 0;
+				item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
 			}
 		});
 	},
 	
-	_initOrderChangeEvent: function(item, input) {
+	_initSortChangeEvent: function(item, el) {
 		const self = this;
-		input.addEventListener('change', function(e) {
+		el.addEventListener('change', function(e) {
 			
 			e.preventDefault();
 			
-			let order_by = this.getAttribute('filter-order-name');
-			let order_type = 0;
-			let idx = self.getSortByName(item, order_by);
+			let sortName = this.getAttribute('filter-order-name');
+			let sortType = 0;
+			let idx = self.getSortByName(item, sortName);
 			
 			if (this.value == 'asc') {
-				order_type = 1;   
+				sortType = 1;   
 			} else if (this.value == 'desc') {
-				order_type = -1;
+				sortType = -1;
 			} else {
-				order_type = [];
+				sortType = [];
 			}
 			
-			self.insertArrayObject(item.filter.sort, idx, {name: order_by, type: order_type}, order_type);
+			self.insertArrayObject(item.filter.sort, idx, {name: sortName, type: sortType}, sortType);
 			
 			if (item.el) {
-				item.el.dispatchEvent(new CustomEvent("changeFilterInput", { detail: {type: 'order'} }));
+				item.filter.startIndex = 0;
+				item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
 			}
 		});
 	},
 
-	initInputEvent: function (item, input) {
+	initInputEvent: function (item, el) {
 		var _instance = this;
 		var delayTimer;
-		let contenteditable = input.getAttribute('contenteditable');
-		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(input.tagName) || contenteditable != undefined && contenteditable != 'false'){
-			input.addEventListener('input', function(e) {
+		let contenteditable = el.getAttribute('contenteditable');
+		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName) || contenteditable != undefined && contenteditable != 'false'){
+			el.addEventListener('input', function(e) {
 				e.preventDefault();
 				clearTimeout(delayTimer);
 				delayTimer = setTimeout(function() {
@@ -377,8 +410,8 @@ const CoCreateFilter = {
 		}
 	},
 	
-	setCheckboxName: function (id, attrName) {
-		var forms = document.querySelectorAll('form[' + attrName + '="' + id + '"]');
+	setCheckboxName: function (id, attribute) {
+		var forms = document.querySelectorAll('form[' + attribute + '="' + id + '"]');
 		for (var k = 0; k < forms.length; k++) {
 			
 			var elements = forms[k].querySelectorAll('input[type=checkbox], form input[type=radio]');
@@ -394,7 +427,6 @@ const CoCreateFilter = {
 			
 		}
 	},
-	
 	
 	insertArrayObject: function(data, idx, obj, value) {
 		if (!value) {
@@ -415,26 +447,18 @@ const CoCreateFilter = {
 		return data;
 	},
 	
-	fetchData:function (item) {
-		let Item = {...item}
-		delete Item.el
-
-		if (item.filter['is_collection'])
-			crud.readCollection(Item);
-		else
-			crud.readDocument(Item);
-	},
-	
+	// ToDo: potentially could be removed as attribute can retrived from el.filter
 	getMainAttribue: function(el) {
+		// return {attribute: el.filter.attribute, id: el.filter.id}
 		if (el.hasAttribute('template_id'))
 			return {
-				name : 'template_id',
+				attribute: 'template_id',
 				id: el.getAttribute('template_id')
 			};
 		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" );
 		if (attribute) {
 			return {
-				name : attribute,
+				attribute,
 				id: el.getAttribute(attribute)
 			};
 		} else {
@@ -442,7 +466,7 @@ const CoCreateFilter = {
 		}
 	},
 	
-	getFilterByName: function (item, filterName, filterOperator) {
+	getQueryByName: function (item, filterName, filterOperator) {
 		for (var i = 0; i < item.filter.query.length; i++) {
 			var f = item.filter.query[i];
 			if (f.name == filterName && f.operator == filterOperator) {
@@ -460,42 +484,7 @@ const CoCreateFilter = {
 		}
 		return -1;
 	},
-		
-	init: function({name, attribute, callback}) {
-		let elements = document.querySelectorAll(`[fetch-collection][${attribute}]`);
-		const self = this;
-		elements.forEach((el) => {
-			self.__initFilterElement(el, attribute, name);
-		});
-		if (callback)
-			crud.listen('readDocument', function(data) {
-				callback.call(null, data);
-			});
-	},
-	
-	__initFilterElement: function(el, attribute, name) {
-		let _id = el.getAttribute(attribute);
-		const self = this;
-		if (!_id) return;
-		
-		let filter = this.setFilter(el, attribute, name);
-		
-		if (filter) {
-			this.module_items.push({
-				el: el,
-				filter: filter,
-				id: _id,
-				name: name
-			});
-			
-			el.addEventListener('changeFilterInput', function(e) {
-				self.fetchData(filter);
-			});
-			
-			this.fetchData(filter);
-		}
-	},
-		
+				
 	exportAction: async function(btn) {
 		const item_id = btn.getAttribute('template_id');
 		let item = this.items.get(item_id)

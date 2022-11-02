@@ -160,7 +160,7 @@
 					<h4 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Functions</h4>
 					<ul class="list-style-type:none ">
 						<li class="padding:15px_0px border-bottom:1px_solid_lightgrey">
-							<h4><span>setFilter(elements, mainAttri, type)</span></h4>
+							<h4><span>init(elements, mainAttri, type)</span></h4>
 							<p>To apply filter into the componentis, the component should call this function</p>
 							<div class="padding-left:1rem">
 								<p>- <strong>elements</strong> <span class="cocreate-badge warning">Type:Node</span><span class="cocreate-badge danager">required</span></p>
@@ -179,7 +179,7 @@
 							<p>To fetch the data, the component should call this function.</p>
 							<div class="padding-left:1rem">
 								<p>- <strong>item</strong> <span class="cocreate-badge warning">Type:object</span><span class="cocreate-badge danager">required</span></p>
-								<p>This paramter is the returned value by setFilter() function</p>
+								<p>This paramter is the returned value by init() function</p>
 							</div>
 						</li>
 					</ul>
@@ -193,8 +193,7 @@
 					<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Effects and Styles</h2>
 	
 					<h2 class="border-bottom:1px_solid_lightgrey margin-top:20px padding:5px_0px">Events</h2>
-					<h4><span>changeFilterInput</span><span class="cocreate-badge success"></span></h4>
-					<h4><span>CoCreateFilter-loadMore</span><span class="cocreate-badge success"></span></h4>
+					<h4><span>filterData</span><span class="cocreate-badge success"></span></h4>
 				</div>
 				<div class="flex-grow:1 width:300px padding:0px_10px margin-top:60px border-bottom:1px_solid_lightgrey">
 					<!-- SandBox -->
