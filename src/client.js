@@ -156,8 +156,12 @@ const CoCreateFilter = {
 
 		if (item.database)
 			item.filter.type = 'database'
-		if (item.collection)
-			item.filter.type = 'collection'
+		if (item.collection) {
+			if (item.collection.length > 0)
+				item.filter.type = 'document'
+			else
+				item.filter.type = 'collection'
+		}
 		if (item.index)
 			item.filter.type = 'index'
 		if (item.document)
