@@ -129,15 +129,6 @@ const CoCreateFilter = {
 			} 
 		}
 
-		// if (el.hasAttribute('fetch-name')) {
-		// 	let name = el.getAttribute('fetch-name');
-		// 	if (name)
-		// 		item.name = name;
-		// 	else
-		// 		item.name = 'names';
-		// 	item.type = 'name'
-		// }
-
 		let sortName = el.getAttribute('filter-sort-name');
 		let sortType = el.getAttribute('filter-sort-type') || 'asc';
 		let fetchCount = parseInt(el.getAttribute('fetch-count'));
@@ -157,8 +148,10 @@ const CoCreateFilter = {
 		if (item.database)
 			item.filter.type = 'database'
 		if (item.collection) {
-			if (item.collection.length > 0)
+			if (item.collection.length > 0) {
 				item.filter.type = 'document'
+				item.document = []
+			}
 			else
 				item.filter.type = 'collection'
 		}
@@ -261,15 +254,19 @@ const CoCreateFilter = {
 		let el = element;	
 		let filter_operator = el.getAttribute('filter-operator') ? el.getAttribute('filter-operator') : '$contain';
 		let value_type = el.getAttribute('filter-value-type') ? el.getAttribute('filter-value-type') : 'string';
+		
+		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = el.getAttribute('filter-type');
-		let filter_value = el.getAttribute('filter-value');
+
 		// ToDo: if filter value is an array check for each
 		// if (Array.isArray(filter_value)) {}
 		// if (filter_value) {
 			// if (value_type !== "raw")
 			// 	filter_value = filter_value.replace(/\s/g, '');
-		// }
+		// }		
+		
+		let filter_value = el.getAttribute('filter-value');
 		if (!filter_value) {
 			let inputType = el.type;
 			filter_value = [];
@@ -573,6 +570,7 @@ observer.init({
 	target: '[filter-name], [filter-sort-name]',
 	callback: function(mutation) {
 		let el = mutation.target;
+		// ToDo:needs to check for fetch- attributes
 		if (el.hasAttribute('fetch-collection')) return;
 		let attr = CoCreateFilter.getMainAttribue(el);
 		let item = CoCreateFilter.items.get(attr.id);
@@ -584,7 +582,7 @@ observer.init({
 observer.init({ 
 	name: 'CoCreateFilterObserver', 
 	observe: ['attributes'],
-	attributeName: ['filter-name', 'filter-value'],
+	attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-type', 'filter-type'],
 	callback: function(mutation) {
 		let el = mutation.target;
 		let attr = CoCreateFilter.getMainAttribue(el);
