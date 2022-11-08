@@ -183,6 +183,7 @@ const CoCreateFilter = {
 	_initFilter: function(item, element, event) {
 		let elements = this.queryFilters(item);
 		if (elements){
+			delete item.fetch
 			// item.filter.sort = [];
 			item.filter.query = [];
 			item.filter.search.value = [];
@@ -267,6 +268,8 @@ const CoCreateFilter = {
 		// }		
 		
 		let filter_value = el.getAttribute('filter-value');
+		if (!crud.checkValue(filter_name) || !crud.checkValue(filter_value) || !crud.checkValue(filter_type) || !crud.checkValue(filter_operator))
+			item.fetch = false
 		if (!filter_value) {
 			let inputType = el.type;
 			filter_value = [];
@@ -312,7 +315,9 @@ const CoCreateFilter = {
 	
 	_applySearch: function(item, element) {
 		let el = element;
-		let value_type = el.getAttribute('filter-value-type') ? el.getAttribute('filter-value-type') : 'string';
+		let value_type = el.getAttribute('filter-value-type')
+		if (!value_type)
+			value_type = 'string'
 		let value = null;
 		
 		if (el.type == 'checkbox' && !el.checked) {
