@@ -22,24 +22,10 @@
 				const count = filter.count;
 				let result_data = [];
 				
-				if (data.created_ids && data.created_ids.length > 0) {
-					let _nn = (count) ? startIndex : data.length;
-					
-					for (let ii = 0; ii < _nn; ii++) {
-						
-						const selected_item = data[ii];
-						data.created_ids.forEach((fetch_id, index) => {
-							if (fetch_id == selected_item['_id']) {
-								result_data.push({ item: selected_item, position: ii })
-							}
-						})
-					}
-				} else {
 					if (startIndex) data = data.slice(startIndex, total);
 					if (count) data = data.slice(0, count)
 					
 					result_data = data;
-				}
 				filter['startIndex'] = startIndex
 				if (count)
 					filter['count'] = count
