@@ -543,7 +543,7 @@ const CoCreateFilter = {
 	
 	__deleteDocumentsAction: function(btn) {
 		const collection = btn.getAttribute('collection');
-		if(crud.checkAttrValue(collection)) {
+		if(crud.checkValue(collection)) {
 			const dataTemplateid = btn.getAttribute('template_id');
 			if(!dataTemplateid) return;
 
@@ -552,7 +552,7 @@ const CoCreateFilter = {
 			selectedEls.forEach((el) => {
 				const document_id = el.getAttribute('document_id');
 
-				if(crud.checkAttrValue(document_id)) {
+				if(crud.checkValue(document_id)) {
 					crud.deleteDocument({
 						collection,
 						document: {
