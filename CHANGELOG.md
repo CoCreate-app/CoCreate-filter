@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.2...v1.9.3) (2022-11-21)
+
+
+### Bug Fixes
+
+* replaced document_id with document._id ([4cb86c2](https://github.com/CoCreate-app/CoCreate-filter/commit/4cb86c27adf20614f07627820c9ee0ade467e82f))
+
 ## [1.9.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.1...v1.9.2) (2022-11-21)
 
 
