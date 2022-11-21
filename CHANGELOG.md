@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.1...v1.9.2) (2022-11-21)
+
+
+### Bug Fixes
+
+* bump [@cocreate](https://github.com/cocreate) dependencies ([b1800a8](https://github.com/CoCreate-app/CoCreate-filter/commit/b1800a8340378851f33639cd6ff10ce6f0e576e9))
+
 ## [1.9.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.0...v1.9.1) (2022-11-21)
 
 
