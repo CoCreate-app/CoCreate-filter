@@ -1,3 +1,24 @@
+# [1.9.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.11...v1.9.0) (2022-11-21)
+
+
+### Bug Fixes
+
+* filter-order attributes renamed to filter-sort ([82243bc](https://github.com/CoCreate-app/CoCreate-filter/commit/82243bc9a641dca94467f2ed01052b153a08eba3))
+* if condition for filter.search ([635bbd4](https://github.com/CoCreate-app/CoCreate-filter/commit/635bbd4dcb116886bbaa905effe6cc96823d71c2))
+* if type document or index and no collection is defined return ([441333a](https://github.com/CoCreate-app/CoCreate-filter/commit/441333acef5b027038db1b92a0c39a7b9751a177))
+* if type document set item.document ([4bdf812](https://github.com/CoCreate-app/CoCreate-filter/commit/4bdf8124be3701bf0b4e78f6c94c7d58d46a6655))
+* removed created_ids ([2f3111b](https://github.com/CoCreate-app/CoCreate-filter/commit/2f3111bdb89da9656dec9a017f2d996fc720f3ef))
+* renamed crud.checkAttrValue to crud.checkValue ([527fa9c](https://github.com/CoCreate-app/CoCreate-filter/commit/527fa9c7bbb639dd682102f678b94e29c3ae468e))
+* renamed data.data to data.document ([3d822b6](https://github.com/CoCreate-app/CoCreate-filter/commit/3d822b6f95f85da264ea0c3b07d8a09853aa1993))
+* update crud functions to receive an array of objects as the response ([3541ed3](https://github.com/CoCreate-app/CoCreate-filter/commit/3541ed3c73cf52144877222a536b4a99b551a3e6))
+
+
+### Features
+
+* checkValue for {{template}} if exist return boolean fetch false to prevent components from fetching ([1805ee2](https://github.com/CoCreate-app/CoCreate-filter/commit/1805ee2bc69199321fbe90f4d44d665f152930bf))
+* renamed changeFilterInput to filterData, support for fetching and rendering multiple database, collection, index and document ([5398f57](https://github.com/CoCreate-app/CoCreate-filter/commit/5398f57f72af09f5af4e8120e0ec3c67ff89fcca))
+* type = document if collection is not empty ([9bc6fb7](https://github.com/CoCreate-app/CoCreate-filter/commit/9bc6fb767f0231bdaeaf5bb54d5e938a052600eb))
+
 ## [1.8.11](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.8.10...v1.8.11) (2022-10-02)
 
 
