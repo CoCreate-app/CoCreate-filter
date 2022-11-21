@@ -1,3 +1,10 @@
+## [1.9.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.3...v1.9.4) (2022-11-21)
+
+
+### Bug Fixes
+
+* @cocreate/docs bug fix ([365ce21](https://github.com/CoCreate-app/CoCreate-filter/commit/365ce219c4437107183b3ca008574550ea81b5ab))
+
 ## [1.9.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.2...v1.9.3) (2022-11-21)
 
 
