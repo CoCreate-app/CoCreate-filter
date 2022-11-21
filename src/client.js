@@ -98,12 +98,10 @@ const CoCreateFilter = {
 		let id = el.getAttribute(attribute);
 		
 		if (!id) return;
+		let item = this.items.get(id) || {el};
 		
 		if (!this.moduleAttribues.includes(attribute)) 
 			this.moduleAttribues.push(attribute);
-		
-
-		let item = {el};
 
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
@@ -129,20 +127,20 @@ const CoCreateFilter = {
 			} 
 		}
 
-		let sortName = el.getAttribute('filter-sort-name');
-		let sortType = el.getAttribute('filter-sort-type') || 'asc';
 		let fetchCount = parseInt(el.getAttribute('fetch-count'));
 
-		item.filter = {
-			attribute,
-			id,
-			search: {
-				type: 'or',
-				value: []
-			},
-			sort: [],
-			query: [],
-			startIndex: 0
+		if (!item.filter) {
+			item.filter = {
+				attribute,
+				id,
+				search: {
+					type: 'or',
+					value: []
+				},
+				sort: [],
+				query: [],
+				startIndex: 0
+			}	
 		}
 
 		if (item.database)
@@ -161,16 +159,17 @@ const CoCreateFilter = {
 			item.filter.type = 'document'
 		if (item.name)
 			item.filter.type = 'name'
+		
+		if (['index', 'document'].includes(item.filter.type) && !item.collection.length)
+			return
 
 		if (!isNaN(fetchCount) && fetchCount > 0) {
 			item.filter.count = fetchCount;
 		}
-	
-		if (sortName) {
-			item.filter.sort.push({name: sortName, type: sortType == 'asc' ? 1 : -1 });
-		}
-		
+			
 		if (!this.items.has(item.filter.id)) {
+			// if (sortName)
+			// 	item.filter.sort.push({name: sortName, type: sortType == 'asc' ? 1 : -1 });	
 			this.setCheckboxName(item.filter.id, item.filter.attribute);
 			this._initFilter(item);
 		}
