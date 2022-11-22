@@ -1,3 +1,11 @@
+## [1.9.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.4...v1.9.5) (2022-11-22)
+
+
+### Bug Fixes
+
+* apply src: {{source}} to CoCreate.config ([1b5d973](https://github.com/CoCreate-app/CoCreate-filter/commit/1b5d973b2b00d8402d587e806dd3eef9e0710005))
+* workflow docs ([78f6f17](https://github.com/CoCreate-app/CoCreate-filter/commit/78f6f17c5c18cd3b4e9f528435f9d061af554060))
+
 ## [1.9.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.3...v1.9.4) (2022-11-21)
 
 
