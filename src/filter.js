@@ -172,54 +172,61 @@
 			return false;
 		}
 		if (Array.isArray(item)) return false;
-		query.forEach(({name, operator, type, value}) => {
-			// ToDo: if fieldValue is an array check for each
-			const fieldValue = item[name];
-			switch (operator) {
-				case '$contain':
-					// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-					if (fieldValue && !fieldValue.includes(value)) flag = false; 
-					break;
-				case '$range':
-					if (value !== null && value !== null) {
-						if (value[0] > fieldValue || value[1] <= fieldValue)
+		for (let i = 0; i < query.length; i++) {
+			let fieldValue = item[query[i].name];
+			if (fieldValue == undefined) 
+				fieldValue = ''
+			let values = query[i].value
+			if (!Array.isArray(values))
+				values = [values] 
+			
+			for (let value of values) {
+				switch (query[i].operator) {
+					case '$contain':
+						if (!fieldValue.includes(value)) 
 							flag = false;
-					} else if (item.value[0] == null && value[1] >= fieldValue) {
-						flag = false;
-					} else if (item.value[1] == null && value[0] <= fieldValue) {
-						flag = false;
-					}
-					break;
-				case '$eq':
-					if (fieldValue != value) flag = false; 
-					break;
-				case '$ne':
-					if (fieldValue == value) flag = false;
-					break;
-				case '$lt':
-					if (fieldValue >= value) flag = false;
-					break;
-				case '$lte':
-					if (fieldValue > value) flag = false;
-					break;
-				case '$gt':
-					if (fieldValue <= value) flag = false;
-					break;
-				case '$gte':
-					if (fieldValue < value) flag = false;
-					break;
-				case '$in':
-					if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-					break;
-				case '$nin':
-					if (Array.isArray(fieldValue) && fieldValue.some(x => value.includes(x))) flag = false;
-					break;
-				default:
-					// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
-					if (fieldValue && !fieldValue.includes(value)) flag = false; 
-					break;
+						break;
+					case '$range':
+						if (value !== null && value !== null) {
+							if (value[0] > fieldValue || value[1] <= fieldValue)
+								flag = false;
+						} else if (item.value[0] == null && value[1] >= fieldValue) {
+							flag = false;
+						} else if (item.value[1] == null && value[0] <= fieldValue) {
+							flag = false;
+						}
+						break;
+					case '$eq':
+						if (fieldValue != value) flag = false; 
+						break;
+					case '$ne':
+						if (fieldValue == value) flag = false;
+						break;
+					case '$lt':
+						if (fieldValue >= value) flag = false;
+						break;
+					case '$lte':
+						if (fieldValue > value) flag = false;
+						break;
+					case '$gt':
+						if (fieldValue <= value) flag = false;
+						break;
+					case '$gte':
+						if (fieldValue < value) flag = false;
+						break;
+					case '$in':
+						if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
+						break;
+					case '$nin':
+						if (Array.isArray(fieldValue) && fieldValue.some(x => value.includes(x))) flag = false;
+						break;
+					default:
+						// if (!Array.isArray(fieldValue) || !fieldValue.some(x => value.includes(x))) flag = false;
+						if (fieldValue && !fieldValue.includes(value)) flag = false; 
+						break;
+				}
 			}
-		});
+		}
 		return flag;
 	}
 	return {
