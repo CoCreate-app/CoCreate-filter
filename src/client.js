@@ -5,7 +5,7 @@ import CRUD from '@cocreate/crud-client';
 import {searchData, andSearch, orSearch, sortData, queryData} from './filter'
 
 let crud
-if(CRUD && CRUD.default)
+if (CRUD && CRUD.default)
 	crud = CRUD.default
 else
 	crud = CRUD
@@ -198,16 +198,16 @@ const CoCreateFilter = {
 			}
 			if (sortName) {
 				this._applySort(item, el);
-				if(setEvent)
+				if (setEvent)
 					this._initSortEvent(item, el);
 			}
 			if (filter_name) {
 				this._applyQuery(item, el, filter_name, event);
-				if(setEvent)
+				if (setEvent)
 					this.initInputEvent(item, el);
 			} else {
 				this._applySearch(item, el);
-				if(setEvent)
+				if (setEvent)
 					this.initInputEvent(item, el);
 			}	
 		}
@@ -542,15 +542,15 @@ const CoCreateFilter = {
 	
 	__deleteDocumentsAction: function(btn) {
 		const collection = btn.getAttribute('collection');
-		if(crud.checkValue(collection)) {
+		if (crud.checkValue(collection)) {
 			const template_id = btn.getAttribute('template_id');
-			if(!template_id) return;
+			if (!template_id) return;
 
 			let _ids = []
 			const selectedEls = document.querySelectorAll(`.selected[templateid="${template_id}"]`);
 			for (let i = 0; i < selectedEls.length; i++) {
 				const _id = selectedEls[i].getAttribute('document_id');
-				if(crud.checkValue(_id))
+				if (crud.checkValue(_id))
 					_ids.push({_id})
 			}
 
