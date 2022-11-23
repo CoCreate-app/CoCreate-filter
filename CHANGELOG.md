@@ -1,3 +1,11 @@
+# [1.10.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.6...v1.10.0) (2022-11-23)
+
+
+### Features
+
+* deleteDocumentsAction now sends one message containg an array of documents ([2e2776d](https://github.com/CoCreate-app/CoCreate-filter/commit/2e2776de6fc7763928e6b957f7e19cb04eda1590))
+* improved querying ([8adda10](https://github.com/CoCreate-app/CoCreate-filter/commit/8adda10d3331e63827974004b664c91aa4784d8a))
+
 ## [1.9.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.9.5...v1.9.6) (2022-11-22)
 
 
