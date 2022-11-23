@@ -543,27 +543,29 @@ const CoCreateFilter = {
 	__deleteDocumentsAction: function(btn) {
 		const collection = btn.getAttribute('collection');
 		if(crud.checkValue(collection)) {
-			const dataTemplateid = btn.getAttribute('template_id');
-			if(!dataTemplateid) return;
+			const template_id = btn.getAttribute('template_id');
+			if(!template_id) return;
 
-			const selectedEls = document.querySelectorAll(`.selected[templateid="${dataTemplateid}"]`);
+			let _ids = []
+			const selectedEls = document.querySelectorAll(`.selected[templateid="${template_id}"]`);
+			for (let i = 0; i < selectedEls.length; i++) {
+				const _id = selectedEls[i].getAttribute('document_id');
+				if(crud.checkValue(_id))
+					_ids.push({_id})
+			}
 
-			selectedEls.forEach((el) => {
-				const document_id = el.getAttribute('document_id');
+			if (_ids.length > 0) {
+				crud.deleteDocument({
+					collection,
+					document: _ids
+				}).then(() => {
+					document.dispatchEvent(new CustomEvent('deletedDocuments', {
+						detail: {}
+					}));
+				})
+			}
 
-				if(crud.checkValue(document_id)) {
-					crud.deleteDocument({
-						collection,
-						document: {
-							_id: document_id
-						}
-					});
-				}
-			});
-
-			document.dispatchEvent(new CustomEvent('deletedDocuments', {
-				detail: {}
-			}));
+			
 		}
 	},
 };
