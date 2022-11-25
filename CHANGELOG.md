@@ -1,3 +1,11 @@
+## [1.10.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.10.3...v1.10.4) (2022-11-25)
+
+
+### Bug Fixes
+
+* bump dependencies ([8a2b481](https://github.com/CoCreate-app/CoCreate-filter/commit/8a2b481aec7f609bcac44d6df025697353ec5752))
+* CoCreate.crud.default removed bug causing default object ([b8b7524](https://github.com/CoCreate-app/CoCreate-filter/commit/b8b75249393f229745cabd3df5d665b5acd1234b))
+
 ## [1.10.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.10.2...v1.10.3) (2022-11-24)
 
 
