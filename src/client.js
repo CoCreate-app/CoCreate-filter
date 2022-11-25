@@ -1,14 +1,8 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
-import CRUD from '@cocreate/crud-client';
+import crud from '@cocreate/crud-client';
 import {searchData, andSearch, orSearch, sortData, queryData} from './filter'
-
-let crud
-if (CRUD && CRUD.default)
-	crud = CRUD.default
-else
-	crud = CRUD
 
 const CoCreateFilter = {
 	items: new Map(),

@@ -1,14 +1,15 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         define([], function() {
-        	return factory(window)
+        	return factory(true)
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory({});
+        module.exports = factory(false);
     } else {
-        root.returnExports = factory(window);
+        root.returnExports = factory(true);
   	}
-}(typeof self !== 'undefined' ? self : this, function (wnd) {
+}(typeof self !== 'undefined' ? self : this, function (isBrowser) {
+
 	function searchData(data, filter) {
 		if (filter && filter.search) {
 			if (filter['search']['type'] == 'and') {
