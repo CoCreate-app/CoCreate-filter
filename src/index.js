@@ -6,84 +6,22 @@ import {searchData, andSearch, orSearch, sortData, queryData} from '@cocreate/ut
 
 const CoCreateFilter = {
 	items: new Map(),
-	ioInstance: null,
-	moduleAttribues: [],
 	filterEvents: new Map(),
-
-	__init: function() {
-		this.__initIntersection();
-		this.__initSocket();
-		this.__initEvents();
-	},
+	intersectionObserver: null,
 	
-	__initIntersection: function() {
+	initIntersectionObserver: function() {
 		const self = this;
-		this.ioInstance = new IntersectionObserver((entries, observer) => {
+		this.intersectionObserver = new IntersectionObserver((entries, observer) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					const {attribute, id} = self.getMainAttribue(entry.target);
-					if (attribute, id)
-						self.__runLoadMore(attribute, id);
-		
-					self.ioInstance.unobserve(entry.target);
+					let item = entry.target['filter']
+					self.loadMore(item);
+					self.intersectionObserver.unobserve(entry.target);
 				}
 			});
 		}, {
 			threshold: 1
 		});	
-	},
-	
-	__runLoadMore: function(attribute, id) {
-		if (!id || !attribute) 
-			return;
-		let item = this.items.get(id)
-		if (!item || item.filter.attribute !== attribute) 
-			return;
-		
-		if (item.filter.count > 0) {
-			item.el.dispatchEvent(new CustomEvent("filterData", { detail: filter }));
-		}
-	},
-	
-	__initSocket: function() {
-		const self = this;
-		crud.listen('readDocument', function(data) {
-			if (!data.filter || data.filter.id) return;
-			let item_id = data.filter.id;
-			let item = self.items.get(item_id);
-			if (item) {
-				const result_data = data.document;
-				
-				//. set the intersection observe element
-				let element = document.querySelector(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="scroll"]`);
-				if (result_data.length > 0 && element) {
-					self.ioInstance.observe(element);
-				}
-				
-				// /** render total count **/
-				const totalCount = data.filter.total;
-				const totalElements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="total"]`);
-				
-				if (totalElements) {
-					totalElements.forEach((el) => el.innerHTML = totalCount);
-				}
-			}
-		});
-	},
-	
-	__initEvents: function() {
-		const self = this;
-		
-		let buttons = document.querySelectorAll('[fetch-type="loadmore"]');
-		buttons.forEach((btn) => {
-			btn.addEventListener('click', function(e) {
-				e.preventDefault();
-
-				const {attribute, id} = self.getMainAttribue(btn);
-				if (attribute, id);
-					self.__runLoadMore(attribute, id);
-			});
-		});
 	},
 	
 	init: function(el, attribute) {	
@@ -94,9 +32,6 @@ const CoCreateFilter = {
 		if (!id) return;
 		let item = this.items.get(id) || {el};
 		
-		if (!this.moduleAttribues.includes(attribute)) 
-			this.moduleAttribues.push(attribute);
-
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
 		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
@@ -161,11 +96,10 @@ const CoCreateFilter = {
 			item.filter.count = fetchCount;
 		}
 			
-		if (!this.items.has(item.filter.id)) {
-			// if (sortName)
-			// 	item.filter.sort.push({name: sortName, type: sortType == 'asc' ? 1 : -1 });	
+		if (!this.items.has(item.filter.id)) {	
 			this.setCheckboxName(item.filter.id, item.filter.attribute);
 			this._initFilter(item);
+			this._initLoadMore(item);
 		}
 
 		this.items.set(item.filter.id, item);
@@ -207,7 +141,7 @@ const CoCreateFilter = {
 		}
 		if (element) {
 			item.filter.startIndex = 0;
-			item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'filter'} }));
+			item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'filter'} }));
 		}
 	},
 	
@@ -328,7 +262,7 @@ const CoCreateFilter = {
 	
 	_initSortEvent: function(item, element) {
 		const self = this;
-		if (element.hasAttribute('toggle-order'))
+		if (element.hasAttribute('filter-sort-toggle'))
 			this._initSortToggleEvent(item, element);
 		else{
 			if (['A', 'BUTTON'].includes(element.tagName)) {
@@ -336,7 +270,7 @@ const CoCreateFilter = {
 					self._applySort(item, element);
 					if (item.el) {
 						item.filter.startIndex = 0;
-						item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
+						item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
 					}
 				});
 			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
@@ -348,17 +282,17 @@ const CoCreateFilter = {
 	_initSortToggleEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function() {
-			let value = this.getAttribute('toggle-order') || '';
+			let value = this.getAttribute('filter-sort-toggle') || '';
 			value = value === 'asc' ? 'desc' : 'asc';
 
 			item.filter.sort = [];
 			
 			self._applySort(item, element, value);
-			element.setAttribute('toggle-order', value);
+			element.setAttribute('filter-sort-toggle', value);
 			
 			if (item.el) {
 				item.filter.startIndex = 0;
-				item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
+				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
 			}
 		});
 	},
@@ -385,14 +319,14 @@ const CoCreateFilter = {
 			
 			if (item.el) {
 				item.filter.startIndex = 0;
-				item.el.dispatchEvent(new CustomEvent("filterData", { detail: {type: 'sort'} }));
+				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
 			}
 		});
 	},
 
 	initInputEvent: function (item, el) {
-		var _instance = this;
-		var delayTimer;
+		const self = this;
+		let delayTimer;
 		let contenteditable = el.getAttribute('contenteditable');
 		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName) || contenteditable != undefined && contenteditable != 'false'){
 			el.addEventListener('input', function(e) {
@@ -401,13 +335,59 @@ const CoCreateFilter = {
 				delayTimer = setTimeout(function() {
 					let element = e.target;
 					if (element.hasAttribute('template_id') || element.form && element.form.hasAttribute('template_id'))
-						_instance._initFilter(item, element, e);
+						self._initFilter(item, element, e);
 				}, 500);
 	
 			});
 		}
 	},
+
+	_initLoadMore: function(item) {
+		const self = this;
+
+		item.el.addEventListener('fetchedData', () => {
 	
+			const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type]`);
+			for (let i = 0; i < elements.length; i++) {
+				elements[i]['filter'] = item
+				let type = elements[i].getAttribute('fetch-type')
+				switch(type) {
+					case 'scroll':
+						self.intersectionObserver.observe(elements[i])
+						break;
+					case 'fetched':
+						elements[i].setValue(item.filter.startIndex)
+					  break;
+					default:
+						if (type && type != 'loadmore')
+							elements[i].setValue(item.filter[type])
+				}
+			}
+		});
+
+		let buttons = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="loadmore"]`);
+		buttons.forEach((btn) => {
+			self.initLoadMoreEvent(btn, item)
+		});
+
+	},
+
+	initLoadMoreEvent: function(element, item) {
+		const self = this;
+		element.addEventListener('click', function(e) {
+			self.loadMore(item);
+		});
+	},
+
+	loadMore: function(item) {
+		if (!item) 
+			return;
+		
+		if (item.filter.total > item.filter.startIndex ) {
+			item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'loadmore'} }));
+		}
+	},
+
 	setCheckboxName: function (id, attribute) {
 		var forms = document.querySelectorAll('form[' + attribute + '="' + id + '"]');
 		for (var k = 0; k < forms.length; k++) {
@@ -445,22 +425,10 @@ const CoCreateFilter = {
 		return data;
 	},
 	
-	// ToDo: potentially could be removed as attribute can retrived from el.filter
-	getMainAttribue: function(el) {
-		// return {attribute: el.filter.attribute, id: el.filter.id}
-		if (el.hasAttribute('template_id'))
-			return {
-				attribute: 'template_id',
-				id: el.getAttribute('template_id')
-			};
-		const attribute = this.moduleAttribues.find((attr) => (el.getAttribute(attr) || "") !== "" );
-		if (attribute) {
-			return {
-				attribute,
-				id: el.getAttribute(attribute)
-			};
-		} else {
-			return {};
+	getFilter: function(el) {
+		for (let item of this.items.values()) {
+			if (item.el == el)
+				return item
 		}
 	},
 	
@@ -488,31 +456,44 @@ const CoCreateFilter = {
 		let item = this.items.get(item_id)
 		if (!item) return;
 		
-		item.filter.startIndex = 0;
 		
-		let data = await crud.readDocument(item);
+		let Item = new Object(item)
+		Item.filter.startIndex = 0;
+		delete Item.el
+		delete Item.count
+
+
+		let data = await crud.readDocument(Item);
 		this.exportFile(data);
 	},
 	
 	exportFile: function(data) {
-		if (window.document) {
-			const file_name = data.collection || 'downloadFile';
-			var a = document.createElement("a");
-			a.style = "display: none";
-			let exportData = JSON.stringify(data.document);
-			let blob = new Blob([exportData], { type: "application/json" });	
-			let url = window.URL.createObjectURL(blob);
-			a.href = url;
-			a.download = file_name;
-			document.body.appendChild(a);
-			a.click();
-			window.URL.revokeObjectURL(url);
-			a.remove();		
-		}
+		let file_name = data.type || 'download';
+		let exportData = JSON.stringify(data.document, null, 4);
+		let blob = new Blob([exportData], { type: "application/json" });	
+		let url = URL.createObjectURL(blob);
+
+		let link = document.createElement("a");
+
+		link.href = url;
+		link.download = file_name;
+
+		document.body.appendChild(link);
+
+		link.dispatchEvent(
+			new MouseEvent('click', { 
+				bubbles: true, 
+				cancelable: true, 
+				view: window 
+			})
+		);
+
+		URL.revokeObjectURL(url);
+		link.remove();		
+	
     	document.dispatchEvent(new CustomEvent('exported', {
 			detail: {}
 		}));
-
 	},
 
 	importAction: function(btn) {
@@ -569,11 +550,9 @@ observer.init({
 	observe: ['addedNodes'],
 	target: '[filter-name], [filter-sort-name]',
 	callback: function(mutation) {
-		let el = mutation.target;
-		// ToDo:needs to check for fetch- attributes
+		// ToDo: needs to check for fetch- attributes
 		if (el.hasAttribute('fetch-collection')) return;
-		let attr = CoCreateFilter.getMainAttribue(el);
-		let item = CoCreateFilter.items.get(attr.id);
+		let item = CoCreateFilter.getFilter(mutation.target);
 		if (item)
 			CoCreateFilter._initFilter(item, mutation.target);
 	}
@@ -584,9 +563,7 @@ observer.init({
 	observe: ['attributes'],
 	attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-type', 'filter-type'],
 	callback: function(mutation) {
-		let el = mutation.target;
-		let attr = CoCreateFilter.getMainAttribue(el);
-		let item = CoCreateFilter.items.get(attr.id);
+		let item = CoCreateFilter.getFilter(mutation.target);
 		if (item)
 			CoCreateFilter._initFilter(item, mutation.target);
 	}
@@ -616,8 +593,7 @@ action.init({
 	}
 });
 
-CoCreateFilter.__init();
- 
+CoCreateFilter.initIntersectionObserver()
 export default {
   ...CoCreateFilter,
   searchData,

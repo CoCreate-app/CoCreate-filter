@@ -4,30 +4,26 @@
         <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
         <title>Filter | CoCreateJS</title>
         <!-- CoCreate CSS CDN -->
-        <link rel="stylesheet" href="https://cdn.cocreate.app/filter/latest/CoCreate-filter.min.css" type="text/css"/>
+        <!-- <link rel="stylesheet" href="https://cdn.cocreate.app/filter/latest/CoCreate-filter.min.css" type="text/css"/> -->
     
     </head>
     <body>
        
-        <div class="padding:10px">
-            <input class="floating-label" data-test_id="filter_test" placeholder="Search">
-            <input class="floating-label" data-test_id="filter_test" placeholder="Color" filter-name="color" >
-        </div>
+    <div class="padding:10px">
+        <input class="floating-label" template_id="filter_test" placeholder="Search">
+        <input class="floating-label" template_id="filter_test" placeholder="Name" filter-name="fullname" >
+    </div>
         
-    <div class="display:flex flex-wrap:wrap" fetch-collection="module_activity" data-test_id="filter_test" fetch-count="10" >
+    <div class="display:flex flex-wrap:wrap" fetch-collection="contacts" template_id="filter_test" fetch-count="5" >
       
-        <div class="card template margin:10px flex-grow:1 min-width:250px" data-test_id="filter_test">
-          <img name="name" document_id="" src="http://via.placeholder.com/250x250/BF00FF/ffffff/" width="100%" alt="...">
-          <div class="padding:15px">
-            <h5>{{document.name}}</h5>
-            <p class="" document_id="{{document._id}}" name="color"></p>
-            <p class="" document_id="{{document._id}}" name="price">$0</p>
-            <p class="" document_id="{{document._id}}" name="description"></p>
-
-            <a href="#" class="btn btn-primary">More details</a>
-          </div>
+      <div class="card template margin:10px flex-grow:1 min-width:250px" template_id="filter_test">
+        <div class="padding:15px">
+          <h5>{{document.name}}</h5>
+          <p document_id="{{document._id}}" name="color">{{document.fullname}}</p>
+          <p document_id="{{document._id}}" name="name">{{document._id}}</p>
         </div>
       </div>
+    </div>
         
     
     <!--<script src="../dist/CoCreate-filter.js"></script>-->

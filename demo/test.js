@@ -43,7 +43,7 @@ const CoCreateFilterTesting = {
 				id: id
 			})
 			
-			el.addEventListener("filterData", function(e) {
+			el.addEventListener("fetchData", function(e) {
 				// self.__removeOldData(item.el)
 				// item.filter.startIndex = 0;
 				// item.filter.isRefresh = true;
