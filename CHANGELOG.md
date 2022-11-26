@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.10.5...v1.11.0) (2022-11-26)
+
+
+### Features
+
+* export as JSON, loadmore on scroll or btn ([18fb87f](https://github.com/CoCreate-app/CoCreate-filter/commit/18fb87f05c247a32a250e4f869e50d9841436755))
+
 ## [1.10.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.10.4...v1.10.5) (2022-11-25)
 
 
