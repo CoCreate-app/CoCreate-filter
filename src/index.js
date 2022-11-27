@@ -56,8 +56,6 @@ const CoCreateFilter = {
 			} 
 		}
 
-		let fetchCount = parseInt(el.getAttribute('fetch-count'));
-
 		if (!item.filter) {
 			item.filter = {
 				attribute,
@@ -92,8 +90,9 @@ const CoCreateFilter = {
 		if (['index', 'document'].includes(item.filter.type) && !item.collection.length)
 			return
 
-		if (!isNaN(fetchCount) && fetchCount > 0) {
-			item.filter.count = fetchCount;
+		let fetchLimit = parseInt(el.getAttribute('fetch-limit'));
+		if (!isNaN(fetchLimit)) {
+			item.filter.limit = fetchLimit;
 		}
 			
 		if (!this.items.has(item.filter.id)) {	
@@ -383,9 +382,7 @@ const CoCreateFilter = {
 		if (!item) 
 			return;
 		
-		if (item.filter.total > item.filter.startIndex ) {
-			item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'loadmore'} }));
-		}
+		item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'loadmore'} }));
 	},
 
 	setCheckboxName: function (id, attribute) {
