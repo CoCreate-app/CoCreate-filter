@@ -2,6 +2,7 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
+import '@cocreate/element-prototype';
 import {searchData, andSearch, orSearch, sortData, queryData} from '@cocreate/utils'
 
 const CoCreateFilter = {
@@ -117,7 +118,7 @@ const CoCreateFilter = {
 		
 		for (var i = 0; i < elements.length; i++) {
 			let el = elements[i];
-			let filter_name = el.getAttribute('filter-name');
+			let filterName = el.getAttribute('filter-name');
 			let sortName = el.getAttribute('filter-sort-name');
 			if (!this.filterEvents.has(el)) {
 				this.filterEvents.set(el, true);
@@ -127,12 +128,11 @@ const CoCreateFilter = {
 				this._applySort(item, el);
 				if (setEvent)
 					this._initSortEvent(item, el);
-			}
-			if (filter_name) {
-				this._applyQuery(item, el, filter_name, event);
+			} else if (filterName) {
+				this._applyQuery(item, el, filterName, event);
 				if (setEvent)
 					this.initInputEvent(item, el);
-			} else {
+			} else if (!el.hasAttribute('actions') && !el.hasAttribute('fetch-type') && !el.classList.contains('template')) {
 				this._applySearch(item, el);
 				if (setEvent)
 					this.initInputEvent(item, el);
@@ -177,83 +177,45 @@ const CoCreateFilter = {
 		this.insertArrayObject(item.filter.sort, idx, {name: name, type: sortType, valueType }, sortType);
 	},
 
-	_applyQuery: function(item, element, filter_name, event) {
-		let el = element;	
-		let filter_operator = el.getAttribute('filter-operator') ? el.getAttribute('filter-operator') : '$contain';
-		let value_type = el.getAttribute('filter-value-type') ? el.getAttribute('filter-value-type') : 'string';
+	_applyQuery: function(item, element, filterName, event) {
+		let filterOperator = element.getAttribute('filter-operator') || '$contain'
+		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		
 		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
-		let filter_type = el.getAttribute('filter-type');
+		let filter_type = element.getAttribute('filter-type');		
+		let filterValue = element.getAttribute('filter-value');
+		if (!crud.checkValue(filterName) || !crud.checkValue(filterValue) || !crud.checkValue(filter_type) || !crud.checkValue(filterOperator))
+			item.fetch = false
+		if (!filterValue)
+			filterValue = element.getValue()
 
 		// ToDo: if filter value is an array check for each
-		// if (Array.isArray(filter_value)) {}
-		// if (filter_value) {
-			// if (value_type !== "raw")
-			// 	filter_value = filter_value.replace(/\s/g, '');
-		// }		
-		
-		let filter_value = el.getAttribute('filter-value');
-		if (!crud.checkValue(filter_name) || !crud.checkValue(filter_value) || !crud.checkValue(filter_type) || !crud.checkValue(filter_operator))
-			item.fetch = false
-		if (!filter_value) {
-			let inputType = el.type;
-			filter_value = [];
-		
-			if (inputType == 'checkbox') {
-				var inputGroup = document.querySelectorAll("input[name=" + el.name + "]:checked");
-				for (var i = 0; i < inputGroup.length; i++) {
-					filter_value.push(inputGroup[i].value);
-				}
-	
-			} else if (inputType == 'raido') {
-				
-			} else if (inputType == 'range') {
-				filter_value = [Number(el.min), Number(el.value)];
-			} else {
-				var value = el.value;
-				if (value_type != 'string') {
-					value = Number(value);
-				}
-				if (value != "none") {
-					filter_value = [value];
-				}
-				
-				if (value_type === "raw") {
-					filter_value = value;
+		if (Array.isArray(filterValue)) {
+			for (let i = 0; i < filterValue.length; i++) {
+				switch (filterValueType) {
+					case 'number':
+						filterValue[i] = Number(filterValue[i]);
+						break
 				}
 			}
+		} else {
+			switch (filterValueType) {
+				case 'number':
+					filterValue[i] = Number(filterValue[i]);
+					break
+			}
 		}
-		if (filter_value == '' && !event || event && event.target !== el) 
+		if (filterValue == '' && !event || event && event.target !== element) 
 			return;
-		let idx = this.getQueryByName(item, filter_name, filter_operator);
-		if (value_type != 'string') {
-			if (Array.isArray(filter_value)) {
-				for (let i = 0; i < filter_value.length; i++) {
-					filter_value[i] = Number(filter_value[i]);
-				}
-			}
-			else
-				filter_value = Number(filter_value)
-		}
-		this.insertArrayObject(item.filter.query, idx, {name: filter_name, value: filter_value, operator: filter_operator, type: filter_type});
+		let idx = this.getQueryByName(item, filterName, filterOperator);
+		this.insertArrayObject(item.filter.query, idx, {name: filterName, value: filterValue, operator: filterOperator, type: filter_type});
 	},
 	
 	_applySearch: function(item, element) {
-		let el = element;
-		let value_type = el.getAttribute('filter-value-type')
-		if (!value_type)
-			value_type = 'string'
-		let value = null;
-		
-		if (el.type == 'checkbox' && !el.checked) {
-			value = null;
-		} else {
-			value = el.value;
-			if (value_type != 'string') {
-				value = Number(value);
-			}
-		}
+		let filterOperator = element.getAttribute('filter-operator') || '$contain'
+		let value = element.getValue()
+
 		if (value && !item.filter.search.value.includes(value)) {
 			item.filter.search.value.push(value);
 		}
