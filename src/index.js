@@ -124,14 +124,18 @@ const CoCreateFilter = {
 				this.filterEvents.set(el, true);
 				var setEvent = true;
 			}
-			if (sortName) {
-				this._applySort(item, el);
-				if (setEvent)
-					this._initSortEvent(item, el);
-			} else if (filterName) {
-				this._applyQuery(item, el, filterName, event);
-				if (setEvent)
-					this.initInputEvent(item, el);
+
+			if (sortName || filterName) {
+				if (sortName) {
+					this._applySort(item, el);
+					if (setEvent)
+						this._initSortEvent(item, el);
+				} 
+				if (filterName) {
+					this._applyQuery(item, el, filterName, event);
+					if (setEvent)
+						this.initInputEvent(item, el);
+				} 
 			} else if (!el.hasAttribute('actions') && !el.hasAttribute('fetch-type') && !el.classList.contains('template')) {
 				this._applySearch(item, el);
 				if (setEvent)
@@ -202,11 +206,11 @@ const CoCreateFilter = {
 		} else {
 			switch (filterValueType) {
 				case 'number':
-					filterValue[i] = Number(filterValue[i]);
+					filterValue = Number(filterValue);
 					break
 			}
 		}
-		if (filterValue == '' && !event || event && event.target !== element) 
+		if (filterValue === '' && !event || event && event.target !== element) 
 			return;
 		let idx = this.getQueryByName(item, filterName, filterOperator);
 		this.insertArrayObject(item.filter.query, idx, {name: filterName, value: filterValue, operator: filterOperator, type: filter_type});
