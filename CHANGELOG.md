@@ -1,3 +1,10 @@
+## [1.11.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.11.5...v1.11.6) (2022-11-28)
+
+
+### Bug Fixes
+
+* search if condition ([7090742](https://github.com/CoCreate-app/CoCreate-filter/commit/7090742872a258519ad956d84e8af0b2b4235d15))
+
 ## [1.11.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.11.4...v1.11.5) (2022-11-28)
 
 
