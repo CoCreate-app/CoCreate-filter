@@ -3,7 +3,7 @@ import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
 import '@cocreate/element-prototype';
-import {searchData, andSearch, orSearch, sortData, queryData} from '@cocreate/utils'
+import {queryData, searchData, sortData} from '@cocreate/utils'
 
 const CoCreateFilter = {
 	items: new Map(),
@@ -32,7 +32,7 @@ const CoCreateFilter = {
 		
 		if (!id) return;
 		let item = this.items.get(id) || {el};
-		
+
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
 		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
@@ -42,6 +42,8 @@ const CoCreateFilter = {
 			if (variable) {
 				let object = {[variable]: attribute.value}
 				if (object[variable]) {
+					if (!crud.checkValue(object[variable]))
+						item.fetch = false
 					if (object[variable].includes(",")) {
 						const array = object[variable].split(',');
 						for (let i = 0; i < array.length; i++)
@@ -61,10 +63,7 @@ const CoCreateFilter = {
 			item.filter = {
 				attribute,
 				id,
-				search: {
-					type: 'or',
-					value: []
-				},
+				search: [],
 				sort: [],
 				query: [],
 				startIndex: 0
@@ -113,7 +112,7 @@ const CoCreateFilter = {
 			delete item.fetch
 			// item.filter.sort = [];
 			item.filter.query = [];
-			item.filter.search.value = [];
+			item.filter.search = [];
 		}
 		
 		for (var i = 0; i < elements.length; i++) {
@@ -160,69 +159,74 @@ const CoCreateFilter = {
 		return elements;
 	},
 	
-	_applySort: function(item, element, value) {
+	_applySort: function(item, element, value, direction) {
 		let name = element.getAttribute('filter-sort-name');
 		if (!value)
-			value = element.getAttribute('value') || element.getAttribute('filter-sort-type');
-		
+			value = element.getAttribute('filter-sort-value') || element.getValue();
 		if (!value) return;
-		let valueType = element.getAttribute('filter-value-type') ? element.getAttribute('filter-value-type') : 'string';
-
-		let sortType = 0;
-		let idx = this.getSortByName(item, name);
 		
-		if (value == 'asc') {
-			sortType = 1;   
-		} else if (value == 'desc') {
-			sortType = -1;
-		} else {
-			sortType = [];
-		}
-		this.insertArrayObject(item.filter.sort, idx, {name: name, type: sortType, valueType }, sortType);
+		let valueType = element.getAttribute('filter-value-type') || 'string';
+
+		if (!direction)
+			direction = element.getAttribute('filter-sort-type') || 'asc';
+		if (direction == 'desc' || direction == -1)
+			direction = -1;   
+		else
+			direction = 1;
+
+		let idx = this.getSort(item, name);
+		this.insertArrayObject(item.filter.sort, idx, {name, direction, valueType});
 	},
 
-	_applyQuery: function(item, element, filterName, event) {
-		let filterOperator = element.getAttribute('filter-operator') || '$contain'
+	_applyQuery: function(item, element, name, event) {
+		let operator = element.getAttribute('filter-operator') || '$contain'
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		
 		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = element.getAttribute('filter-type');		
-		let filterValue = element.getAttribute('filter-value');
-		if (!crud.checkValue(filterName) || !crud.checkValue(filterValue) || !crud.checkValue(filter_type) || !crud.checkValue(filterOperator))
+		let value = element.getAttribute('filter-value');
+		if (!crud.checkValue(name) || !crud.checkValue(value) || !crud.checkValue(filter_type) || !crud.checkValue(operator))
 			item.fetch = false
-		if (!filterValue)
-			filterValue = element.getValue()
+		if (!value)
+			value = element.getValue()
 
 		// ToDo: if filter value is an array check for each
-		if (Array.isArray(filterValue)) {
-			for (let i = 0; i < filterValue.length; i++) {
+		if (Array.isArray(value)) {
+			for (let i = 0; i < value.length; i++) {
 				switch (filterValueType) {
 					case 'number':
-						filterValue[i] = Number(filterValue[i]);
+						value[i] = Number(value[i]);
 						break
 				}
 			}
 		} else {
 			switch (filterValueType) {
 				case 'number':
-					filterValue = Number(filterValue);
+					value = Number(value);
 					break
 			}
 		}
-		if (filterValue === '' && !event || event && event.target !== element) 
+		if (value === '' && !event || event && event.target !== element) 
 			return;
-		let idx = this.getQueryByName(item, filterName, filterOperator);
-		this.insertArrayObject(item.filter.query, idx, {name: filterName, value: filterValue, operator: filterOperator, type: filter_type});
+		let idx = this.getQuery(item, name, operator);
+		this.insertArrayObject(item.filter.query, idx, {name, value, operator, type: filter_type});
 	},
 	
 	_applySearch: function(item, element) {
-		let filterOperator = element.getAttribute('filter-operator') || '$contain'
+		let operator = element.getAttribute('filter-operator') || 'or'
+		let caseSensitive = element.getAttribute('filter-caseSensitive') || false
 		let value = element.getValue()
+		if (!crud.checkValue(value) || !crud.checkValue(operator))
+			item.fetch = false
 
 		if (value && !item.filter.search.value.includes(value)) {
 			item.filter.search.value.push(value);
 		}
+
+		let idx = this.getSearch(item, value, operator);
+		this.insertArrayObject(item.filter.search, idx, {value, operator, caseSensitive});
+
 	},
 	
 	_initSortEvent: function(item, element) {
@@ -270,7 +274,7 @@ const CoCreateFilter = {
 			
 			let sortName = this.getAttribute('filter-sort-name');
 			let sortType = 0;
-			let idx = self.getSortByName(item, sortName);
+			let idx = self.getSort(item, sortName);
 			
 			if (this.value == 'asc') {
 				sortType = 1;   
@@ -368,7 +372,43 @@ const CoCreateFilter = {
 			
 		}
 	},
+		
+	getFilter: function(el) {
+		for (let item of this.items.values()) {
+			if (item.el == el)
+				return item
+		}
+	},
 	
+	getQuery: function (item, name, operator) {
+		for (let i = 0; i < item.filter.query.length; i++) {
+			let f = item.filter.query[i];
+			if (f.name == name && f.operator == operator) {
+				return i;
+			}
+		}
+		return -1;
+	},
+
+	getSearch: function (item, value, operator, caseSensitive) {
+		for (let i = 0; i < item.filter.search.length; i++) {
+			let f = item.filter.search[i];
+			if (f.value == value && f.operator == operator && f.operator == caseSensitive) {
+				return i;
+			}
+		}
+		return -1;
+	},
+	
+	getSort: function(item, name) {
+		for (let i = 0; i < item.filter.sort.length; i++) {
+			if (item.filter.sort[i].name == name) {
+				return i;
+			}
+		}
+		return -1;
+	},
+
 	insertArrayObject: function(data, idx, obj, value) {
 		if (!value) {
 			value = obj.value;
@@ -386,32 +426,6 @@ const CoCreateFilter = {
 		}
 		
 		return data;
-	},
-	
-	getFilter: function(el) {
-		for (let item of this.items.values()) {
-			if (item.el == el)
-				return item
-		}
-	},
-	
-	getQueryByName: function (item, filterName, filterOperator) {
-		for (var i = 0; i < item.filter.query.length; i++) {
-			var f = item.filter.query[i];
-			if (f.name == filterName && f.operator == filterOperator) {
-				return i;
-			}
-		}
-		return -1;
-	},
-	
-	getSortByName: function(item, name) {
-		for (var i = 0; i < item.filter.sort.length; i++) {
-			if (item.filter.sort[i].name == name) {
-				return i;
-			}
-		}
-		return -1;
 	},
 				
 	exportAction: async function(btn) {
@@ -514,7 +528,8 @@ observer.init({
 	target: '[filter-name], [filter-sort-name]',
 	callback: function(mutation) {
 		// ToDo: needs to check for fetch- attributes
-		if (el.hasAttribute('fetch-collection')) return;
+		if (mutation.target.hasAttribute('fetch-collection')) 
+			return;
 		let item = CoCreateFilter.getFilter(mutation.target);
 		if (item)
 			CoCreateFilter._initFilter(item, mutation.target);
@@ -559,9 +574,7 @@ action.init({
 CoCreateFilter.initIntersectionObserver()
 export default {
   ...CoCreateFilter,
+  queryData,
   searchData,
-  andSearch,
-  orSearch,
-  sortData,
-  queryData
+  sortData
 };
