@@ -165,21 +165,20 @@ const CoCreateFilter = {
 			value = element.getAttribute('filter-sort-value') || element.getValue();
 		if (!value) return;
 		
-		let valueType = element.getAttribute('filter-value-type') || 'string';
-
 		if (!direction)
-			direction = element.getAttribute('filter-sort-type') || 'asc';
+			direction = element.getAttribute('filter-sort-direction') || 'asc';
 		if (direction == 'desc' || direction == -1)
 			direction = -1;   
 		else
 			direction = 1;
 
 		let idx = this.getSort(item, name);
-		this.insertArrayObject(item.filter.sort, idx, {name, direction, valueType});
+		this.insertArrayObject(item.filter.sort, idx, {name, direction});
 	},
 
 	_applyQuery: function(item, element, name, event) {
-		let operator = element.getAttribute('filter-operator') || '$contain'
+		let operator = element.getAttribute('filter-operator') || '$includes'
+		let logicalOperator = element.getAttribute('filter-logical-operator') || 'or'
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		
 		// ToDo: rename to filter-query-type?
@@ -190,6 +189,13 @@ const CoCreateFilter = {
 			item.fetch = false
 		if (!value)
 			value = element.getValue()
+
+			
+		if (value.includes(",")) {
+			value = value.split(',');
+			for (let i = 0; i < value.length; i++)
+				value[i] = value[i].trim()
+		}
 
 		// ToDo: if filter value is an array check for each
 		if (Array.isArray(value)) {
@@ -210,7 +216,7 @@ const CoCreateFilter = {
 		if (value === '' && !event || event && event.target !== element) 
 			return;
 		let idx = this.getQuery(item, name, operator);
-		this.insertArrayObject(item.filter.query, idx, {name, value, operator, type: filter_type});
+		this.insertArrayObject(item.filter.query, idx, {name, value, operator, logicalOperator, type: filter_type});
 	},
 	
 	_applySearch: function(item, element) {
@@ -219,10 +225,6 @@ const CoCreateFilter = {
 		let value = element.getValue()
 		if (!crud.checkValue(value) || !crud.checkValue(operator))
 			item.fetch = false
-
-		if (value && !item.filter.search.value.includes(value)) {
-			item.filter.search.value.push(value);
-		}
 
 		let idx = this.getSearch(item, value, operator);
 		this.insertArrayObject(item.filter.search, idx, {value, operator, caseSensitive});
@@ -253,9 +255,7 @@ const CoCreateFilter = {
 		element.addEventListener('click', function() {
 			let value = this.getAttribute('filter-sort-toggle') || '';
 			value = value === 'asc' ? 'desc' : 'asc';
-
 			item.filter.sort = [];
-			
 			self._applySort(item, element, value);
 			element.setAttribute('filter-sort-toggle', value);
 			
@@ -269,23 +269,8 @@ const CoCreateFilter = {
 	_initSortChangeEvent: function(item, el) {
 		const self = this;
 		el.addEventListener('change', function(e) {
-			
 			e.preventDefault();
-			
-			let sortName = this.getAttribute('filter-sort-name');
-			let sortType = 0;
-			let idx = self.getSort(item, sortName);
-			
-			if (this.value == 'asc') {
-				sortType = 1;   
-			} else if (this.value == 'desc') {
-				sortType = -1;
-			} else {
-				sortType = [];
-			}
-			
-			self.insertArrayObject(item.filter.sort, idx, {name: sortName, type: sortType}, sortType);
-			
+			self._applySort(item, element, value);
 			if (item.el) {
 				item.filter.startIndex = 0;
 				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
