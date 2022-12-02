@@ -1,3 +1,16 @@
+# [1.12.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.11.7...v1.12.0) (2022-12-02)
+
+
+### Bug Fixes
+
+* bump dependencies ([6c0dd13](https://github.com/CoCreate-app/CoCreate-filter/commit/6c0dd1364df398f46cb111ac022cda9d540db36f))
+
+
+### Features
+
+* filter-logical-operator to define and | or for various filter elements ([585d1ed](https://github.com/CoCreate-app/CoCreate-filter/commit/585d1edafd1cebc8505cdb2dc0a247451b08405e))
+* filter.search is an array of searches. renames sort.type to sort direction, return fetch false if fetch-<attribute> value is a template {{}} ([cfef7d0](https://github.com/CoCreate-app/CoCreate-filter/commit/cfef7d09f556be8fed59a638acc75b1c1e82d816))
+
 ## [1.11.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.11.6...v1.11.7) (2022-11-28)
 
 
