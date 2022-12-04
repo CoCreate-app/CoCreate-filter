@@ -107,7 +107,7 @@ const CoCreateFilter = {
 	},
 	
 	_initFilter: function(item, element, event) {
-		let elements = this.queryFilters(item);
+		let elements = item.el.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
 		if (elements){
 			delete item.fetch
 			// item.filter.sort = [];
@@ -119,63 +119,38 @@ const CoCreateFilter = {
 			let el = elements[i];
 			let filterName = el.getAttribute('filter-name');
 			let sortName = el.getAttribute('filter-sort-name');
+			let search = el.getAttribute('filter-search');
+			let loadMore = el.getAttribute('fetch-type');
 			if (!this.filterEvents.has(el)) {
 				this.filterEvents.set(el, true);
 				var setEvent = true;
 			}
 
-			if (sortName || filterName) {
-				if (sortName) {
-					this._applySort(item, el);
-					if (setEvent)
-						this._initSortEvent(item, el);
-				} 
-				if (filterName) {
-					this._applyQuery(item, el, filterName, event);
-					if (setEvent)
-						this.initInputEvent(item, el);
-				} 
-			} else if (!el.hasAttribute('actions') && !el.hasAttribute('fetch-type') && !el.classList.contains('template')) {
+			if (sortName) {
+				this._applySort(item, el);
+				if (setEvent)
+					this._initSortEvent(item, el);
+			} 
+			if (filterName) {
+				this._applyQuery(item, el, filterName, event);
+				if (setEvent)
+					this.initInputEvent(item, el);
+			}
+			if (search) {
 				this._applySearch(item, el);
 				if (setEvent)
 					this.initInputEvent(item, el);
-			}	
+			}
+			if (loadMore == 'loadmore' && setEvent)
+				this.initLoadMoreEvent(item, el)
+
 		}
 		if (element) {
 			item.filter.startIndex = 0;
 			item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'filter'} }));
 		}
 	},
-	
-	queryFilters: function(item) {
-		let tmpSelector = '[' + item.filter.attribute + '="' + item.filter.id + '"]';
-		let formInputs = item.el.ownerDocument.querySelectorAll('form'+ tmpSelector + ' input, form' + tmpSelector + ' textarea, form' + tmpSelector + ' select');
-		let otherInputs = item.el.ownerDocument.querySelectorAll(tmpSelector);
-	
-		formInputs = Array.prototype.slice.call(formInputs);
-		otherInputs = Array.prototype.slice.call(otherInputs);
-		let elements = formInputs.concat(otherInputs);
 		
-		return elements;
-	},
-	
-	_applySort: function(item, element, value, direction) {
-		let name = element.getAttribute('filter-sort-name');
-		if (!value)
-			value = element.getAttribute('filter-sort-value') || element.getValue();
-		if (!value) return;
-		
-		if (!direction)
-			direction = element.getAttribute('filter-sort-direction') || 'asc';
-		if (direction == 'desc' || direction == -1)
-			direction = -1;   
-		else
-			direction = 1;
-
-		let idx = this.getSort(item, name);
-		this.insertArrayObject(item.filter.sort, idx, {name, direction});
-	},
-
 	_applyQuery: function(item, element, name, event) {
 		let operator = element.getAttribute('filter-operator') || '$includes'
 		let logicalOperator = element.getAttribute('filter-logical-operator') || 'or'
@@ -229,6 +204,23 @@ const CoCreateFilter = {
 		let idx = this.getSearch(item, value, operator);
 		this.insertArrayObject(item.filter.search, idx, {value, operator, caseSensitive});
 
+	},
+
+	_applySort: function(item, element, value, direction) {
+		let name = element.getAttribute('filter-sort-name');
+		if (!value)
+			value = element.getAttribute('filter-sort-value') || element.getValue();
+		if (!value) return;
+		
+		if (!direction)
+			direction = element.getAttribute('filter-sort-direction') || 'asc';
+		if (direction == 'desc' || direction == -1)
+			direction = -1;   
+		else
+			direction = 1;
+
+		let idx = this.getSort(item, name);
+		this.insertArrayObject(item.filter.sort, idx, {name, direction});
 	},
 	
 	_initSortEvent: function(item, element) {
@@ -300,7 +292,6 @@ const CoCreateFilter = {
 		const self = this;
 
 		item.el.addEventListener('fetchedData', () => {
-	
 			const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type]`);
 			for (let i = 0; i < elements.length; i++) {
 				elements[i]['filter'] = item
@@ -319,14 +310,9 @@ const CoCreateFilter = {
 			}
 		});
 
-		let buttons = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type="loadmore"]`);
-		buttons.forEach((btn) => {
-			self.initLoadMoreEvent(btn, item)
-		});
-
 	},
 
-	initLoadMoreEvent: function(element, item) {
+	initLoadMoreEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function(e) {
 			self.loadMore(item);
