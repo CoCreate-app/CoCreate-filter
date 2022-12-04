@@ -1,3 +1,11 @@
+## [1.12.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.12.1...v1.12.2) (2022-12-04)
+
+
+### Bug Fixes
+
+* bump @cocreate/crud-client ([3fdda5a](https://github.com/CoCreate-app/CoCreate-filter/commit/3fdda5afe868c1b4c27cf5502e18d819ddcfc520))
+* reduced queries ([50dc0c6](https://github.com/CoCreate-app/CoCreate-filter/commit/50dc0c6207ff7edf243d0b55429dd72e0277bbfb))
+
 ## [1.12.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.12.0...v1.12.1) (2022-12-02)
 
 
