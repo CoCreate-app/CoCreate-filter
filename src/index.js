@@ -90,6 +90,7 @@ const CoCreateFilter = {
 		if (['index', 'document'].includes(item.filter.type) && !item.collection.length)
 			return
 
+		item.filter.startIndex = 0;
 		let fetchLimit = parseInt(el.getAttribute('fetch-limit'));
 		if (!isNaN(fetchLimit)) {
 			item.filter.limit = fetchLimit;
