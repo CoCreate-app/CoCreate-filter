@@ -1,3 +1,16 @@
+# [1.13.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.12.13...v1.13.0) (2022-12-13)
+
+
+### Bug Fixes
+
+* bump dependencies ([9ccc06b](https://github.com/CoCreate-app/CoCreate-filter/commit/9ccc06b1020d2704fcaafaaeaf142c9f0d462773))
+* filter perator include and $include ([3a2b5a8](https://github.com/CoCreate-app/CoCreate-filter/commit/3a2b5a80df5cdf4b88ceb67ea609b193380dbc68))
+
+
+### Features
+
+* filter items accepts an option called compare. if true will check if filter has changed ([c758115](https://github.com/CoCreate-app/CoCreate-filter/commit/c7581154d71e6c25ad570e2b6316f936852470d7))
+
 ## [1.12.13](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.12.12...v1.12.13) (2022-12-12)
 
 
