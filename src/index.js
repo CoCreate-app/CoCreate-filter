@@ -8,6 +8,7 @@ import {queryData, searchData, sortData} from '@cocreate/utils'
 const CoCreateFilter = {
 	items: new Map(),
 	filterEvents: new Map(),
+	mutatonObserver: false,
 	intersectionObserver: null,
 	
 	initIntersectionObserver: function() {
@@ -100,6 +101,10 @@ const CoCreateFilter = {
 			this.setCheckboxName(item.filter.id, item.filter.attribute);
 			this._initFilter(item);
 			this._initLoadMore(item);
+			if (!this.mutatonObserver) 
+				this.initMutationObserver()
+			if (!this.intersectionObserver) 
+				this.initIntersectionObserver()
 		}
 
 		this.items.set(item.filter.id, item);
@@ -152,20 +157,17 @@ const CoCreateFilter = {
 		}
 	},
 		
-	_applyQuery: function(item, element, name, event) {
+	_applyQuery: function(item, element, name, event, compare) {
 		let operator = element.getAttribute('filter-operator') || '$includes'
-		let logicalOperator = element.getAttribute('filter-logical-operator') || 'or'
+		let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		
 		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = element.getAttribute('filter-type');		
-		let value = element.getAttribute('filter-value');
+		let value = element.getAttribute('filter-value') || element.getValue();
 		if (!crud.checkValue(name) || !crud.checkValue(value) || !crud.checkValue(filter_type) || !crud.checkValue(operator))
 			item.fetch = false
-		if (!value)
-			value = element.getValue()
-
 			
 		if (value.includes(",")) {
 			value = value.split(',');
@@ -189,39 +191,45 @@ const CoCreateFilter = {
 					break
 			}
 		}
-		if (value === '' && !event || event && event.target !== element) 
+		if (value === '' && !event || value === '' && event && event.target !== element) 
 			return;
-		let idx = this.getQuery(item, name, operator);
-		this.insertArrayObject(item.filter.query, idx, {name, value, operator, logicalOperator, type: filter_type});
+	
+		let index = this.getQuery(item, name, operator, logicalOperator);
+		if (compare) {
+			if (!index || item.filter.query[index].value !== value)
+				this._initFilter(item, element)
+		} else 
+			this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type});
 	},
 	
-	_applySearch: function(item, element) {
+	_applySearch: function(item, element, compare) {
 		let operator = element.getAttribute('filter-operator') || 'or'
 		let caseSensitive = element.getAttribute('filter-caseSensitive') || false
 		let value = element.getValue()
 		if (!crud.checkValue(value) || !crud.checkValue(operator))
 			item.fetch = false
 
-		let idx = this.getSearch(item, value, operator);
-		this.insertArrayObject(item.filter.search, idx, {value, operator, caseSensitive});
+		let index = this.getSearch(item, value, operator, caseSensitive);
+		if (compare) {
+			if (!index)
+				this._initFilter(item, element)
+		} else 
+			this.insertArray(item.filter.search, index, {value, operator, caseSensitive});
 
 	},
 
-	_applySort: function(item, element, value, direction) {
+	_applySort: function(item, element, direction, compare) {
 		let name = element.getAttribute('filter-sort-name');
-		if (!value)
-			value = element.getAttribute('filter-sort-value') || element.getValue();
-		if (!value) return;
 		
 		if (!direction)
 			direction = element.getAttribute('filter-sort-direction') || 'asc';
-		if (direction == 'desc' || direction == -1)
-			direction = -1;   
-		else
-			direction = 1;
 
-		let idx = this.getSort(item, name);
-		this.insertArrayObject(item.filter.sort, idx, {name, direction});
+		let index = this.getSort(item, name);
+		if (compare) {
+			if (!index || item.filter.sort[index].direction !== direction)
+				this._initFilter(item, element)
+		} else 
+			this.insertArray(item.filter.sort, index, {name, direction});
 	},
 	
 	_initSortEvent: function(item, element) {
@@ -246,11 +254,10 @@ const CoCreateFilter = {
 	_initSortToggleEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function() {
-			let value = this.getAttribute('filter-sort-toggle') || '';
-			value = value === 'asc' ? 'desc' : 'asc';
+			let direction = this.getAttribute('filter-sort-toggle') || 'asc';
 			item.filter.sort = [];
-			self._applySort(item, element, value);
-			element.setAttribute('filter-sort-toggle', value);
+			self._applySort(item, element, direction);
+			element.setAttribute('filter-sort-toggle', direction);
 			
 			if (item.el) {
 				item.filter.startIndex = 0;
@@ -259,11 +266,11 @@ const CoCreateFilter = {
 		});
 	},
 	
-	_initSortChangeEvent: function(item, el) {
+	_initSortChangeEvent: function(item, element) {
 		const self = this;
-		el.addEventListener('change', function(e) {
+		element.addEventListener('change', function(e) {
 			e.preventDefault();
-			self._applySort(item, element, value);
+			self._applySort(item, element, e.target.value);
 			if (item.el) {
 				item.filter.startIndex = 0;
 				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
@@ -352,24 +359,24 @@ const CoCreateFilter = {
 		}
 	},
 	
-	getQuery: function (item, name, operator) {
+	getQuery: function (item, name, operator, logicalOperator) {
 		for (let i = 0; i < item.filter.query.length; i++) {
 			let f = item.filter.query[i];
-			if (f.name == name && f.operator == operator) {
+			if (f.name == name && f.operator == operator && f.logicalOperator == logicalOperator) {
 				return i;
 			}
 		}
-		return -1;
+		return;
 	},
 
 	getSearch: function (item, value, operator, caseSensitive) {
 		for (let i = 0; i < item.filter.search.length; i++) {
 			let f = item.filter.search[i];
-			if (f.value == value && f.operator == operator && f.operator == caseSensitive) {
+			if (f.value == value && f.operator == operator && f.caseSensitive == caseSensitive) {
 				return i;
 			}
 		}
-		return -1;
+		return;
 	},
 	
 	getSort: function(item, name) {
@@ -378,26 +385,16 @@ const CoCreateFilter = {
 				return i;
 			}
 		}
-		return -1;
+		return;
 	},
 
-	insertArrayObject: function(data, idx, obj, value) {
-		if (!value) {
-			value = obj.value;
-		}
-		if (typeof value == 'object'  && value.length == 0) {
-			if (idx != -1) {
-				data.splice(idx, 1);
-			}
-		} else {
-			if (idx != -1) {
-				data[idx] = obj;
-			} else {
-				data.push(obj);
-			}
-		}
+	insertArray: function(filterArray, index, obj) {
+		if (index)
+			filterArray.splice(index, 1, obj);
+		else
+			filterArray.push(obj);
 		
-		return data;
+		return filterArray;
 	},
 				
 	exportAction: async function(btn) {
@@ -491,33 +488,48 @@ const CoCreateFilter = {
 
 			
 		}
-	},
+	},	
+
+	initMutationObserver: function() {
+		const self = this
+		this.mutatonObserver = true
+
+		observer.init({ 
+			name: 'CoCreateFilterInit', 
+			observe: ['addedNodes'],
+			target: '[filter-name], [filter-sort-name]',
+			callback: function(mutation) {
+				// ToDo: needs to check for fetch- attributes
+				if (mutation.target.hasAttribute('fetch-collection')) 
+					return;
+				let item = this.getFilter(mutation.target);
+				if (item)
+					this._initFilter(item, mutation.target);
+			}
+		});
+		
+		observer.init({ 
+			name: 'CoCreateFilterObserver', 
+			observe: ['attributes'],
+			attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-sort-direction', 'filter-type'],
+			callback: function(mutation) {
+				let element = mutation.target
+				let attribute = mutation.attributeName
+				let item = this.getFilter(mutation.target);
+				if (item) {
+					if (attribute.includes('search')) {
+						this._applySearch(item, element, true)
+					} else if (attribute.includes('sort')) {
+						this._applySort(item, element, '', true)
+					} else if (element.hasAttribute('filter-name')) {
+						let name = element.getAttribute('filter-name')
+						this._applyQuery(item, element, name, '', true) 
+					}
+				}
+			}
+		});
+	}
 };
-
-observer.init({ 
-	name: 'CoCreateFilterInit', 
-	observe: ['addedNodes'],
-	target: '[filter-name], [filter-sort-name]',
-	callback: function(mutation) {
-		// ToDo: needs to check for fetch- attributes
-		if (mutation.target.hasAttribute('fetch-collection')) 
-			return;
-		let item = CoCreateFilter.getFilter(mutation.target);
-		if (item)
-			CoCreateFilter._initFilter(item, mutation.target);
-	}
-});
-
-observer.init({ 
-	name: 'CoCreateFilterObserver', 
-	observe: ['attributes'],
-	attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-type', 'filter-type'],
-	callback: function(mutation) {
-		let item = CoCreateFilter.getFilter(mutation.target);
-		if (item)
-			CoCreateFilter._initFilter(item, mutation.target);
-	}
-});
 
 action.init({
 	name: "import",
@@ -543,7 +555,6 @@ action.init({
 	}
 });
 
-CoCreateFilter.initIntersectionObserver()
 export default {
   ...CoCreateFilter,
   queryData,
