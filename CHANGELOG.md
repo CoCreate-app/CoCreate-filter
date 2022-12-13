@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.1...v1.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* removed un used devDependencies ([ebb2601](https://github.com/CoCreate-app/CoCreate-filter/commit/ebb2601c77a996f996886fa6fed31058f4c26c37))
+
 ## [1.13.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.0...v1.13.1) (2022-12-13)
 
 
