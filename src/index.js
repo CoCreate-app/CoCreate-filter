@@ -158,7 +158,7 @@ const CoCreateFilter = {
 	},
 		
 	_applyQuery: function(item, element, name, event, compare) {
-		let operator = element.getAttribute('filter-operator') || '$includes'
+		let operator = element.getAttribute('filter-operator') || 'includes'
 		let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		
