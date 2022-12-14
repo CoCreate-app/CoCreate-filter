@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.2...v1.13.3) (2022-12-14)
+
+
+### Bug Fixes
+
+* filter-sort-toggle ([b314223](https://github.com/CoCreate-app/CoCreate-filter/commit/b314223da5293d31054b85910cea386d6c7befce))
+
 ## [1.13.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.1...v1.13.2) (2022-12-13)
 
 
