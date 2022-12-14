@@ -33,7 +33,7 @@ const CoCreateFilter = {
 		
 		if (!id) return;
 		let item = this.items.get(id) || {el};
-
+		delete item.fetch
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
 		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
@@ -115,7 +115,7 @@ const CoCreateFilter = {
 	_initFilter: function(item, element, event) {
 		let elements = item.el.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
 		if (elements){
-			delete item.fetch
+			delete item.isFilter
 			// item.filter.sort = [];
 			item.filter.query = [];
 			item.filter.search = [];
@@ -151,9 +151,11 @@ const CoCreateFilter = {
 				this.initLoadMoreEvent(item, el)
 
 		}
+
 		if (element) {
 			item.filter.startIndex = 0;
-			item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'filter'} }));
+			if (isFilter != false)
+				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'filter'} }));
 		}
 	},
 		
@@ -167,7 +169,7 @@ const CoCreateFilter = {
 		let filter_type = element.getAttribute('filter-type');		
 		let value = element.getAttribute('filter-value') || element.getValue();
 		if (!crud.checkValue(name) || !crud.checkValue(value) || !crud.checkValue(filter_type) || !crud.checkValue(operator))
-			item.fetch = false
+			item.isFilter = false
 			
 		if (value.includes(",")) {
 			value = value.split(',');
@@ -207,7 +209,7 @@ const CoCreateFilter = {
 		let caseSensitive = element.getAttribute('filter-caseSensitive') || false
 		let value = element.getValue()
 		if (!crud.checkValue(value) || !crud.checkValue(operator))
-			item.fetch = false
+			item.isFilter = false
 
 		let index = this.getSearch(item, value, operator, caseSensitive);
 		if (compare) {
@@ -242,7 +244,8 @@ const CoCreateFilter = {
 					self._applySort(item, element);
 					if (item.el) {
 						item.filter.startIndex = 0;
-						item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
+						if (isFilter != false)
+							item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
 					}
 				});
 			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
@@ -254,7 +257,11 @@ const CoCreateFilter = {
 	_initSortToggleEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function() {
-			let direction = this.getAttribute('filter-sort-toggle') || 'asc';
+			let direction = this.getAttribute('filter-sort-toggle');
+			if (direction == 'asc')
+				direction = 'desc'
+			else
+				direction = 'asc'
 			item.filter.sort = [];
 			self._applySort(item, element, direction);
 			element.setAttribute('filter-sort-toggle', direction);
