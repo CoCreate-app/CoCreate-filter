@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.3...v1.13.4) (2022-12-15)
+
+
+### Bug Fixes
+
+* isFlter typo item.isfilter ([6a23c20](https://github.com/CoCreate-app/CoCreate-filter/commit/6a23c20ec1302433d913fd8f654ff389f89d69d3))
+
 ## [1.13.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.2...v1.13.3) (2022-12-14)
 
 
