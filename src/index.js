@@ -154,7 +154,7 @@ const CoCreateFilter = {
 
 		if (element) {
 			item.filter.startIndex = 0;
-			if (isFilter != false)
+			if (item.isFilter != false)
 				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'filter'} }));
 		}
 	},
@@ -244,7 +244,7 @@ const CoCreateFilter = {
 					self._applySort(item, element);
 					if (item.el) {
 						item.filter.startIndex = 0;
-						if (isFilter != false)
+						if (item.isFilter != false)
 							item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
 					}
 				});
