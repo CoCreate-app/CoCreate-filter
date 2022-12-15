@@ -1,3 +1,10 @@
+## [1.13.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.4...v1.13.5) (2022-12-15)
+
+
+### Bug Fixes
+
+* add missing dev dependency style-loader ([3f8482b](https://github.com/CoCreate-app/CoCreate-filter/commit/3f8482b4bcf39c7b22bd3608f1a94a995d54e140))
+
 ## [1.13.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.3...v1.13.4) (2022-12-15)
 
 
