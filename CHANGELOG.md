@@ -1,3 +1,10 @@
+## [1.13.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.8...v1.13.9) (2022-12-22)
+
+
+### Bug Fixes
+
+* filter-search getAttribute update to hasAttribute to support empty attribute va;ue ([e10477b](https://github.com/CoCreate-app/CoCreate-filter/commit/e10477bcf5b027bb933a21d284960b2cdeb5aa77))
+
 ## [1.13.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.7...v1.13.8) (2022-12-21)
 
 
