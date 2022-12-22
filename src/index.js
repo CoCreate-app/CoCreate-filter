@@ -125,7 +125,7 @@ const CoCreateFilter = {
 			let el = elements[i];
 			let filterName = el.getAttribute('filter-name');
 			let sortName = el.getAttribute('filter-sort-name');
-			let search = el.getAttribute('filter-search');
+			let search = el.hasAttribute('filter-search');
 			let loadMore = el.getAttribute('fetch-type');
 			if (!this.filterEvents.has(el)) {
 				this.filterEvents.set(el, true);
