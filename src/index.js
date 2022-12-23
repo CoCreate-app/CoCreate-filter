@@ -509,9 +509,9 @@ const CoCreateFilter = {
 				// ToDo: needs to check for fetch- attributes
 				if (mutation.target.hasAttribute('fetch-collection')) 
 					return;
-				let item = this.getFilter(mutation.target);
+				let item = self.getFilter(mutation.target);
 				if (item)
-					this._initFilter(item, mutation.target);
+					self._initFilter(item, mutation.target);
 			}
 		});
 		
@@ -522,15 +522,15 @@ const CoCreateFilter = {
 			callback: function(mutation) {
 				let element = mutation.target
 				let attribute = mutation.attributeName
-				let item = this.getFilter(mutation.target);
+				let item = self.getFilter(mutation.target);
 				if (item) {
 					if (attribute.includes('search')) {
-						this._applySearch(item, element, true)
+						self._applySearch(item, element, true)
 					} else if (attribute.includes('sort')) {
-						this._applySort(item, element, '', true)
+						self._applySort(item, element, '', true)
 					} else if (element.hasAttribute('filter-name')) {
 						let name = element.getAttribute('filter-name')
-						this._applyQuery(item, element, name, '', true) 
+						self._applyQuery(item, element, name, '', true) 
 					}
 				}
 			}
