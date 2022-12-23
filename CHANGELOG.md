@@ -1,3 +1,10 @@
+## [1.13.12](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.11...v1.13.12) (2022-12-23)
+
+
+### Bug Fixes
+
+* observer callback require self instanc ([6cea505](https://github.com/CoCreate-app/CoCreate-filter/commit/6cea505186cc7d73d62d33f0612aeece6fc8d76e))
+
 ## [1.13.11](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.10...v1.13.11) (2022-12-22)
 
 
