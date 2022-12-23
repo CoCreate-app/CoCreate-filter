@@ -1,3 +1,10 @@
+## [1.13.13](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.12...v1.13.13) (2022-12-23)
+
+
+### Bug Fixes
+
+* bump dependnecies ([bac30b1](https://github.com/CoCreate-app/CoCreate-filter/commit/bac30b13eac428445a04160eb25e1a1aceff91ba))
+
 ## [1.13.12](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.11...v1.13.12) (2022-12-23)
 
 
