@@ -206,7 +206,7 @@ const CoCreateFilter = {
 	
 	_applySearch: function(item, element, compare) {
 		let operator = element.getAttribute('filter-operator') || 'or'
-		let caseSensitive = element.getAttribute('filter-caseSensitive') || false
+		let caseSensitive = element.getAttribute('filter-case-sensitive') || false
 		let value = element.getValue()
 		if (!crud.checkValue(value) || !crud.checkValue(operator))
 			item.isFilter = false
