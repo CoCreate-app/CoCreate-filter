@@ -48,7 +48,7 @@ const CoCreateFilter = {
 					if (object[variable].includes(",")) {
 						const array = object[variable].split(',');
 						for (let i = 0; i < array.length; i++)
-						array[i].trim()
+							array[i].trim()
 						item[variable] = array
 					} else {
 						item[variable] = [object[variable]]
