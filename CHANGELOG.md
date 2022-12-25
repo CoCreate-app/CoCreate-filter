@@ -1,3 +1,13 @@
+## [1.13.14](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.13...v1.13.14) (2022-12-25)
+
+
+### Bug Fixes
+
+* bump dependencies ([c14b727](https://github.com/CoCreate-app/CoCreate-filter/commit/c14b727a3757fd65e5bba3d0eb58ef8a2ac6b408))
+* bumpcdn to 1.34.4 ([4d14cbb](https://github.com/CoCreate-app/CoCreate-filter/commit/4d14cbb2ea739a22f554a773b457026ae0502ed3))
+* formating ([8126a24](https://github.com/CoCreate-app/CoCreate-filter/commit/8126a24c458aca24d45d453225425aeb62edded3))
+* type="modal" and pass_to updated to action="pass, openModal" ([009f8b4](https://github.com/CoCreate-app/CoCreate-filter/commit/009f8b44dc7109426ba8b5437d0c4f71b91b7f09))
+
 ## [1.13.13](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.12...v1.13.13) (2022-12-23)
 
 
