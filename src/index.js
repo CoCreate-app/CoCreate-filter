@@ -32,8 +32,8 @@ const CoCreateFilter = {
 		let id = el.getAttribute(attribute);
 		
 		if (!id) return;
-		let item = this.items.get(id) || {el};
-		delete item.fetch
+		let item = {el};
+
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
 		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
@@ -60,16 +60,14 @@ const CoCreateFilter = {
 			} 
 		}
 
-		if (!item.filter) {
-			item.filter = {
-				attribute,
-				id,
-				search: [],
-				sort: [],
-				query: [],
-				startIndex: 0
-			}	
-		}
+		item.filter = {
+			attribute,
+			id,
+			search: [],
+			sort: [],
+			query: [],
+			startIndex: 0
+		}	
 
 		if (item.database)
 			item.filter.type = 'database'
@@ -97,15 +95,13 @@ const CoCreateFilter = {
 			item.filter.limit = fetchLimit;
 		}
 			
-		if (!this.items.has(item.filter.id)) {	
-			this.setCheckboxName(item.filter.id, item.filter.attribute);
-			this._initFilter(item);
-			this._initLoadMore(item);
-			if (!this.mutatonObserver) 
-				this.initMutationObserver()
-			if (!this.intersectionObserver) 
-				this.initIntersectionObserver()
-		}
+		this.setCheckboxName(item.filter.id, item.filter.attribute);
+		this._initFilter(item);
+		this._initLoadMore(item);
+		if (!this.mutatonObserver) 
+			this.initMutationObserver()
+		if (!this.intersectionObserver) 
+			this.initIntersectionObserver()
 
 		this.items.set(item.filter.id, item);
 		el.filter = item.filter
@@ -113,13 +109,15 @@ const CoCreateFilter = {
 	},
 	
 	_initFilter: function(item, element, event) {
-		let elements = item.el.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
-		if (elements){
+		let elements
+		if (element)
+			elements = [element]
+		else
+			elements = item.el.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
+		
+		if (elements)
 			delete item.isFilter
-			// item.filter.sort = [];
-			item.filter.query = [];
-			item.filter.search = [];
-		}
+		
 		
 		for (var i = 0; i < elements.length; i++) {
 			let el = elements[i];
@@ -193,8 +191,14 @@ const CoCreateFilter = {
 					break
 			}
 		}
-		if (value === '' && !event || value === '' && event && event.target !== element) 
-			return;
+
+		if (event) {
+			if (value === '' && event.target !== element) 
+				return
+		} else {
+			if (value === '') 
+				item.isFilter = false
+		}
 	
 		let index = this.getQuery(item, name, operator, logicalOperator);
 		if (compare) {
@@ -396,7 +400,7 @@ const CoCreateFilter = {
 	},
 
 	insertArray: function(filterArray, index, obj) {
-		if (index)
+		if (index >= 0)
 			filterArray.splice(index, 1, obj);
 		else
 			filterArray.push(obj);
