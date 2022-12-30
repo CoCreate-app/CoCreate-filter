@@ -1,3 +1,10 @@
+## [1.13.21](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.20...v1.13.21) (2022-12-30)
+
+
+### Bug Fixes
+
+* update config sources to use template  braces with entry on src ([bbeeff3](https://github.com/CoCreate-app/CoCreate-filter/commit/bbeeff3b307a71da4afc94aff4bcfac3edfb3d9c))
+
 ## [1.13.20](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.19...v1.13.20) (2022-12-29)
 
 
