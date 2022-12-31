@@ -1,3 +1,11 @@
+## [1.13.22](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.21...v1.13.22) (2022-12-31)
+
+
+### Bug Fixes
+
+* add @cocreate/element-prototype ([c13312f](https://github.com/CoCreate-app/CoCreate-filter/commit/c13312f3849796dff42a6e9a66cce1413289e2ca))
+* delete item.isFIlter if filter.init ([64a3073](https://github.com/CoCreate-app/CoCreate-filter/commit/64a3073b038749910b2cc5175a62b49a9f01df70))
+
 ## [1.13.21](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.20...v1.13.21) (2022-12-30)
 
 
