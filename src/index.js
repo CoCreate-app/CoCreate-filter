@@ -103,6 +103,7 @@ const CoCreateFilter = {
 		if (!this.intersectionObserver) 
 			this.initIntersectionObserver()
 
+		delete item.isFilter
 		this.items.set(item.filter.id, item);
 		el.filter = item.filter
 		return item;
@@ -202,7 +203,7 @@ const CoCreateFilter = {
 	
 		let index = this.getQuery(item, name, operator, logicalOperator);
 		if (compare) {
-			if (!index || item.filter.query[index].value !== value)
+			if (index === null || item.filter.query[index].value !== value)
 				this._initFilter(item, element)
 		} else 
 			this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type});
@@ -217,7 +218,7 @@ const CoCreateFilter = {
 
 		let index = this.getSearch(item, value, operator, caseSensitive);
 		if (compare) {
-			if (!index)
+			if (index === null)
 				this._initFilter(item, element)
 		} else 
 			this.insertArray(item.filter.search, index, {value, operator, caseSensitive});
@@ -232,7 +233,7 @@ const CoCreateFilter = {
 
 		let index = this.getSort(item, name);
 		if (compare) {
-			if (!index || item.filter.sort[index].direction !== direction)
+			if (index === null || item.filter.sort[index].direction !== direction)
 				this._initFilter(item, element)
 		} else 
 			this.insertArray(item.filter.sort, index, {name, direction});
@@ -377,7 +378,7 @@ const CoCreateFilter = {
 				return i;
 			}
 		}
-		return;
+		return null;
 	},
 
 	getSearch: function (item, value, operator, caseSensitive) {
@@ -387,7 +388,7 @@ const CoCreateFilter = {
 				return i;
 			}
 		}
-		return;
+		return null;
 	},
 	
 	getSort: function(item, name) {
@@ -396,7 +397,7 @@ const CoCreateFilter = {
 				return i;
 			}
 		}
-		return;
+		return null;
 	},
 
 	insertArray: function(filterArray, index, obj) {
