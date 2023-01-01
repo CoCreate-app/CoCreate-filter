@@ -1,3 +1,10 @@
+## [1.13.24](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.23...v1.13.24) (2023-01-01)
+
+
+### Bug Fixes
+
+* docs sanbox overflow ([be52742](https://github.com/CoCreate-app/CoCreate-filter/commit/be5274288b3b87c2e68abf69a736f63957c0fd0b))
+
 ## [1.13.23](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.22...v1.13.23) (2022-12-31)
 
 
