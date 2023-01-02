@@ -1,6 +1,6 @@
 {
   "name": "@cocreate/filter",
-  "version": "1.13.24",
+  "version": "1.14.0",
   "description": "A JavaScript api define attributes for filtering color, description, text, price or any list of document stored in db. Great for creating custom components like fetch, calender, datatables etc.",
   "keywords": [
     "filter",
