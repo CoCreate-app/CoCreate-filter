@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.24...v1.14.0) (2023-01-02)
+
+
+### Features
+
+* class="template" template_id="id" replaced with template="id" ([c3f84e3](https://github.com/CoCreate-app/CoCreate-filter/commit/c3f84e30e55d73ab113a3ccfde53540a9d968e1b))
+
 ## [1.13.24](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.13.23...v1.13.24) (2023-01-01)
 
 
