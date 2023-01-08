@@ -166,7 +166,10 @@ const CoCreateFilter = {
 		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = element.getAttribute('filter-type');		
-		let value = element.getAttribute('filter-value') || element.getValue();
+		let value = element.getAttribute('filter-value');
+		if (!value && element.value !== undefined)
+			value = element.getValue();
+
 		if (!crud.checkValue(name) || !crud.checkValue(value) || !crud.checkValue(filter_type) || !crud.checkValue(operator))
 			item.isFilter = false
 			
