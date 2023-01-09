@@ -44,7 +44,7 @@ const CoCreateFilter = {
 				let object = {[variable]: attribute.value}
 				if (object[variable]) {
 					if (!crud.checkValue(object[variable]))
-						item.fetch = false
+						return
 					if (object[variable].includes(",")) {
 						const array = object[variable].split(',');
 						for (let i = 0; i < array.length; i++)
@@ -103,7 +103,10 @@ const CoCreateFilter = {
 		if (!this.intersectionObserver) 
 			this.initIntersectionObserver()
 
-		delete item.isFilter
+		if (item.isFilter != false) {
+			delete item.isFilter
+		}
+
 		this.items.set(item.filter.id, item);
 		el.filter = item.filter
 		return item;
@@ -199,17 +202,16 @@ const CoCreateFilter = {
 		if (event) {
 			if (value === '' && event.target !== element) 
 				return
-		} else {
-			if (value === '') 
-				item.isFilter = false
-		}
+		} 
 	
 		let index = this.getQuery(item, name, operator, logicalOperator);
 		if (compare) {
 			if (index === null || item.filter.query[index].value !== value)
 				this._initFilter(item, element)
-		} else 
-			this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type});
+		} else if (index === null && value === '') 
+			return
+		
+		this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type});
 	},
 	
 	_applySearch: function(item, element, compare) {
@@ -218,7 +220,7 @@ const CoCreateFilter = {
 		let value = element.getValue()
 		if (!crud.checkValue(value) || !crud.checkValue(operator))
 			item.isFilter = false
-
+		
 		let index = this.getSearch(item, value, operator, caseSensitive);
 		if (compare) {
 			if (index === null)
@@ -532,7 +534,10 @@ const CoCreateFilter = {
 				let attribute = mutation.attributeName
 				let item = self.getFilter(mutation.target);
 				if (item) {
-					if (attribute.includes('search')) {
+					delete item.isFilter
+					if (!item.isFetched)
+						self._initFilter(item, element);
+					else if (attribute.includes('search')) {
 						self._applySearch(item, element, true)
 					} else if (attribute.includes('sort')) {
 						self._applySort(item, element, '', true)
