@@ -1,3 +1,12 @@
+## [1.14.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.3...v1.14.4) (2023-01-09)
+
+
+### Bug Fixes
+
+* bump dependnecies ([b8ead4b](https://github.com/CoCreate-app/CoCreate-filter/commit/b8ead4bdbd2d0af7d6ad79e8c134a0d302eb4514))
+* filter.getValue if el.value not undefined ([8d56407](https://github.com/CoCreate-app/CoCreate-filter/commit/8d56407c318c40493453a5584a4889c3431172a1))
+* if getQuery index is null and value is empty string return ([b4c798c](https://github.com/CoCreate-app/CoCreate-filter/commit/b4c798ce9a35c1fd003b35b39b610a4e1d1d3cb3))
+
 ## [1.14.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.2...v1.14.3) (2023-01-06)
 
 
