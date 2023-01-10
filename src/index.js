@@ -236,6 +236,9 @@ const CoCreateFilter = {
 		if (!direction)
 			direction = element.getAttribute('filter-sort-direction') || 'asc';
 
+		if (!crud.checkValue(name) || !crud.checkValue(direction))
+			return
+
 		let index = this.getSort(item, name);
 		if (compare) {
 			if (index === null || item.filter.sort[index].direction !== direction)
@@ -264,6 +267,7 @@ const CoCreateFilter = {
 		}
 	},
 	
+	// ToDo: depreciate as this can be handeled by CoCreate-toggle/click
 	_initSortToggleEvent: function(item, element) {
 		const self = this;
 		element.addEventListener('click', function() {
