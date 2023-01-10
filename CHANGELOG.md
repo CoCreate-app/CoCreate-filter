@@ -1,3 +1,11 @@
+## [1.14.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.5...v1.14.6) (2023-01-10)
+
+
+### Bug Fixes
+
+* bump @cocreate/element-prototype ([8c33ece](https://github.com/CoCreate-app/CoCreate-filter/commit/8c33ece2a4a6905526e155756ef7a7982cfd667f))
+* test sortName and sortDirection for template braces if found return ([28303a4](https://github.com/CoCreate-app/CoCreate-filter/commit/28303a48fe2fbd11e509a0c9d28bb680ad7397c7))
+
 ## [1.14.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.4...v1.14.5) (2023-01-09)
 
 
