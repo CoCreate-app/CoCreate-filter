@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.15.0...v1.15.1) (2023-01-27)
+
+
+### Bug Fixes
+
+* CoCreate && CoCreate.crud ([9043a57](https://github.com/CoCreate-app/CoCreate-filter/commit/9043a57fb12004f02f86b31c67b7e9f6e83e78a8))
+
 # [1.15.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.9...v1.15.0) (2023-01-27)
 
 
