@@ -1,3 +1,15 @@
+# [1.15.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.9...v1.15.0) (2023-01-27)
+
+
+### Bug Fixes
+
+* bump dependencies ([e99ddcc](https://github.com/CoCreate-app/CoCreate-filter/commit/e99ddcc054fbba1932b5de0954aada97fe8e23ea))
+
+
+### Features
+
+* crud is optional and accessed using CoCreate.crud ([1fdb8f0](https://github.com/CoCreate-app/CoCreate-filter/commit/1fdb8f0eb57a45228f48201dcac4705cfd9a6bd9))
+
 ## [1.14.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.14.8...v1.14.9) (2023-01-13)
 
 
