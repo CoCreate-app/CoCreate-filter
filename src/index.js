@@ -429,7 +429,7 @@ const CoCreateFilter = {
 		delete Item.count
 
 		let data;
-		if (CoCreate.crud) {
+		if (CoCreate && CoCreate.crud) {
 			data = await CoCreate.crud.readDocument(Item);
 		}
 		// ToDo: get from local data source
@@ -475,7 +475,7 @@ const CoCreateFilter = {
 		input.type = 'file';
 
 		input.onchange = e => {
-			if (CoCreate.crud) {
+			if (CoCreate && CoCreate.crud) {
 				let file = e.target.files[0];
 				CoCreate.crud.importCollection({
 					collection: collection,
@@ -500,7 +500,7 @@ const CoCreateFilter = {
 					_ids.push({_id})
 			}
 
-			if (_ids.length > 0 && CoCreate.crud) {
+			if (_ids.length > 0 && CoCreate && CoCreate.crud) {
 				CoCreate.crud.deleteDocument({
 					collection,
 					document: _ids
