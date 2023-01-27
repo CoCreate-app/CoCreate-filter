@@ -1,9 +1,8 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
-import crud from '@cocreate/crud-client';
 import '@cocreate/element-prototype';
-import {queryData, searchData, sortData} from '@cocreate/utils'
+import {checkValue, queryData, searchData, sortData} from '@cocreate/utils'
 
 const CoCreateFilter = {
 	items: new Map(),
@@ -43,7 +42,7 @@ const CoCreateFilter = {
 			if (variable) {
 				let object = {[variable]: attribute.value}
 				if (object[variable]) {
-					if (!crud.checkValue(object[variable]))
+					if (!checkValue(object[variable]))
 						return
 					if (object[variable].includes(",")) {
 						const array = object[variable].split(',');
@@ -173,7 +172,7 @@ const CoCreateFilter = {
 		if (!value && element.value !== undefined)
 			value = element.getValue();
 
-		if (!crud.checkValue(name) || !crud.checkValue(value) || !crud.checkValue(filter_type) || !crud.checkValue(operator))
+		if (!checkValue(name) || !checkValue(value) || !checkValue(filter_type) || !checkValue(operator))
 			item.isFilter = false
 			
 		if (value.includes(",")) {
@@ -218,7 +217,7 @@ const CoCreateFilter = {
 		let operator = element.getAttribute('filter-operator') || 'or'
 		let caseSensitive = element.getAttribute('filter-case-sensitive') || false
 		let value = element.getValue()
-		if (!crud.checkValue(value) || !crud.checkValue(operator))
+		if (!checkValue(value) || !checkValue(operator))
 			item.isFilter = false
 		
 		let index = this.getSearch(item, value, operator, caseSensitive);
@@ -236,7 +235,7 @@ const CoCreateFilter = {
 		if (!direction)
 			direction = element.getAttribute('filter-sort-direction') || 'asc';
 
-		if (!crud.checkValue(name) || !crud.checkValue(direction))
+		if (!checkValue(name) || !checkValue(direction))
 			return
 
 		let index = this.getSort(item, name);
@@ -429,8 +428,11 @@ const CoCreateFilter = {
 		delete Item.el
 		delete Item.count
 
-
-		let data = await crud.readDocument(Item);
+		let data;
+		if (CoCreate.crud) {
+			data = await CoCreate.crud.readDocument(Item);
+		}
+		// ToDo: get from local data source
 		this.exportFile(data);
 	},
 	
@@ -473,18 +475,20 @@ const CoCreateFilter = {
 		input.type = 'file';
 
 		input.onchange = e => {
-			var file = e.target.files[0];
-			crud.importCollection({
-				collection: collection,
-				file: file
-			});
+			if (CoCreate.crud) {
+				let file = e.target.files[0];
+				CoCreate.crud.importCollection({
+					collection: collection,
+					file: file
+				});
+			}
 		};
 		input.click();
 	},
 	
 	__deleteDocumentsAction: function(btn) {
 		const collection = btn.getAttribute('collection');
-		if (crud.checkValue(collection)) {
+		if (checkValue(collection)) {
 			const template_id = btn.getAttribute('template_id');
 			if (!template_id) return;
 
@@ -492,12 +496,12 @@ const CoCreateFilter = {
 			const selectedEls = document.querySelectorAll(`.selected[templateid="${template_id}"]`);
 			for (let i = 0; i < selectedEls.length; i++) {
 				const _id = selectedEls[i].getAttribute('document_id');
-				if (crud.checkValue(_id))
+				if (checkValue(_id))
 					_ids.push({_id})
 			}
 
-			if (_ids.length > 0) {
-				crud.deleteDocument({
+			if (_ids.length > 0 && CoCreate.crud) {
+				CoCreate.crud.deleteDocument({
 					collection,
 					document: _ids
 				}).then(() => {
