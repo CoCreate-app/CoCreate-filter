@@ -1,5 +1,6 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
+import crud from '@cocreate/crud-client';
 import action from '@cocreate/actions';
 import '@cocreate/element-prototype';
 import {checkValue, queryData, searchData, sortData} from '@cocreate/utils'
