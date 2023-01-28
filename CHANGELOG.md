@@ -1,3 +1,12 @@
+## [1.15.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.15.1...v1.15.2) (2023-01-28)
+
+
+### Bug Fixes
+
+* add crud import ([efdaa74](https://github.com/CoCreate-app/CoCreate-filter/commit/efdaa74d1f60ca4720eaa88d771a7b073887bdd5))
+* bump crud-client ([b9a18dc](https://github.com/CoCreate-app/CoCreate-filter/commit/b9a18dcfc574e6034f5be0f28be7175c43e4af2c))
+* import crud ([f5ed30e](https://github.com/CoCreate-app/CoCreate-filter/commit/f5ed30eba8ffa952cefd944cfbe0b8635bd12cb7))
+
 ## [1.15.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.15.0...v1.15.1) (2023-01-27)
 
 
