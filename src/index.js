@@ -36,7 +36,7 @@ const CoCreateFilter = {
 
 		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
-		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name"}
+		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name", "fetch-data": "data"}
 
 		for (let attribute of el.attributes) {
 			let variable = attributes[attribute.name]
@@ -85,6 +85,8 @@ const CoCreateFilter = {
 			item.filter.type = 'document'
 		if (item.name)
 			item.filter.type = 'name'
+		if (item.data)
+			item.filter.type = 'data'
 		
 		if (['index', 'document'].includes(item.filter.type) && !item.collection.length)
 			return
