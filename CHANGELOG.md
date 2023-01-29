@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.15.2...v1.16.0) (2023-01-29)
+
+
+### Features
+
+* filter.type data ([44ad996](https://github.com/CoCreate-app/CoCreate-filter/commit/44ad99644f4068b714b8551ba9869b613c7fef55))
+
 ## [1.15.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.15.1...v1.15.2) (2023-01-28)
 
 
