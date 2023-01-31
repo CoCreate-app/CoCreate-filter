@@ -167,7 +167,8 @@ const CoCreateFilter = {
 		let operator = element.getAttribute('filter-operator') || 'includes'
 		let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
-		
+		let caseSensitive = element.getAttribute('filter-case-sensitive') || false
+
 		// ToDo: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = element.getAttribute('filter-type');		
@@ -210,10 +211,11 @@ const CoCreateFilter = {
 		if (compare) {
 			if (index === null || item.filter.query[index].value !== value)
 				this._initFilter(item, element)
+			// ToDo: a way to include matching empty string logicalOperator !== 'and'
 		} else if (index === null && value === '') 
 			return
 		
-		this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type});
+		this.insertArray(item.filter.query, index, {name, value, operator, logicalOperator, type: filter_type, caseSensitive});
 	},
 	
 	_applySearch: function(item, element, compare) {
@@ -412,7 +414,7 @@ const CoCreateFilter = {
 	},
 
 	insertArray: function(filterArray, index, obj) {
-		if (index >= 0)
+		if (index !== null && index >= 0)
 			filterArray.splice(index, 1, obj);
 		else
 			filterArray.push(obj);
