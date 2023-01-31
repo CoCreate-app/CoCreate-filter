@@ -1,3 +1,15 @@
+# [1.17.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.16.3...v1.17.0) (2023-01-31)
+
+
+### Bug Fixes
+
+* bump crud depedency ([c0b48a7](https://github.com/CoCreate-app/CoCreate-filter/commit/c0b48a781a79da6f8a394ae4df0997fc96cc7d4c))
+
+
+### Features
+
+* filter.query caseSensitive support ([ab81769](https://github.com/CoCreate-app/CoCreate-filter/commit/ab8176918ee0fbe717ffde9e6aad3248f88d5892))
+
 ## [1.16.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.16.2...v1.16.3) (2023-01-30)
 
 
