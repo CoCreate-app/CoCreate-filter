@@ -1,3 +1,11 @@
+## [1.17.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.17.1...v1.17.2) (2023-02-01)
+
+
+### Bug Fixes
+
+* bump dependencies ([bd43ef3](https://github.com/CoCreate-app/CoCreate-filter/commit/bd43ef31e21c18c029098b3f83c92e3857772f67))
+* getSearch matches operator and caseSensitive ([9cac8ed](https://github.com/CoCreate-app/CoCreate-filter/commit/9cac8edf0585876d155306c4ac4b8bd2b7c86731))
+
 ## [1.17.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.17.0...v1.17.1) (2023-01-31)
 
 
