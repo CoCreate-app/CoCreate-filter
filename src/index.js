@@ -397,7 +397,7 @@ const CoCreateFilter = {
 	getSearch: function (item, value, operator, caseSensitive) {
 		for (let i = 0; i < item.filter.search.length; i++) {
 			let f = item.filter.search[i];
-			if (f.value == value && f.operator == operator && f.caseSensitive == caseSensitive) {
+			if (f.operator == operator && f.caseSensitive == caseSensitive) {
 				return i;
 			}
 		}
