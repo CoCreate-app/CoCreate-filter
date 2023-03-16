@@ -1,3 +1,11 @@
+## [1.18.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.1...v1.18.2) (2023-03-16)
+
+
+### Bug Fixes
+
+* filter-sort-direction ([00c9f02](https://github.com/CoCreate-app/CoCreate-filter/commit/00c9f023f315b800ef8572dfee8a716e571b9977))
+* sort bug ([647c4a6](https://github.com/CoCreate-app/CoCreate-filter/commit/647c4a6b98dbffd5cedfd252b524fecb0700f3e9))
+
 ## [1.18.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.0...v1.18.1) (2023-03-16)
 
 
