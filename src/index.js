@@ -238,71 +238,35 @@ const CoCreateFilter = {
 		let name = element.getAttribute('filter-sort-name');
 		
 		if (!direction)
-			direction = element.getAttribute('filter-sort-direction') || 'asc';
+			direction = element.getAttribute('filter-sort-direction')
 
-		if (!checkValue(name) || !checkValue(direction))
+		if (!name || !direction || !checkValue(name) || !checkValue(direction))
 			return
 
 		let index = this.getSort(item, name);
 		if (compare) {
-			if (index === null || item.filter.sort[index].direction !== direction)
+			if (index === null || item.filter.sort[index].direction !== direction) {
+				item.filter.sort.splice(index, 1)
 				this._initFilter(item, element)
+			}
 		} else 
 			this.insertArray(item.filter.sort, index, {name, direction});
 	},
 	
 	_initSortEvent: function(item, element) {
-		const self = this;
-		if (element.hasAttribute('filter-sort-toggle'))
-			this._initSortToggleEvent(item, element);
-		else{
-			if (['A', 'BUTTON'].includes(element.tagName)) {
-				element.addEventListener('click', function(){
-					self._applySort(item, element);
-					if (item.el) {
-						item.filter.startIndex = 0;
-						if (item.isFilter != false)
-							item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
-					}
-				});
-			} else if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
-				this._initSortChangeEvent(item, element);
-			}
+		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
+			const self = this;
+			element.addEventListener('change', function(e) {
+				e.preventDefault();
+				self._applySort(item, element, e.target.value);
+				if (item.el) {
+					item.filter.startIndex = 0;
+					item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
+				}
+			});
 		}
 	},
 	
-	// ToDo: depreciate as this can be handeled by CoCreate-toggle/click
-	_initSortToggleEvent: function(item, element) {
-		const self = this;
-		element.addEventListener('click', function() {
-			let direction = this.getAttribute('filter-sort-toggle');
-			if (direction == 'asc')
-				direction = 'desc'
-			else
-				direction = 'asc'
-			item.filter.sort = [];
-			self._applySort(item, element, direction);
-			element.setAttribute('filter-sort-toggle', direction);
-			
-			if (item.el) {
-				item.filter.startIndex = 0;
-				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
-			}
-		});
-	},
-	
-	_initSortChangeEvent: function(item, element) {
-		const self = this;
-		element.addEventListener('change', function(e) {
-			e.preventDefault();
-			self._applySort(item, element, e.target.value);
-			if (item.el) {
-				item.filter.startIndex = 0;
-				item.el.dispatchEvent(new CustomEvent("fetchData", { detail: {type: 'sort'} }));
-			}
-		});
-	},
-
 	initInputEvent: function (item, el) {
 		const self = this;
 		let delayTimer;
@@ -378,6 +342,10 @@ const CoCreateFilter = {
 	},
 		
 	getFilter: function(el) {
+		let id = el.getAttribute('template_id')
+		let item = this.items.get(id)
+		if (item)
+			return item
 		for (let item of this.items.values()) {
 			if (item.el == el)
 				return item
