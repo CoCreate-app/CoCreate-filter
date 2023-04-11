@@ -1,3 +1,10 @@
+## [1.18.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.4...v1.18.5) (2023-04-11)
+
+
+### Bug Fixes
+
+* renamed domains to hosts ([c251137](https://github.com/CoCreate-app/CoCreate-filter/commit/c2511372a258e216498c9a36ec54e86d4e63a14f))
+
 ## [1.18.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.3...v1.18.4) (2023-03-30)
 
 
