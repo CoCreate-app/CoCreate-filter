@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.0...v1.19.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* removed uglifyjs-webpack-plugin ([dea4cc5](https://github.com/CoCreate-app/CoCreate-filter/commit/dea4cc535c167da7ed32a50169c2452a03f1f4ff))
+
 # [1.19.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.7...v1.19.0) (2023-04-24)
 
 
