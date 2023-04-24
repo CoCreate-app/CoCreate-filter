@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.7...v1.19.0) (2023-04-24)
+
+
+### Features
+
+* added pwa manifest ([b4d5f56](https://github.com/CoCreate-app/CoCreate-filter/commit/b4d5f569a6c10f03d9515a46944297c1a1ae1811))
+
 ## [1.18.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.18.6...v1.18.7) (2023-04-11)
 
 
