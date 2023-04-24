@@ -1,3 +1,10 @@
+## [1.19.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.3...v1.19.4) (2023-04-24)
+
+
+### Bug Fixes
+
+* updated worrkflows to v3 and node version 16 ([851a755](https://github.com/CoCreate-app/CoCreate-filter/commit/851a755d9bf1b49698bec9a334959962aff5e6f3))
+
 ## [1.19.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.2...v1.19.3) (2023-04-24)
 
 
