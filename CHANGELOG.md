@@ -1,3 +1,10 @@
+## [1.19.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.7...v1.19.8) (2023-05-01)
+
+
+### Bug Fixes
+
+* replaced icon toggles with new svg ([15d8d81](https://github.com/CoCreate-app/CoCreate-filter/commit/15d8d8187b87c112db41a353efaf3660e989a1a8))
+
 ## [1.19.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.6...v1.19.7) (2023-05-01)
 
 
