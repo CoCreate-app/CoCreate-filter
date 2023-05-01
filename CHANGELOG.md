@@ -1,3 +1,10 @@
+## [1.19.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.6...v1.19.7) (2023-05-01)
+
+
+### Bug Fixes
+
+* update manifest.json to manifest.webmanifest ([805046e](https://github.com/CoCreate-app/CoCreate-filter/commit/805046ebc5459afb74615e3cf5db20327a9304af))
+
 ## [1.19.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.5...v1.19.6) (2023-05-01)
 
 
