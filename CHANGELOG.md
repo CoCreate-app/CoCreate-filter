@@ -1,3 +1,10 @@
+## [1.19.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.5...v1.19.6) (2023-05-01)
+
+
+### Bug Fixes
+
+* replace fontawesome with svg ([718d2ad](https://github.com/CoCreate-app/CoCreate-filter/commit/718d2ada3b94087f6b1adfa02e5081129c910a7d))
+
 ## [1.19.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.4...v1.19.5) (2023-04-30)
 
 
