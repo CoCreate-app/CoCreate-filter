@@ -1,3 +1,10 @@
+## [1.19.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.9...v1.19.10) (2023-05-10)
+
+
+### Bug Fixes
+
+* apikey renamed to key ([c5758e5](https://github.com/CoCreate-app/CoCreate-filter/commit/c5758e514c507577bb9505d0e1b6641b07be6b8a))
+
 ## [1.19.9](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.8...v1.19.9) (2023-05-06)
 
 
