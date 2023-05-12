@@ -34,7 +34,7 @@ const CoCreateFilter = {
 		if (!id) return;
 		let item = {el};
 
-		// ToDo: add default and custom attributes to window.CoCreateConfig.attributes
+		// TODO: add default and custom attributes to window.CoCreateConfig.attributes
 		// let attributes = window.CoCreateConfig.attributes;
 		let attributes = {"fetch-db": "db", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name", "fetch-data": "data"}
 
@@ -169,7 +169,7 @@ const CoCreateFilter = {
 		let filterValueType = element.getAttribute('filter-value-type') || 'string';
 		let caseSensitive = element.getAttribute('filter-case-sensitive') || false
 
-		// ToDo: rename to filter-query-type?
+		// TODO: rename to filter-query-type?
 		// filter_type used for $center $box etc
 		let filter_type = element.getAttribute('filter-type');		
 		let value = element.getAttribute('filter-value');
@@ -185,7 +185,7 @@ const CoCreateFilter = {
 				value[i] = value[i].trim()
 		}
 
-		// ToDo: if filter value is an array check for each
+		// TODO: if filter value is an array check for each
 		if (Array.isArray(value)) {
 			for (let i = 0; i < value.length; i++) {
 				switch (filterValueType) {
@@ -211,7 +211,7 @@ const CoCreateFilter = {
 		if (compare) {
 			if (index === null || item.filter.query[index].value !== value)
 				this._initFilter(item, element)
-			// ToDo: a way to include matching empty string logicalOperator !== 'and'
+			// TODO: a way to include matching empty string logicalOperator !== 'and'
 		} else if (index === null && value === '') 
 			return
 		
@@ -405,7 +405,7 @@ const CoCreateFilter = {
 		if (crud) {
 			data = await crud.readDocument(Item);
 		}
-		// ToDo: get from local data source
+		// TODO: get from local data source
 		this.exportFile(data);
 	},
 	
@@ -497,7 +497,7 @@ const CoCreateFilter = {
 			observe: ['addedNodes'],
 			target: '[filter-name], [filter-sort-name]',
 			callback: function(mutation) {
-				// ToDo: needs to check for fetch- attributes
+				// TODO: needs to check for fetch- attributes
 				if (mutation.target.hasAttribute('fetch-collection')) 
 					return;
 				let item = self.getFilter(mutation.target);
