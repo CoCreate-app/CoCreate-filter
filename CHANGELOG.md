@@ -1,3 +1,10 @@
+## [1.19.11](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.10...v1.19.11) (2023-05-19)
+
+
+### Bug Fixes
+
+* update packages to latest version. This commit updates various packages in the dependencies section of the package.json file to their latest published versions, thereby fixing multiple bugs and improving overall performance. ([0f364fc](https://github.com/CoCreate-app/CoCreate-filter/commit/0f364fc4a4ee8f928da51b3ef5b163bb652d4853))
+
 ## [1.19.10](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.9...v1.19.10) (2023-05-10)
 
 
