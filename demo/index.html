@@ -1,34 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="icon" href="https://cdn.cocreate.app/favicon.ico" type="image/ico" sizes="16x16">
+        <link
+            rel="icon"
+            href="https://cdn.cocreate.app/favicon.ico"
+            type="image/ico"
+            sizes="16x16" />
         <title>Filter | CoCreateJS</title>
         <!-- CoCreate CSS CDN -->
         <!-- <link rel="stylesheet" href="https://cdn.cocreate.app/filter/latest/CoCreate-filter.min.css" type="text/css"/> -->
-    
-		<link rel="manifest" href="/manifest.webmanifest" />
-	</head>
+
+        <link rel="manifest" href="/manifest.webmanifest" />
+    </head>
     <body>
-       
-    <div class="padding:10px">
-        <input class="floating-label" template_id="filter_test" placeholder="Search">
-        <input class="floating-label" template_id="filter_test" placeholder="Name" filter-name="fullname" >
-    </div>
-        
-    <div class="display:flex flex-wrap:wrap" fetch-collection="contacts" template_id="filter_test" fetch-limit="5" >
-      
-      <div class="card template margin:10px flex-grow:1 min-width:250px" template_id="filter_test">
-        <div class="padding:15px">
-          <h5>{{document.name}}</h5>
-          <p document_id="{{document._id}}" name="color">{{document.fullname}}</p>
-          <p document_id="{{document._id}}" name="name">{{document._id}}</p>
+        <div class="padding:10px">
+            <input
+                class="floating-label"
+                template_id="filter_test"
+                placeholder="Search" />
+            <input
+                class="floating-label"
+                template_id="filter_test"
+                placeholder="Name"
+                filter-name="fullname" />
         </div>
-      </div>
-    </div>
-        
-    
-    <!--<script src="../dist/CoCreate-filter.js"></script>-->
-    <script src="https://cdn.cocreate.app/latest/CoCreate.min.js" ></script>
-        
+
+        <div
+            class="display:flex flex-wrap:wrap"
+            fetch-collection="contacts"
+            template_id="filter_test"
+            fetch-limit="5">
+            <div
+                class="card template margin:10px flex-grow:1 min-width:250px"
+                template_id="filter_test">
+                <div class="padding:15px">
+                    <h5>{{document.name}}</h5>
+                    <p document_id="{{document._id}}" name="color">
+                        {{document.fullname}}
+                    </p>
+                    <p document_id="{{document._id}}" name="name">
+                        {{document._id}}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!--<script src="../dist/CoCreate-filter.js"></script>-->
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
     </body>
 </html>
