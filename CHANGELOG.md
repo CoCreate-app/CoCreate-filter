@@ -1,3 +1,10 @@
+## [1.19.14](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.13...v1.19.14) (2023-06-04)
+
+
+### Bug Fixes
+
+* **semantic-release:** worklow error solved by running node version 14 ([5ae6a2b](https://github.com/CoCreate-app/CoCreate-filter/commit/5ae6a2b1c33fe5752dcffced9e87115074fd71d5))
+
 ## [1.19.13](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.12...v1.19.13) (2023-06-02)
 
 
