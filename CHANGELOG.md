@@ -1,3 +1,11 @@
+## [1.19.15](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.14...v1.19.15) (2023-06-04)
+
+
+### Bug Fixes
+
+* replaced secert GITHUB_TOKEN with GITHUB ([264948b](https://github.com/CoCreate-app/CoCreate-filter/commit/264948b4d7dd6954f9db56156e33b4042ea31426))
+* Update dependencies versions for [@cocreate](https://github.com/cocreate) libraries ([0d482a3](https://github.com/CoCreate-app/CoCreate-filter/commit/0d482a3b8c03ab6cd1d8d03f0290ed33d374fdac))
+
 ## [1.19.14](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.13...v1.19.14) (2023-06-04)
 
 
