@@ -1,3 +1,11 @@
+## [1.19.25](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.24...v1.19.25) (2023-06-11)
+
+
+### Bug Fixes
+
+* testing workflow ([4e27fe2](https://github.com/CoCreate-app/CoCreate-filter/commit/4e27fe21c13ef84470956f1d6b8f0ba29a59f7f8))
+* testing workflow ([9fee229](https://github.com/CoCreate-app/CoCreate-filter/commit/9fee2291c1c0ad3fd88b27c08f27779ac4e58065))
+
 ## [1.19.24](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.23...v1.19.24) (2023-06-11)
 
 
