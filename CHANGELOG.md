@@ -1,3 +1,11 @@
+## [1.19.19](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.18...v1.19.19) (2023-06-11)
+
+
+### Bug Fixes
+
+* renamed db to storage ([b9f7113](https://github.com/CoCreate-app/CoCreate-filter/commit/b9f71133f230e1d43de3b6eb4bc56b0df885be27))
+* renamed hosts to host. the value can be a string or an array of strings ([84b50bc](https://github.com/CoCreate-app/CoCreate-filter/commit/84b50bcb904ab52f8b039d92fb0705f0cb5e3f67))
+
 ## [1.19.18](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.17...v1.19.18) (2023-06-10)
 
 
