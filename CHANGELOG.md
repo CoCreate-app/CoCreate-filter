@@ -1,3 +1,10 @@
+## [1.19.21](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.20...v1.19.21) (2023-06-11)
+
+
+### Bug Fixes
+
+* @cocreate/cli moved to dependencies ([733cb51](https://github.com/CoCreate-app/CoCreate-filter/commit/733cb51a3403d84ede4b24610afaf0ffabbc7650))
+
 ## [1.19.20](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.19...v1.19.20) (2023-06-11)
 
 
