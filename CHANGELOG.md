@@ -1,3 +1,10 @@
+## [1.19.22](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.21...v1.19.22) (2023-06-11)
+
+
+### Bug Fixes
+
+* postintall error ([f7094a3](https://github.com/CoCreate-app/CoCreate-filter/commit/f7094a3810a51f4a6da761c75250f2c69e98f171))
+
 ## [1.19.21](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.20...v1.19.21) (2023-06-11)
 
 
