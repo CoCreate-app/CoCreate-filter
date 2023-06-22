@@ -130,7 +130,7 @@ const CoCreateFilter = {
             let filterName = el.getAttribute('filter-name');
             let sortName = el.getAttribute('filter-sort-name');
             let search = el.hasAttribute('filter-search');
-            let loadMore = el.getAttribute('fetch-type');
+            let loadMore = el.getAttribute('filter-on');
             if (!this.filterEvents.has(el)) {
                 this.filterEvents.set(el, true);
                 var setEvent = true;
@@ -289,10 +289,10 @@ const CoCreateFilter = {
         const self = this;
 
         item.el.addEventListener('fetchedData', () => {
-            const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][fetch-type]`);
+            const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][filter-on]`);
             for (let i = 0; i < elements.length; i++) {
                 elements[i]['filter'] = item
-                let type = elements[i].getAttribute('fetch-type')
+                let type = elements[i].getAttribute('filter-on')
                 switch (type) {
                     case 'scroll':
                         self.intersectionObserver.observe(elements[i])
