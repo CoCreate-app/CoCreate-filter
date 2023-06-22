@@ -463,15 +463,6 @@ const CoCreateFilter = {
     }
 };
 
-
-action.init({
-    name: "export",
-    endEvent: "exported",
-    callback: (btn, data) => {
-        CoCreateFilter.exportAction(btn)
-    },
-})
-
 action.init({
     name: "deleteDocuments",
     endEvent: "deletedDocuments",
