@@ -390,75 +390,6 @@ const CoCreateFilter = {
         return filterArray;
     },
 
-    exportAction: async function (btn) {
-        const item_id = btn.getAttribute('template_id');
-        let item = this.items.get(item_id)
-        if (!item) return;
-
-
-        let Item = new Object(item)
-        Item.filter.startIndex = 0;
-        delete Item.el
-        delete Item.count
-
-        let data;
-        if (crud) {
-            data = await crud.readDocument(Item);
-        }
-        // TODO: get from local data source
-        this.exportFile(data);
-    },
-
-    exportFile: function (data) {
-        let file_name = data.type || 'download';
-        let exportData = JSON.stringify(data.document, null, 4);
-        let blob = new Blob([exportData], { type: "application/json" });
-        let url = URL.createObjectURL(blob);
-
-        let link = document.createElement("a");
-
-        link.href = url;
-        link.download = file_name;
-
-        document.body.appendChild(link);
-
-        link.dispatchEvent(
-            new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            })
-        );
-
-        URL.revokeObjectURL(url);
-        link.remove();
-
-        document.dispatchEvent(new CustomEvent('exported', {
-            detail: {}
-        }));
-    },
-
-    importAction: function (btn) {
-        const collection = btn.getAttribute('collection');
-        if (!collection) {
-            console.log('collection is required');
-            return;
-        }
-        var input = document.createElement('input');
-        input.type = 'file';
-
-        input.onchange = e => {
-            if (crud) {
-                let file = e.target.files[0];
-                crud.importCollection({
-                    collection: collection,
-                    file: file
-                });
-            }
-        };
-        input.click();
-    },
-
     __deleteDocumentsAction: function (btn) {
         const collection = btn.getAttribute('collection');
         if (checkValue(collection)) {
@@ -532,13 +463,6 @@ const CoCreateFilter = {
     }
 };
 
-action.init({
-    name: "import",
-    endEvent: "imported",
-    callback: (btn, data) => {
-        CoCreateFilter.importAction(btn)
-    },
-})
 
 action.init({
     name: "export",
