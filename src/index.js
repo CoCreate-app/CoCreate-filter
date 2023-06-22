@@ -92,9 +92,9 @@ const CoCreateFilter = {
             return
 
         item.filter.startIndex = 0;
-        let fetchLimit = parseInt(el.getAttribute('fetch-limit'));
-        if (!isNaN(fetchLimit)) {
-            item.filter.limit = fetchLimit;
+        let filterLimit = parseInt(el.getAttribute('filter-limit'));
+        if (!isNaN(filterLimit)) {
+            item.filter.limit = filterLimit;
         }
 
         this.setCheckboxName(item.filter.id, item.filter.attribute);
