@@ -466,8 +466,8 @@ const CoCreateFilter = {
 action.init({
     name: "deleteDocuments",
     endEvent: "deletedDocuments",
-    callback: (btn, data) => {
-        CoCreateFilter.__deleteDocumentsAction(btn);
+    callback: (data) => {
+        CoCreateFilter.__deleteDocumentsAction(data.element);
     }
 });
 
