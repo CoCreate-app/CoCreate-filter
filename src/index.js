@@ -26,39 +26,18 @@ const CoCreateFilter = {
         });
     },
 
-    init: function (el, attribute) {
-        if (!el || !attribute) return;
+    init: function (element, attribute) {
+        if (!element) return;
+        if (!attribute)
+            attribute = 'filter_id'
 
-        let id = el.getAttribute(attribute);
+        let id = element.getAttribute(attribute);
 
         if (!id) return;
-        let item = { el };
+        let item = crud.getObject(element)
 
         // TODO: add default and custom attributes to window.CoCreateConfig.attributes
         // let attributes = window.CoCreateConfig.attributes;
-        let attributes = { "fetch-db": "storage", "fetch-database": "database", "fetch-collection": "collection", "fetch-index": "index", "fetch-document": "document", "fetch-name": "name", "fetch-data": "data" }
-
-        for (let attribute of el.attributes) {
-            let variable = attributes[attribute.name]
-            if (variable) {
-                let object = { [variable]: attribute.value }
-                if (object[variable]) {
-                    if (!checkValue(object[variable]))
-                        return
-                    if (object[variable].includes(",")) {
-                        const array = object[variable].split(',');
-                        for (let i = 0; i < array.length; i++)
-                            array[i].trim()
-                        item[variable] = array
-                    } else {
-                        item[variable] = [object[variable]]
-                    }
-                } else {
-                    item[variable] = [];
-                }
-
-            }
-        }
 
         item.filter = {
             attribute,
@@ -69,30 +48,7 @@ const CoCreateFilter = {
             startIndex: 0
         }
 
-        if (item.database)
-            item.filter.type = 'database'
-        if (item.collection) {
-            if (item.collection.length > 0) {
-                item.filter.type = 'document'
-                item.document = []
-            }
-            else
-                item.filter.type = 'collection'
-        }
-        if (item.index)
-            item.filter.type = 'index'
-        if (item.document)
-            item.filter.type = 'document'
-        if (item.name)
-            item.filter.type = 'name'
-        if (item.data)
-            item.filter.type = 'data'
-
-        if (['index', 'document'].includes(item.filter.type) && !item.collection.length)
-            return
-
-        item.filter.startIndex = 0;
-        let filterLimit = parseInt(el.getAttribute('filter-limit'));
+        let filterLimit = parseInt(element.getAttribute('filter-limit'));
         if (!isNaN(filterLimit)) {
             item.filter.limit = filterLimit;
         }
@@ -110,7 +66,7 @@ const CoCreateFilter = {
         }
 
         this.items.set(item.filter.id, item);
-        el.filter = item.filter
+        element.filter = item.filter
         return item;
     },
 
@@ -119,7 +75,7 @@ const CoCreateFilter = {
         if (element)
             elements = [element]
         else
-            elements = item.el.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
+            elements = item.element.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
 
         if (elements)
             delete item.isFilter
@@ -159,7 +115,7 @@ const CoCreateFilter = {
         if (element) {
             item.filter.startIndex = 0;
             if (item.isFilter != false)
-                item.el.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'filter' } }));
+                item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'filter' } }));
         }
     },
 
@@ -259,9 +215,9 @@ const CoCreateFilter = {
             element.addEventListener('change', function (e) {
                 e.preventDefault();
                 self._applySort(item, element, e.target.value);
-                if (item.el) {
+                if (item.element) {
                     item.filter.startIndex = 0;
-                    item.el.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'sort' } }));
+                    item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'sort' } }));
                 }
             });
         }
@@ -288,7 +244,7 @@ const CoCreateFilter = {
     _initLoadMore: function (item) {
         const self = this;
 
-        item.el.addEventListener('fetchedData', () => {
+        item.element.addEventListener('fetchedData', () => {
             const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][filter-on]`);
             for (let i = 0; i < elements.length; i++) {
                 elements[i]['filter'] = item
@@ -320,7 +276,7 @@ const CoCreateFilter = {
         if (!item)
             return;
 
-        item.el.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'loadmore' } }));
+        item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'loadmore' } }));
     },
 
     setCheckboxName: function (id, attribute) {
@@ -341,13 +297,13 @@ const CoCreateFilter = {
         }
     },
 
-    getFilter: function (el) {
-        let id = el.getAttribute('template_id')
+    getFilter: function (element) {
+        let id = element.getAttribute('template_id')
         let item = this.items.get(id)
         if (item)
             return item
         for (let item of this.items.values()) {
-            if (item.el == el)
+            if (item.element == element)
                 return item
         }
     },
