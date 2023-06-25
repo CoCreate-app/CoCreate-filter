@@ -6,7 +6,7 @@ import '@cocreate/element-prototype';
 import { checkValue, queryData, searchData, sortData } from '@cocreate/utils'
 
 const CoCreateFilter = {
-    items: new Map(),
+    filters: new Map(),
     filterEvents: new Map(),
     mutatonObserver: false,
     intersectionObserver: null,
@@ -16,8 +16,8 @@ const CoCreateFilter = {
         this.intersectionObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    let item = entry.target['filter']
-                    self.loadMore(item);
+                    let filter = entry.target['filter']
+                    self.loadMore(filter);
                     self.intersectionObserver.unobserve(entry.target);
                 }
             });
@@ -29,17 +29,13 @@ const CoCreateFilter = {
     init: function (element, attribute) {
         if (!element) return;
         if (!attribute)
-            attribute = 'filter_id'
+            attribute = 'filter'
 
         let id = element.getAttribute(attribute);
-
         if (!id) return;
-        let item = crud.getObject(element)
 
-        // TODO: add default and custom attributes to window.CoCreateConfig.attributes
-        // let attributes = window.CoCreateConfig.attributes;
-
-        item.filter = {
+        let filter = {
+            element,
             attribute,
             id,
             search: [],
@@ -50,35 +46,39 @@ const CoCreateFilter = {
 
         let filterLimit = parseInt(element.getAttribute('filter-limit'));
         if (!isNaN(filterLimit)) {
-            item.filter.limit = filterLimit;
+            filter.limit = filterLimit;
         }
 
-        this.setCheckboxName(item.filter.id, item.filter.attribute);
-        this._initFilter(item);
-        this._initLoadMore(item);
+        this.setCheckboxName(filter.id, filter.attribute);
+        this._initFilter(filter);
+        this._initLoadMore(filter);
         if (!this.mutatonObserver)
             this.initMutationObserver()
         if (!this.intersectionObserver)
             this.initIntersectionObserver()
 
-        if (item.isFilter != false) {
-            delete item.isFilter
+        if (filter.isFilter != false) {
+            delete filter.isFilter
         }
 
-        this.items.set(item.filter.id, item);
-        element.filter = item.filter
-        return item;
+        this.filters.set(filter.id, filter);
+
+        element.filter = filter
+
+        let Filter = { ...filter }
+        delete Filter.element
+        return Filter;
     },
 
-    _initFilter: function (item, element, event) {
+    _initFilter: function (filter, element, event) {
         let elements
         if (element)
             elements = [element]
         else
-            elements = item.element.ownerDocument.querySelectorAll(`[${item.filter.attribute}='${item.filter.id}']`);
+            elements = filter.element.ownerDocument.querySelectorAll(`[${filter.attribute}='${filter.id}']`);
 
         if (elements)
-            delete item.isFilter
+            delete filter.isFilter
 
 
         for (var i = 0; i < elements.length; i++) {
@@ -93,33 +93,33 @@ const CoCreateFilter = {
             }
 
             if (sortName) {
-                this._applySort(item, el);
+                this._applySort(filter, el);
                 if (setEvent)
-                    this._initSortEvent(item, el);
+                    this._initSortEvent(filter, el);
             }
             if (filterName) {
-                this._applyQuery(item, el, filterName, event);
+                this._applyQuery(filter, el, filterName, event);
                 if (setEvent)
-                    this.initInputEvent(item, el);
+                    this.initInputEvent(filter, el);
             }
             if (search) {
-                this._applySearch(item, el);
+                this._applySearch(filter, el);
                 if (setEvent)
-                    this.initInputEvent(item, el);
+                    this.initInputEvent(filter, el);
             }
             if (loadMore == 'loadmore' && setEvent)
-                this.initLoadMoreEvent(item, el)
+                this.initLoadMoreEvent(filter, el)
 
         }
 
         if (element) {
-            item.filter.startIndex = 0;
-            if (item.isFilter != false)
-                item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'filter' } }));
+            filter.startIndex = 0;
+            if (filter.isFilter != false)
+                filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
         }
     },
 
-    _applyQuery: function (item, element, name, event, compare) {
+    _applyQuery: function (filter, element, name, event, compare) {
         let operator = element.getAttribute('filter-operator') || 'includes'
         let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
         let filterValueType = element.getAttribute('filter-value-type') || 'string';
@@ -133,7 +133,7 @@ const CoCreateFilter = {
             value = element.getValue();
 
         if (!checkValue(name) || !checkValue(value) || !checkValue(filter_type) || !checkValue(operator))
-            item.isFilter = false
+            filter.isFilter = false
 
         if (value.includes(",")) {
             value = value.split(',');
@@ -163,34 +163,34 @@ const CoCreateFilter = {
                 return
         }
 
-        let index = this.getQuery(item, name, operator, logicalOperator);
+        let index = this.getQuery(filter, name, operator, logicalOperator);
         if (compare) {
-            if (index === null || item.filter.query[index].value !== value)
-                this._initFilter(item, element)
+            if (index === null || filter.query[index].value !== value)
+                this._initFilter(filter, element)
             // TODO: a way to include matching empty string logicalOperator !== 'and'
         } else if (index === null && value === '')
             return
 
-        this.insertArray(item.filter.query, index, { name, value, operator, logicalOperator, type: filter_type, caseSensitive });
+        this.insertArray(filter.query, index, { name, value, operator, logicalOperator, type: filter_type, caseSensitive });
     },
 
-    _applySearch: function (item, element, compare) {
+    _applySearch: function (filter, element, compare) {
         let operator = element.getAttribute('filter-operator') || 'or'
         let caseSensitive = element.getAttribute('filter-case-sensitive') || false
         let value = element.getValue()
         if (!checkValue(value) || !checkValue(operator))
-            item.isFilter = false
+            filter.isFilter = false
 
-        let index = this.getSearch(item, value, operator, caseSensitive);
+        let index = this.getSearch(filter, value, operator, caseSensitive);
         if (compare) {
             if (index === null)
-                this._initFilter(item, element)
+                this._initFilter(filter, element)
         } else
-            this.insertArray(item.filter.search, index, { value, operator, caseSensitive });
+            this.insertArray(filter.search, index, { value, operator, caseSensitive });
 
     },
 
-    _applySort: function (item, element, direction, compare) {
+    _applySort: function (filter, element, direction, compare) {
         let name = element.getAttribute('filter-sort-name');
 
         if (!direction)
@@ -199,31 +199,31 @@ const CoCreateFilter = {
         if (!name || !direction || !checkValue(name) || !checkValue(direction))
             return
 
-        let index = this.getSort(item, name);
+        let index = this.getSort(filter, name);
         if (compare) {
-            if (index === null || item.filter.sort[index].direction !== direction) {
-                item.filter.sort.splice(index, 1)
-                this._initFilter(item, element)
+            if (index === null || filter.sort[index].direction !== direction) {
+                filter.sort.splice(index, 1)
+                this._initFilter(filter, element)
             }
         } else
-            this.insertArray(item.filter.sort, index, { name, direction });
+            this.insertArray(filter.sort, index, { name, direction });
     },
 
-    _initSortEvent: function (item, element) {
+    _initSortEvent: function (filter, element) {
         if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
             const self = this;
             element.addEventListener('change', function (e) {
                 e.preventDefault();
-                self._applySort(item, element, e.target.value);
-                if (item.element) {
-                    item.filter.startIndex = 0;
-                    item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'sort' } }));
+                self._applySort(filter, element, e.target.value);
+                if (filter.element) {
+                    filter.startIndex = 0;
+                    filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
                 }
             });
         }
     },
 
-    initInputEvent: function (item, el) {
+    initInputEvent: function (filter, el) {
         const self = this;
         let delayTimer;
         let contenteditable = el.getAttribute('contenteditable');
@@ -234,49 +234,49 @@ const CoCreateFilter = {
                 delayTimer = setTimeout(function () {
                     let element = e.target;
                     if (element.hasAttribute('template_id') || element.form && element.form.hasAttribute('template_id'))
-                        self._initFilter(item, element, e);
+                        self._initFilter(filter, element, e);
                 }, 500);
 
             });
         }
     },
 
-    _initLoadMore: function (item) {
+    _initLoadMore: function (filter) {
         const self = this;
 
-        item.element.addEventListener('fetchedData', () => {
-            const elements = document.querySelectorAll(`[${item.filter.attribute}="${item.filter.id}"][filter-on]`);
+        filter.element.addEventListener('fetchedData', () => {
+            const elements = document.querySelectorAll(`[${filter.attribute}="${filter.id}"][filter-on]`);
             for (let i = 0; i < elements.length; i++) {
-                elements[i]['filter'] = item
+                elements[i]['filter'] = filter
                 let type = elements[i].getAttribute('filter-on')
                 switch (type) {
                     case 'scroll':
                         self.intersectionObserver.observe(elements[i])
                         break;
                     case 'fetched':
-                        elements[i].setValue(item.filter.startIndex)
+                        elements[i].setValue(filter.startIndex)
                         break;
                     default:
                         if (type && type != 'loadmore')
-                            elements[i].setValue(item.filter[type])
+                            elements[i].setValue(filter[type])
                 }
             }
         });
 
     },
 
-    initLoadMoreEvent: function (item, element) {
+    initLoadMoreEvent: function (filter, element) {
         const self = this;
         element.addEventListener('click', function (e) {
-            self.loadMore(item);
+            self.loadMore(filter);
         });
     },
 
-    loadMore: function (item) {
-        if (!item)
+    loadMore: function (filter) {
+        if (!filter)
             return;
 
-        item.element.dispatchEvent(new CustomEvent("fetchData", { detail: { type: 'loadmore' } }));
+        filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
     },
 
     setCheckboxName: function (id, attribute) {
@@ -299,18 +299,18 @@ const CoCreateFilter = {
 
     getFilter: function (element) {
         let id = element.getAttribute('template_id')
-        let item = this.items.get(id)
-        if (item)
-            return item
-        for (let item of this.items.values()) {
-            if (item.element == element)
-                return item
+        let filter = this.filters.get(id)
+        if (filter)
+            return filter
+        for (let filter of this.filters.values()) {
+            if (filter.element == element)
+                return filter
         }
     },
 
-    getQuery: function (item, name, operator, logicalOperator) {
-        for (let i = 0; i < item.filter.query.length; i++) {
-            let f = item.filter.query[i];
+    getQuery: function (filter, name, operator, logicalOperator) {
+        for (let i = 0; i < filter.query.length; i++) {
+            let f = filter.query[i];
             if (f.name == name && f.operator == operator && f.logicalOperator == logicalOperator) {
                 return i;
             }
@@ -318,9 +318,9 @@ const CoCreateFilter = {
         return null;
     },
 
-    getSearch: function (item, value, operator, caseSensitive) {
-        for (let i = 0; i < item.filter.search.length; i++) {
-            let f = item.filter.search[i];
+    getSearch: function (filter, value, operator, caseSensitive) {
+        for (let i = 0; i < filter.search.length; i++) {
+            let f = filter.search[i];
             if (f.operator == operator && f.caseSensitive == caseSensitive) {
                 return i;
             }
@@ -328,9 +328,9 @@ const CoCreateFilter = {
         return null;
     },
 
-    getSort: function (item, name) {
-        for (let i = 0; i < item.filter.sort.length; i++) {
-            if (item.filter.sort[i].name == name) {
+    getSort: function (filter, name) {
+        for (let i = 0; i < filter.sort.length; i++) {
+            if (filter.sort[i].name == name) {
                 return i;
             }
         }
@@ -371,7 +371,6 @@ const CoCreateFilter = {
                 })
             }
 
-
         }
     },
 
@@ -387,9 +386,9 @@ const CoCreateFilter = {
                 // TODO: needs to check for fetch- attributes
                 if (mutation.target.hasAttribute('fetch-collection'))
                     return;
-                let item = self.getFilter(mutation.target);
-                if (item)
-                    self._initFilter(item, mutation.target);
+                let filter = self.getFilter(mutation.target);
+                if (filter)
+                    self._initFilter(filter, mutation.target);
             }
         });
 
@@ -400,18 +399,18 @@ const CoCreateFilter = {
             callback: function (mutation) {
                 let element = mutation.target
                 let attribute = mutation.attributeName
-                let item = self.getFilter(mutation.target);
-                if (item) {
-                    delete item.isFilter
-                    if (!item.isFetched)
-                        self._initFilter(item, element);
+                let filter = self.getFilter(mutation.target);
+                if (filter) {
+                    delete filter.isFilter
+                    if (!filter.isFetched)
+                        self._initFilter(filter, element);
                     else if (attribute.includes('search')) {
-                        self._applySearch(item, element, true)
+                        self._applySearch(filter, element, true)
                     } else if (attribute.includes('sort')) {
-                        self._applySort(item, element, '', true)
+                        self._applySort(filter, element, '', true)
                     } else if (element.hasAttribute('filter-name')) {
                         let name = element.getAttribute('filter-name')
-                        self._applyQuery(item, element, name, '', true)
+                        self._applyQuery(filter, element, name, '', true)
                     }
                 }
             }
