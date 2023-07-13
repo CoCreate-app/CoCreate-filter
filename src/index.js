@@ -1,433 +1,335 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
-import crud from '@cocreate/crud-client';
-import action from '@cocreate/actions';
 import '@cocreate/element-prototype';
 import { checkValue, queryData, searchData, sortData } from '@cocreate/utils'
 
-const CoCreateFilter = {
-    filters: new Map(),
-    filterEvents: new Map(),
-    mutatonObserver: false,
-    intersectionObserver: null,
+const elements = new Map();
+const selectors = new Map();
+const filters = new Map();
+const dispatch = new Map();
 
-    initIntersectionObserver: function () {
-        const self = this;
-        this.intersectionObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    let filter = entry.target['filter']
-                    self.loadMore(filter);
-                    self.intersectionObserver.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 1
-        });
-    },
 
-    init: function (element, attribute) {
-        if (!element) return;
-        if (!attribute)
-            attribute = 'filter'
+function init() {
+    // if (element) {
+    //     if (!filters.has(element))
+    //         initFilterOnEvent(element);
 
-        let id = element.getAttribute(attribute);
-        if (!id) return;
+    //     element.getFilter = () => getFilter(element)
+    //     let filter = getFilter(element)
+    //     return filter;
 
-        let filter = {
-            element,
-            attribute,
-            id,
-            search: [],
-            sort: [],
-            query: [],
-            startIndex: 0
-        }
+    // } else {
 
-        let filterLimit = parseInt(element.getAttribute('filter-limit'));
-        if (!isNaN(filterLimit)) {
-            filter.limit = filterLimit;
-        }
+    let elements = document.querySelectorAll('[filter-selector], [filter-name], [filter-search], [filter-sort-name], [filter-on]')
+    for (let i = 0; i < elements.length; i++)
+        initElement(elements[i])
 
-        this.setCheckboxName(filter.id, filter.attribute);
-        this._initFilter(filter);
-        this._initLoadMore(filter);
-        if (!this.mutatonObserver)
-            this.initMutationObserver()
-        if (!this.intersectionObserver)
-            this.initIntersectionObserver()
-
-        if (filter.isFilter != false) {
-            delete filter.isFilter
-        }
-
-        this.filters.set(filter.id, filter);
-
-        element.filter = filter
-
-        let Filter = { ...filter }
-        delete Filter.element
-        return Filter;
-    },
-
-    _initFilter: function (filter, element, event) {
-        let elements
-        if (element)
-            elements = [element]
+    for (let selector of selectors.keys()) {
+        if (typeof selector === 'string')
+            elements = document.querySelectorAll(selector)
         else
-            elements = filter.element.ownerDocument.querySelectorAll(`[${filter.attribute}='${filter.id}']`);
+            elements = [selector]
 
-        if (elements)
-            delete filter.isFilter
-
-
-        for (var i = 0; i < elements.length; i++) {
-            let el = elements[i];
-            let filterName = el.getAttribute('filter-name');
-            let sortName = el.getAttribute('filter-sort-name');
-            let search = el.hasAttribute('filter-search');
-            let loadMore = el.getAttribute('filter-on');
-            if (!this.filterEvents.has(el)) {
-                this.filterEvents.set(el, true);
-                var setEvent = true;
+        for (let i = 0; i < elements.length; i++) {
+            if (!filters.has(elements[i])) {
+                initFilterOnEvent(elements[i]);
+                getFilter(elements[i])
+                elements[i].getFilter = () => getFilter(elements[i])
             }
-
-            if (sortName) {
-                this._applySort(filter, el);
-                if (setEvent)
-                    this._initSortEvent(filter, el);
-            }
-            if (filterName) {
-                this._applyQuery(filter, el, filterName, event);
-                if (setEvent)
-                    this.initInputEvent(filter, el);
-            }
-            if (search) {
-                this._applySearch(filter, el);
-                if (setEvent)
-                    this.initInputEvent(filter, el);
-            }
-            if (loadMore == 'loadmore' && setEvent)
-                this.initLoadMoreEvent(filter, el)
-
         }
+    }
+    // }
+}
 
-        if (element) {
-            filter.startIndex = 0;
-            if (filter.isFilter != false)
-                filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
-        }
-    },
+function initElement(element) {
+    let selector = element.getAttribute('filter-selector')
+    if (!selector) {
+        if (element.hasAttribute('filter-selector'))
+            return
+        else
+            selector = element
+    }
+    if (!elements.has(element)) {
+        elements.set(element, {})
 
-    _applyQuery: function (filter, element, name, event, compare) {
-        let operator = element.getAttribute('filter-operator') || 'includes'
-        let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
-        let filterValueType = element.getAttribute('filter-value-type') || 'string';
-        let caseSensitive = element.getAttribute('filter-case-sensitive') || false
+        initElementEvents(element)
 
-        // TODO: rename to filter-query-type?
-        // filter_type used for $center $box etc
-        let filter_type = element.getAttribute('filter-type');
-        let value = element.getAttribute('filter-value');
-        if (!value && element.value !== undefined)
-            value = element.getValue();
+        if (!selectors.has(selector))
+            selectors.set(selector, [element])
+        else
+            selectors.get(selector).push(element)
+    }
+}
 
-        if (!checkValue(name) || !checkValue(value) || !checkValue(filter_type) || !checkValue(operator))
-            filter.isFilter = false
+function initElementEvents(element) {
+    if (element.hasAttribute('filter-sort-name'))
+        initSortEvent(element);
+    if (element.hasAttribute('filter-name') || element.hasAttribute('filter-search'))
+        initInputEvent(element);
+}
 
-        if (value.includes(",")) {
-            value = value.split(',');
-            for (let i = 0; i < value.length; i++)
-                value[i] = value[i].trim()
-        }
+function getElementFilters(element) {
+    let filter = {}
+    if (element.hasAttribute('filter-sort-name'))
+        applySort(filter, element);
+    if (element.hasAttribute('filter-name'))
+        applyQuery(filter, element);
+    if (element.hasAttribute('filter-search'))
+        applySearch(filter, element);
 
-        // TODO: if filter value is an array check for each
-        if (Array.isArray(value)) {
+    elements.set(element, filter)
+    return filter
+}
+
+function getFilter(element) {
+    let filter = {
+        index: 0
+    }
+
+    for (var [key, value] of selectors.entries()) {
+        if (element.matches(key)) {
             for (let i = 0; i < value.length; i++) {
-                switch (filterValueType) {
-                    case 'number':
-                        value[i] = Number(value[i]);
-                        break
-                }
+                filter = { ...filter, ...elements.get(value[i]) }
             }
-        } else {
+        }
+    }
+
+    let filterLimit = parseInt(element.getAttribute('filter-limit'));
+    if (!isNaN(filterLimit)) {
+        filter.limit = filterLimit;
+    }
+
+    filters.set(element, filter);
+    return filter
+}
+
+function updateFilter(element, loadMore) {
+    let newFilter = getElementFilters(element);
+    let selector = element.getAttribute('filter-selector')
+    if (selector) {
+        // ensures that the els returned still match the selector 
+        let els = document.querySelectorAll(selector)
+        for (let i = 0; i < els.length; i++) {
+            let filter = filters.get(els[i])
+            filter = { ...filter, ...newFilter }
+            if (loadMore) {
+                let filterLimit = element.getAttribute('filter-limit')
+                if (filterLimit)
+                    filter.limit = filterLimit
+                filter.index = filter.count
+
+            }
+            filters.set(els[i], filter)
+
+            let delayTimer = dispatch.get(els[i])
+            clearTimeout(delayTimer);
+            delayTimer = setTimeout(function () {
+                dispatch.delete(els[i])
+                els[i].setFilter(filter)
+                // els[i].dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
+            }, 500);
+            dispatch.set(els[i], delayTimer)
+        }
+    }
+}
+
+function applyQuery(filter, element) {
+    let name = element.getAttribute('filter-name')
+    let operator = element.getAttribute('filter-operator') || 'includes'
+    let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
+    let filterValueType = element.getAttribute('filter-value-type') || 'string';
+    let caseSensitive = element.getAttribute('filter-case-sensitive') || false
+
+    // TODO: rename to filter-query-type?
+    // filter-type used for $center $box etc
+    let type = element.getAttribute('filter-type');
+    let value = element.getAttribute('filter-value');
+    if (!value && element.value !== undefined)
+        value = element.getValue();
+
+    if (!checkValue(name) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
+        filter.isFilter = false
+
+    if (value.includes(",")) {
+        value = value.split(',');
+        for (let i = 0; i < value.length; i++)
+            value[i] = value[i].trim()
+    }
+
+    if (Array.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
             switch (filterValueType) {
                 case 'number':
-                    value = Number(value);
+                    value[i] = Number(value[i]);
                     break
             }
         }
-
-        if (event) {
-            if (value === '' && event.target !== element)
-                return
+    } else {
+        switch (filterValueType) {
+            case 'number':
+                value = Number(value);
+                break
         }
+    }
 
-        let index = this.getQuery(filter, name, operator, logicalOperator);
-        if (compare) {
-            if (index === null || filter.query[index].value !== value)
-                this._initFilter(filter, element)
-            // TODO: a way to include matching empty string logicalOperator !== 'and'
-        } else if (index === null && value === '')
-            return
+    let index = getQuery(filter, name, operator, logicalOperator);
+    if (index === null || filter.query[index].value !== value)
+        insertArray(filter.query, index, { name, value, operator, logicalOperator, type, caseSensitive });
+}
 
-        this.insertArray(filter.query, index, { name, value, operator, logicalOperator, type: filter_type, caseSensitive });
-    },
+function applySearch(filter, element) {
+    let operator = element.getAttribute('filter-operator') || 'or'
+    let caseSensitive = element.getAttribute('filter-case-sensitive') || false
+    let value = element.getValue()
+    if (!checkValue(value) || !checkValue(operator))
+        filter.isFilter = false
 
-    _applySearch: function (filter, element, compare) {
-        let operator = element.getAttribute('filter-operator') || 'or'
-        let caseSensitive = element.getAttribute('filter-case-sensitive') || false
-        let value = element.getValue()
-        if (!checkValue(value) || !checkValue(operator))
-            filter.isFilter = false
+    let index = getSearch(filter, value, operator, caseSensitive);
+    if (index === null)
+        insertArray(filter.search, index, { value, operator, caseSensitive });
 
-        let index = this.getSearch(filter, value, operator, caseSensitive);
-        if (compare) {
-            if (index === null)
-                this._initFilter(filter, element)
-        } else
-            this.insertArray(filter.search, index, { value, operator, caseSensitive });
+}
 
-    },
+function applySort(filter, element) {
+    let name = element.getAttribute('filter-sort-name');
+    let direction = element.getAttribute('filter-sort-direction')
 
-    _applySort: function (filter, element, direction, compare) {
-        let name = element.getAttribute('filter-sort-name');
+    if (!name || !direction || !checkValue(name) || !checkValue(direction))
+        return
 
-        if (!direction)
-            direction = element.getAttribute('filter-sort-direction')
+    let index = getSort(filter, name);
+    if (index === null || filter.sort[index].direction !== direction) {
+        filter.sort.splice(index, 1)
+        insertArray(filter.sort, index, { name, direction });
+    }
+}
 
-        if (!name || !direction || !checkValue(name) || !checkValue(direction))
-            return
-
-        let index = this.getSort(filter, name);
-        if (compare) {
-            if (index === null || filter.sort[index].direction !== direction) {
-                filter.sort.splice(index, 1)
-                this._initFilter(filter, element)
-            }
-        } else
-            this.insertArray(filter.sort, index, { name, direction });
-    },
-
-    _initSortEvent: function (filter, element) {
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
-            const self = this;
-            element.addEventListener('change', function (e) {
-                e.preventDefault();
-                self._applySort(filter, element, e.target.value);
-                if (filter.element) {
-                    filter.startIndex = 0;
-                    filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
-                }
-            });
-        }
-    },
-
-    initInputEvent: function (filter, el) {
-        const self = this;
-        let delayTimer;
-        let contenteditable = el.getAttribute('contenteditable');
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName) || contenteditable != undefined && contenteditable != 'false') {
-            el.addEventListener('input', function (e) {
-                e.preventDefault();
-                clearTimeout(delayTimer);
-                delayTimer = setTimeout(function () {
-                    let element = e.target;
-                    if (element.hasAttribute('template_id') || element.form && element.form.hasAttribute('template_id'))
-                        self._initFilter(filter, element, e);
-                }, 500);
-
-            });
-        }
-    },
-
-    _initLoadMore: function (filter) {
-        const self = this;
-
-        filter.element.addEventListener('fetchedData', () => {
-            const elements = document.querySelectorAll(`[${filter.attribute}="${filter.id}"][filter-on]`);
-            for (let i = 0; i < elements.length; i++) {
-                elements[i]['filter'] = filter
-                let type = elements[i].getAttribute('filter-on')
-                switch (type) {
-                    case 'scroll':
-                        self.intersectionObserver.observe(elements[i])
-                        break;
-                    case 'fetched':
-                        elements[i].setValue(filter.startIndex)
-                        break;
-                    default:
-                        if (type && type != 'loadmore')
-                            elements[i].setValue(filter[type])
-                }
-            }
+function initSortEvent(element) {
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)) {
+        element.addEventListener('change', function (e) {
+            updateFilter(element)
         });
+    }
+}
 
-    },
-
-    initLoadMoreEvent: function (filter, element) {
-        const self = this;
-        element.addEventListener('click', function (e) {
-            self.loadMore(filter);
+function initInputEvent(element) {
+    let contenteditable = element.getAttribute('contenteditable');
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName) || contenteditable != undefined && contenteditable != 'false') {
+        element.addEventListener('input', function () {
+            updateFilter(element)
         });
-    },
+    }
+}
 
-    loadMore: function (filter) {
-        if (!filter)
-            return;
-
-        filter.element.dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
-    },
-
-    setCheckboxName: function (id, attribute) {
-        var forms = document.querySelectorAll('form[' + attribute + '="' + id + '"]');
-        for (var k = 0; k < forms.length; k++) {
-
-            var elements = forms[k].querySelectorAll('input[type=checkbox], form input[type=radio]');
-
-            for (var i = 0; i < elements.length; i++) {
-                var el_name = elements[i].getAttribute('name');
-                var f_name = elements[i].getAttribute('filter-name');
-                if (el_name || !f_name) {
-                    continue;
-                }
-                elements[i].setAttribute('name', "_" + id + "-" + f_name + "_" + k);
+function initFilterOnEvent(element) {
+    element.addEventListener('fetchedData', () => {
+        for (let el of elements.keys()) {
+            let type = el.getAttribute('filter-on')
+            switch (type) {
+                case 'click':
+                    el.addEventListener('click', () => updateFilter(el, true));
+                    break;
+                case 'scroll':
+                    intersectionObserver.observe(el)
+                    break;
+                case 'fetched':
+                    // TODO: get filter from response data
+                    const filter = filters.get(element)
+                    el.setValue(filter.count)
+                    break;
             }
-
         }
-    },
+    });
 
-    getFilter: function (element) {
-        let id = element.getAttribute('template_id')
-        let filter = this.filters.get(id)
-        if (filter)
-            return filter
-        for (let filter of this.filters.values()) {
-            if (filter.element == element)
-                return filter
+}
+
+const intersectionObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            updateFilter(entry.target, true)
+            intersectionObserver.unobserve(entry.target);
         }
-    },
+    });
+}, {
+    threshold: 1
+});
 
-    getQuery: function (filter, name, operator, logicalOperator) {
+function getQuery(filter, name, operator, logicalOperator) {
+    if (filter.query) {
         for (let i = 0; i < filter.query.length; i++) {
             let f = filter.query[i];
             if (f.name == name && f.operator == operator && f.logicalOperator == logicalOperator) {
                 return i;
             }
         }
-        return null;
-    },
+    } else {
+        filter.query = []
+    }
+    return null;
+}
 
-    getSearch: function (filter, value, operator, caseSensitive) {
+function getSearch(filter, value, operator, caseSensitive) {
+    if (filter.search) {
         for (let i = 0; i < filter.search.length; i++) {
             let f = filter.search[i];
             if (f.operator == operator && f.caseSensitive == caseSensitive) {
                 return i;
             }
         }
-        return null;
-    },
+    } else {
+        filter.search = []
+    }
+    return null;
+}
 
-    getSort: function (filter, name) {
+function getSort(filter, name) {
+    if (filter.sort) {
         for (let i = 0; i < filter.sort.length; i++) {
             if (filter.sort[i].name == name) {
                 return i;
             }
         }
-        return null;
-    },
-
-    insertArray: function (filterArray, index, obj) {
-        if (index !== null && index >= 0)
-            filterArray.splice(index, 1, obj);
-        else
-            filterArray.push(obj);
-
-        return filterArray;
-    },
-
-    __deleteDocumentsAction: function (btn) {
-        const collection = btn.getAttribute('collection');
-        if (checkValue(collection)) {
-            const template_id = btn.getAttribute('template_id');
-            if (!template_id) return;
-
-            let _ids = []
-            const selectedEls = document.querySelectorAll(`.selected[templateid="${template_id}"]`);
-            for (let i = 0; i < selectedEls.length; i++) {
-                const _id = selectedEls[i].getAttribute('document_id');
-                if (checkValue(_id))
-                    _ids.push({ _id })
-            }
-
-            if (_ids.length > 0 && crud) {
-                crud.deleteDocument({
-                    collection,
-                    document: _ids
-                }).then(() => {
-                    document.dispatchEvent(new CustomEvent('deletedDocuments', {
-                        detail: {}
-                    }));
-                })
-            }
-
-        }
-    },
-
-    initMutationObserver: function () {
-        const self = this
-        this.mutatonObserver = true
-
-        observer.init({
-            name: 'CoCreateFilterInit',
-            observe: ['addedNodes'],
-            target: '[filter-name], [filter-sort-name]',
-            callback: function (mutation) {
-                // TODO: needs to check for fetch- attributes
-                if (mutation.target.hasAttribute('fetch-collection'))
-                    return;
-                let filter = self.getFilter(mutation.target);
-                if (filter)
-                    self._initFilter(filter, mutation.target);
-            }
-        });
-
-        observer.init({
-            name: 'CoCreateFilterObserver',
-            observe: ['attributes'],
-            attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-sort-direction', 'filter-type'],
-            callback: function (mutation) {
-                let element = mutation.target
-                let attribute = mutation.attributeName
-                let filter = self.getFilter(mutation.target);
-                if (filter) {
-                    delete filter.isFilter
-                    if (!filter.isFetched)
-                        self._initFilter(filter, element);
-                    else if (attribute.includes('search')) {
-                        self._applySearch(filter, element, true)
-                    } else if (attribute.includes('sort')) {
-                        self._applySort(filter, element, '', true)
-                    } else if (element.hasAttribute('filter-name')) {
-                        let name = element.getAttribute('filter-name')
-                        self._applyQuery(filter, element, name, '', true)
-                    }
-                }
-            }
-        });
+    } else {
+        filter.sort = []
     }
-};
+    return null;
+}
 
-action.init({
-    name: "deleteDocuments",
-    endEvent: "deletedDocuments",
-    callback: (data) => {
-        CoCreateFilter.__deleteDocumentsAction(data.element);
+function insertArray(filterArray, index, obj) {
+    if (index !== null && index >= 0)
+        filterArray.splice(index, 1, obj);
+    else
+        filterArray.push(obj);
+
+    return filterArray;
+}
+
+observer.init({
+    name: 'CoCreateFilterInit',
+    observe: ['addedNodes'],
+    target: '[filter-selector]',
+    callback(mutation) {
+        initElement(mutation.target);
     }
 });
 
+observer.init({
+    name: 'CoCreateFilterObserver',
+    observe: ['attributes'],
+    attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-sort-direction', 'filter-type'],
+    callback(mutation) {
+        updateFilter(mutation.target)
+    }
+});
+
+
+init()
+
 export default {
-    ...CoCreateFilter,
+    init,
+    getFilter,
+    elements,
+    filters,
     queryData,
     searchData,
     sortData

@@ -13,38 +13,52 @@
         <link rel="manifest" href="/manifest.webmanifest" />
     </head>
     <body>
+        <input
+            placeholder="test"
+            collection="test"
+            document_id="6465646af1e023c0aee760c2"
+            name="name"
+            crdt="false" />
+
         <div class="padding:10px">
             <input
                 class="floating-label"
-                template_id="filter_test"
+                filter-selector="#test"
                 placeholder="Search" />
             <input
                 class="floating-label"
-                template_id="filter_test"
-                placeholder="Name"
-                filter-name="fullname" />
+                filter-selector="#test"
+                filter-name="name"
+                placeholder="Name" />
         </div>
 
         <div
+            id="test"
             class="display:flex flex-wrap:wrap"
             collection="test"
-            template_id="filter_test"
             filter-limit="5"
-            filter="123">
+            render-selector="#documents">
             <div
-                class="card template margin:10px flex-grow:1 min-width:250px"
-                template_id="filter_test">
+                id="documents"
+                class="card margin:10px flex-grow:1 min-width:250px"
+                render="document">
                 <div class="padding:15px">
-                    <h5>{{document.name}}</h5>
-                    <p document_id="{{document._id}}" name="color">
-                        {{document.fullname}}
-                    </p>
-                    <p document_id="{{document._id}}" name="name">
-                        {{document._id}}
-                    </p>
+                    <h5>{{document.name}}{{status}}</h5>
+                    <p document_id="{{document._id}}">{{document._id}}</p>
+                    <div render="document.created" render-key="created">
+                        <span>{{created.key}}: {{created.value}}</span>
+                        <span
+                            >{{created.key}}:
+                            {{document.created.{{created.key}}}}
+                            {{status}}</span
+                        >
+                        <!-- <span>{{created.keyPath}}</span> -->
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div filter-on="click" filter-selector="#test">Load More</div>
 
         <!--<script src="../dist/CoCreate-filter.js"></script>-->
         <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
