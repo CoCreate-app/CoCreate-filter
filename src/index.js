@@ -126,7 +126,6 @@ function updateFilter(element, loadMore) {
             delayTimer = setTimeout(function () {
                 dispatch.delete(els[i])
                 els[i].setFilter(filter)
-                // els[i].dispatchEvent(new CustomEvent("fetchData", { detail: { filter } }));
             }, 500);
             dispatch.set(els[i], delayTimer)
         }
