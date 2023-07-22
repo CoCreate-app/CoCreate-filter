@@ -35,17 +35,46 @@
         <div
             id="test"
             class="display:flex flex-wrap:wrap"
-            collection="test"
+            collection="files"
             filter-limit="5"
-            render-selector="#documents">
+            render-selector=".card[template]">
             <div
-                id="documents"
-                class="card margin:10px flex-grow:1 min-width:250px"
-                render="document">
+                template
+                render="document"
+                class="card margin:10px flex-grow:1 min-width:250px">
                 <div class="padding:15px">
-                    <h5>{{document.name}}{{status}}</h5>
-                    <p document_id="{{document._id}}">{{document._id}}</p>
-                    <div render="document.created" render-key="created">
+                    <h5 document_id="{{document._id}}">
+                        {{document._id}}{{status}}
+                    </h5>
+
+                    <textarea
+                        collection="{{document.collection}}"
+                        document_id="{{document._id}}"
+                        name="src"></textarea>
+
+                    <div render="document.modified" render-as="modified">
+                        <span>{{modified.key}}: {{modified.value}}</span>
+                        <input
+                            type="datetime-local"
+                            collection="{{document.collection}}"
+                            document_id="{{document._id}}"
+                            name="{{modified.keyPath}}.{{modified.key}}" />
+                        <input
+                            type="datetime-local"
+                            collection="{{document.collection}}"
+                            document_id="{{document._id}}"
+                            name="{{modified.parentKey}}.{{modified.key}}" />
+
+                        <span>{{modified.renderAs}}</span>
+
+                        <span
+                            >{{modified.key}}:
+                            {{document.modified.{{modified.key}}}}
+                            {{status}}</span
+                        >
+                    </div>
+
+                    <div render="document.created" render-as="created">
                         <span>{{created.key}}: {{created.value}}</span>
                         <span
                             >{{created.key}}:
@@ -61,7 +90,7 @@
         <div filter-on="click" filter-selector="#test">Load More</div>
 
         <!--<script src="../dist/CoCreate-filter.js"></script>-->
-        <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
-        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
+        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
     </body>
 </html>
