@@ -35,7 +35,7 @@
         <div
             id="test"
             class="display:flex flex-wrap:wrap"
-            collection="files"
+            collection="test"
             filter-limit="5"
             render-selector=".card[template]">
             <div
@@ -52,9 +52,25 @@
                         document_id="{{document._id}}"
                         name="src"></textarea>
 
-                    <div render="document.modified" render-as="modified">
-                        <span>{{modified.key}}: {{modified.value}}</span>
-                        <input
+                    <div
+                        render="document.test.nested.nested1"
+                        render-as="nested"
+                        template>
+                        <span>{{nested.key}}: {{nested.value}}</span>
+                        <h3>parentKey: {{parentKey}}</h3>
+                        <h3>keyPath: {{keyPath}}</h3>
+                        <h3>key: {{nested.key}}</h3>
+                    </div>
+
+                    <!-- <div
+                        render="document.modified"
+                        render-as="updated"
+                        template>
+                        <span>{{updated.key}}: {{updated.value}}</span>
+                        <h3>parentKey: {{parentKey}}</h3>
+                        <h3>keyPath: {{keyPath}}</h3>
+                        <h3>key: {{updated.key}}</h3> -->
+                    <!-- <input
                             type="datetime-local"
                             collection="{{document.collection}}"
                             document_id="{{document._id}}"
@@ -63,26 +79,26 @@
                             type="datetime-local"
                             collection="{{document.collection}}"
                             document_id="{{document._id}}"
-                            name="{{modified.parentKey}}.{{modified.key}}" />
-
+                            name="{{modified.parentKey}}.{{modified.key}}" /> -->
+                    <!-- 
                         <span>{{modified.renderAs}}</span>
 
                         <span
                             >{{modified.key}}:
                             {{document.modified.{{modified.key}}}}
                             {{status}}</span
-                        >
-                    </div>
+                        > -->
+                    <!-- </div> -->
 
-                    <div render="document.created" render-as="created">
+                    <!-- <div render="document.created" render-as="created">
                         <span>{{created.key}}: {{created.value}}</span>
                         <span
                             >{{created.key}}:
                             {{document.created.{{created.key}}}}
                             {{status}}</span
                         >
-                        <!-- <span>{{created.keyPath}}</span> -->
-                    </div>
+                        <span>{{created.keyPath}}</span>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -90,7 +106,7 @@
         <div filter-on="click" filter-selector="#test">Load More</div>
 
         <!--<script src="../dist/CoCreate-filter.js"></script>-->
-        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
-        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
+        <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
+        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
     </body>
 </html>

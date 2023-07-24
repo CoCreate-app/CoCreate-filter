@@ -1,26 +1,18 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import '@cocreate/element-prototype';
-import { checkValue, queryData, searchData, sortData } from '@cocreate/utils'
+import { getElements, checkValue, queryData, searchData, sortData } from '@cocreate/utils'
 
 const elements = new Map();
 const selectors = new Map();
 const filters = new Map();
 const dispatch = new Map();
+const elementSelector = '[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]'
 
 
 function init() {
-    // if (element) {
-    //     if (!filters.has(element))
-    //         initFilterOnEvent(element);
-
-    //     element.getFilter = () => getFilter(element)
-    //     let filter = getFilter(element)
-    //     return filter;
-
-    // } else {
-
-    let elements = document.querySelectorAll('[filter-selector], [filter-name], [filter-search], [filter-sort-name], [filter-on]')
+    let filterSelector = elementSelector + ', [filter-name], [filter-search], [filter-sort-name], [filter-on]'
+    let elements = document.querySelectorAll(filterSelector)
     for (let i = 0; i < elements.length; i++)
         initElement(elements[i])
 
@@ -38,17 +30,22 @@ function init() {
             }
         }
     }
-    // }
 }
 
 function initElement(element) {
-    let selector = element.getAttribute('filter-selector')
-    if (!selector) {
-        if (element.hasAttribute('filter-selector'))
-            return
-        else
-            selector = element
+    let selector
+    for (let attribute of element.attributes) {
+        if (['filter-selector', 'filter-closest', 'filter-parent', 'filter-next', 'filter-previous'].includes(attribute.name)) {
+            if (attribute.value) {
+                selector = attribute.value
+                break;
+            } else {
+                // selector = element
+                return
+            }
+        }
     }
+
     if (!elements.has(element)) {
         elements.set(element, {})
 
@@ -105,30 +102,27 @@ function getFilter(element) {
 
 function updateFilter(element, loadMore) {
     let newFilter = getElementFilters(element);
-    let selector = element.getAttribute('filter-selector')
-    if (selector) {
-        // ensures that the els returned still match the selector 
-        let els = document.querySelectorAll(selector)
-        for (let i = 0; i < els.length; i++) {
-            let filter = filters.get(els[i])
-            filter = { ...filter, ...newFilter }
-            if (loadMore) {
-                let filterLimit = element.getAttribute('filter-limit')
-                if (filterLimit)
-                    filter.limit = filterLimit
-                filter.index = filter.count
 
-            }
-            filters.set(els[i], filter)
+    let els = getElements(element, 'filter')
+    for (let i = 0; i < els.length; i++) {
+        let filter = filters.get(els[i])
+        filter = { ...filter, ...newFilter }
+        if (loadMore) {
+            let filterLimit = element.getAttribute('filter-limit')
+            if (filterLimit)
+                filter.limit = filterLimit
+            filter.index = filter.count
 
-            let delayTimer = dispatch.get(els[i])
-            clearTimeout(delayTimer);
-            delayTimer = setTimeout(function () {
-                dispatch.delete(els[i])
-                els[i].setFilter(filter)
-            }, 500);
-            dispatch.set(els[i], delayTimer)
         }
+        filters.set(els[i], filter)
+
+        let delayTimer = dispatch.get(els[i])
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(function () {
+            dispatch.delete(els[i])
+            els[i].setFilter(filter)
+        }, 500);
+        dispatch.set(els[i], delayTimer)
     }
 }
 
@@ -306,7 +300,7 @@ function insertArray(filterArray, index, obj) {
 observer.init({
     name: 'CoCreateFilterInit',
     observe: ['addedNodes'],
-    target: '[filter-selector]',
+    target: elementSelector,
     callback(mutation) {
         initElement(mutation.target);
     }
