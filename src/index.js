@@ -103,7 +103,7 @@ function getFilter(element) {
 function updateFilter(element, loadMore) {
     let newFilter = getElementFilters(element);
 
-    let els = queryElements(element, 'filter')
+    let els = queryElements({ element, prefix: 'filter' })
     for (let i = 0; i < els.length; i++) {
         let filter = filters.get(els[i])
         filter = { ...filter, ...newFilter }
