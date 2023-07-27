@@ -4,57 +4,35 @@ import '@cocreate/element-prototype';
 import { queryElements, checkValue, queryData, searchData, sortData } from '@cocreate/utils'
 
 const elements = new Map();
-const selectors = new Map();
 const filters = new Map();
 const dispatch = new Map();
-const elementSelector = '[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]'
+const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]'
 
 
 function init() {
-    let filterSelector = elementSelector + ', [filter-name], [filter-search], [filter-sort-name], [filter-on]'
-    let elements = document.querySelectorAll(filterSelector)
-    for (let i = 0; i < elements.length; i++)
-        initElement(elements[i])
-
-    for (let selector of selectors.keys()) {
-        if (typeof selector === 'string')
-            elements = document.querySelectorAll(selector)
-        else
-            elements = [selector]
-
-        for (let i = 0; i < elements.length; i++) {
-            if (!filters.has(elements[i])) {
-                initFilterOnEvent(elements[i]);
-                getFilter(elements[i])
-                elements[i].getFilter = () => getFilter(elements[i])
-            }
-        }
-    }
+    let filterSelector = selector + ', [filter-name], [filter-search], [filter-sort-name], [filter-on]'
+    let filterElements = document.querySelectorAll(filterSelector)
+    for (let i = 0; i < filterElements.length; i++)
+        initElement(filterElements[i])
 }
 
 function initElement(element) {
-    let selector
-    for (let attribute of element.attributes) {
-        if (['filter-selector', 'filter-closest', 'filter-parent', 'filter-next', 'filter-previous'].includes(attribute.name)) {
-            if (attribute.value) {
-                selector = attribute.value
-                break;
-            } else {
-                // selector = element
-                return
-            }
-        }
-    }
-
     if (!elements.has(element)) {
         elements.set(element, {})
 
         initElementEvents(element)
 
-        if (!selectors.has(selector))
-            selectors.set(selector, [element])
-        else
-            selectors.get(selector).push(element)
+        let filteredElements = queryElements({ element, prefix: 'filter' })
+        if (!filteredElements)
+            filteredElements = [element]
+
+        for (let j = 0; j < filteredElements.length; j++) {
+            if (!filters.has(filteredElements[j])) {
+                initFilterOnEvent(filteredElements[j]);
+                getFilter(filteredElements[j])
+                filteredElements[j].getFilter = () => getFilter(filteredElements[j])
+            }
+        }
     }
 }
 
@@ -83,11 +61,12 @@ function getFilter(element) {
         index: 0
     }
 
-    for (var [key, value] of selectors.entries()) {
-        if (element.matches(key)) {
-            for (let i = 0; i < value.length; i++) {
-                filter = { ...filter, ...elements.get(value[i]) }
-            }
+    for (let key of elements.keys()) {
+        let filteredElement = queryElements({ element: key, prefix: 'filter' })
+        if (!filteredElement) continue
+        for (let i = 0; i < filteredElement.length; i++) {
+            if (filteredElement[i] === element)
+                filter = { ...filter, ...filters.get(filteredElement[i]) }
         }
     }
 
@@ -300,7 +279,7 @@ function insertArray(filterArray, index, obj) {
 observer.init({
     name: 'CoCreateFilterInit',
     observe: ['addedNodes'],
-    target: elementSelector,
+    target: selector,
     callback(mutation) {
         initElement(mutation.target);
     }
