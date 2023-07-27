@@ -1,7 +1,7 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import '@cocreate/element-prototype';
-import { getElements, checkValue, queryData, searchData, sortData } from '@cocreate/utils'
+import { queryElements, checkValue, queryData, searchData, sortData } from '@cocreate/utils'
 
 const elements = new Map();
 const selectors = new Map();
@@ -103,7 +103,7 @@ function getFilter(element) {
 function updateFilter(element, loadMore) {
     let newFilter = getElementFilters(element);
 
-    let els = getElements(element, 'filter')
+    let els = queryElements(element, 'filter')
     for (let i = 0; i < els.length; i++) {
         let filter = filters.get(els[i])
         filter = { ...filter, ...newFilter }
