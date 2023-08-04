@@ -33,7 +33,7 @@ const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-
 
 
 function init() {
-    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on]'
+    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit]'
     let filterElements = document.querySelectorAll(filterSelector)
     for (let i = 0; i < filterElements.length; i++)
         initElement(filterElements[i])
@@ -311,7 +311,7 @@ observer.init({
 observer.init({
     name: 'CoCreateFilterObserver',
     observe: ['attributes'],
-    attributeName: ['filter-key', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-type'],
+    attributeName: ['filter-key', 'filter-value', 'filter-operator', 'filter-logical-operator', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-case-sensitive', 'filter-type', 'filter-limit'],
     callback(mutation) {
         updateFilter(mutation.target)
     }
