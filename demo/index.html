@@ -17,7 +17,7 @@
             placeholder="test"
             array="test"
             object="6465646af1e023c0aee760c2"
-            property="name"
+            key="name"
             crdt="false" />
 
         <div class="padding:10px">
@@ -28,7 +28,7 @@
             <input
                 class="floating-label"
                 filter-selector="document; #test"
-                filter-name="name"
+                filter-key="name"
                 placeholder="Name" />
         </div>
 
@@ -48,7 +48,7 @@
                     <textarea
                         array="{{object.array}}"
                         object="{{object._id}}"
-                        name="src"></textarea>
+                        key="src"></textarea>
 
                     <div
                         render="object.test.nested.nested1"
@@ -72,12 +72,12 @@
                             type="datetime-local"
                             array="{{object.array}}"
                             object="{{object._id}}"
-                            name="{{modified.keyPath}}.{{modified.key}}" />
+                            key="{{modified.keyPath}}.{{modified.key}}" />
                         <input
                             type="datetime-local"
                             array="{{object.array}}"
                             object="{{object._id}}"
-                            name="{{modified.parentKey}}.{{modified.key}}" /> -->
+                            key="{{modified.parentKey}}.{{modified.key}}" /> -->
                     <!-- 
                         <span>{{modified.renderAs}}</span>
 
@@ -104,7 +104,7 @@
         <div filter-on="click" filter-selector="#test">Load More</div>
 
         <!--<script src="../dist/CoCreate-filter.js"></script>-->
-        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
-        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
+        <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
+        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
     </body>
 </html>

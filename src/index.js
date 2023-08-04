@@ -33,7 +33,7 @@ const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-
 
 
 function init() {
-    let filterSelector = selector + ', [filter-name], [filter-search], [filter-sort-name], [filter-on]'
+    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on]'
     let filterElements = document.querySelectorAll(filterSelector)
     for (let i = 0; i < filterElements.length; i++)
         initElement(filterElements[i])
@@ -60,17 +60,17 @@ function initElement(element) {
 }
 
 function initElementEvents(element) {
-    if (element.hasAttribute('filter-sort-name'))
+    if (element.hasAttribute('filter-sort-key'))
         initSortEvent(element);
-    if (element.hasAttribute('filter-name') || element.hasAttribute('filter-search'))
+    if (element.hasAttribute('filter-key') || element.hasAttribute('filter-search'))
         initInputEvent(element);
 }
 
 function getElementFilters(element) {
     let filter = {}
-    if (element.hasAttribute('filter-sort-name'))
+    if (element.hasAttribute('filter-sort-key'))
         applySort(filter, element);
-    if (element.hasAttribute('filter-name'))
+    if (element.hasAttribute('filter-key'))
         applyQuery(filter, element);
     if (element.hasAttribute('filter-search'))
         applySearch(filter, element);
@@ -129,7 +129,7 @@ function updateFilter(element, loadMore) {
 }
 
 function applyQuery(filter, element) {
-    let name = element.getAttribute('filter-name')
+    let key = element.getAttribute('filter-key')
     let operator = element.getAttribute('filter-operator') || 'includes'
     let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
     let filterValueType = element.getAttribute('filter-value-type') || 'string';
@@ -142,7 +142,7 @@ function applyQuery(filter, element) {
     if (!value && element.value !== undefined)
         value = element.getValue();
 
-    if (!checkValue(name) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
+    if (!checkValue(key) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
         filter.isFilter = false
 
     if (value.includes(",")) {
@@ -167,9 +167,9 @@ function applyQuery(filter, element) {
         }
     }
 
-    let index = getQuery(filter, name, operator, logicalOperator);
+    let index = getQuery(filter, key, operator, logicalOperator);
     if (index === null || filter.query[index].value !== value)
-        insertArray(filter.query, index, { name, value, operator, logicalOperator, type, caseSensitive });
+        insertArray(filter.query, index, { key, value, operator, logicalOperator, type, caseSensitive });
 }
 
 function applySearch(filter, element) {
@@ -186,16 +186,16 @@ function applySearch(filter, element) {
 }
 
 function applySort(filter, element) {
-    let name = element.getAttribute('filter-sort-name');
+    let key = element.getAttribute('filter-sort-key');
     let direction = element.getAttribute('filter-sort-direction')
 
-    if (!name || !direction || !checkValue(name) || !checkValue(direction))
+    if (!key || !direction || !checkValue(key) || !checkValue(direction))
         return
 
-    let index = getSort(filter, name);
+    let index = getSort(filter, key);
     if (index === null || filter.sort[index].direction !== direction) {
         filter.sort.splice(index, 1)
-        insertArray(filter.sort, index, { name, direction });
+        insertArray(filter.sort, index, { key, direction });
     }
 }
 
@@ -249,11 +249,11 @@ const intersectionObserver = new IntersectionObserver((entries, observer) => {
     threshold: 1
 });
 
-function getQuery(filter, name, operator, logicalOperator) {
+function getQuery(filter, key, operator, logicalOperator) {
     if (filter.query) {
         for (let i = 0; i < filter.query.length; i++) {
             let f = filter.query[i];
-            if (f.name == name && f.operator == operator && f.logicalOperator == logicalOperator) {
+            if (f.key == key && f.operator == operator && f.logicalOperator == logicalOperator) {
                 return i;
             }
         }
@@ -277,10 +277,10 @@ function getSearch(filter, value, operator, caseSensitive) {
     return null;
 }
 
-function getSort(filter, name) {
+function getSort(filter, key) {
     if (filter.sort) {
         for (let i = 0; i < filter.sort.length; i++) {
-            if (filter.sort[i].name == name) {
+            if (filter.sort[i].key == key) {
                 return i;
             }
         }
@@ -311,7 +311,7 @@ observer.init({
 observer.init({
     name: 'CoCreateFilterObserver',
     observe: ['attributes'],
-    attributeName: ['filter-name', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-name', 'filter-sort-direction', 'filter-type'],
+    attributeName: ['filter-key', 'filter-operator', 'filter-value', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-type'],
     callback(mutation) {
         updateFilter(mutation.target)
     }
