@@ -1,3 +1,31 @@
+# [1.20.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.30...v1.20.0) (2023-08-16)
+
+
+### Bug Fixes
+
+* crud attributes renamed ([7b8bd79](https://github.com/CoCreate-app/CoCreate-filter/commit/7b8bd79343c0140e3701c32820d669a0f2204fda))
+* Refactor filtering functionality - change "items" to "filters" and update related variable names throughout the code. Improve code readability. ([9bc14f4](https://github.com/CoCreate-app/CoCreate-filter/commit/9bc14f430e75e859ad6728a4afc1fb0c02709ab1))
+* Refactor queryElements function to accept an object for element parameter ([4fdfdd9](https://github.com/CoCreate-app/CoCreate-filter/commit/4fdfdd9b35c8d7d7b43e9460ac1cc0d6f12b6082))
+* Remove commented out code in updateFilter function ([4ff5791](https://github.com/CoCreate-app/CoCreate-filter/commit/4ff57913ca91b92115fa35ab88dc28c1f01c94f4))
+* removed functions for exporting and importing data, it has been replaced with @cocreate/files. ([1346487](https://github.com/CoCreate-app/CoCreate-filter/commit/13464870502d6bbd16fa23d7a958568990e8e87f))
+* replace -target -selector ([c0f94bb](https://github.com/CoCreate-app/CoCreate-filter/commit/c0f94bb260dd1fd4f4721bf0e7a713a2539295fe))
+* Update render attribute in index.html ([ab04430](https://github.com/CoCreate-app/CoCreate-filter/commit/ab04430ae6062fda071b48cb83a02f4e86615d63))
+* updated actions callback data object ([b04c2b3](https://github.com/CoCreate-app/CoCreate-filter/commit/b04c2b3e8f286c153697873176e5081f7c97aeab))
+* updated fetch-limit to filter-limit ([2d6ecfd](https://github.com/CoCreate-app/CoCreate-filter/commit/2d6ecfda88415661edc66ad338b4ffff4800d451))
+* updated fetch-type to filter-on ([17343cb](https://github.com/CoCreate-app/CoCreate-filter/commit/17343cbcc2f00abd78931fc11f7280844c2b5d38))
+* webpack.config and package.json make use of mode=production instead of process.env ([2b586b6](https://github.com/CoCreate-app/CoCreate-filter/commit/2b586b620d847aeb641a181b2fed618bd57ef724))
+
+
+### Features
+
+* Add support for [filter-limit] ([531a9c6](https://github.com/CoCreate-app/CoCreate-filter/commit/531a9c665f30c1dae00578fcb18158395d0c4aa8))
+* filter refactored to return a filter object rather than a data object. Performance and maintainability improvements ([621c9c0](https://github.com/CoCreate-app/CoCreate-filter/commit/621c9c047ee4615da8249a51e39c9985d1fbd17c))
+* name attribute and variable renamed to key ([3e6355e](https://github.com/CoCreate-app/CoCreate-filter/commit/3e6355eba74e0fddde35a4db70f308c069a655bd))
+* Refactor filter initialization crud.getObject is now used to return a crud object from a specified element and filter is responsible for generating the filter object and item configuration ([a842180](https://github.com/CoCreate-app/CoCreate-filter/commit/a84218047e98e6829a53c70f46a10d129b730def))
+* Refactor filter selector and element initialization process ([7003e70](https://github.com/CoCreate-app/CoCreate-filter/commit/7003e7069faae9611fe62574a201662eaae9e188))
+* Refactor to support selector, closest, parent, next, previous ([6c31437](https://github.com/CoCreate-app/CoCreate-filter/commit/6c314372a8f2115f26886972e2cc34358634616a))
+* update template_id to render-selector attribute. update filter attributes to filter selector-attributes ([82068b3](https://github.com/CoCreate-app/CoCreate-filter/commit/82068b3d2eef2a4f2a4714015cb6b0d24f4170be))
+
 ## [1.19.30](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.19.29...v1.19.30) (2023-06-14)
 
 
