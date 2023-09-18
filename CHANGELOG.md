@@ -1,3 +1,11 @@
+## [1.22.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.22.1...v1.22.2) (2023-09-18)
+
+
+### Bug Fixes
+
+*  Add path and pathname ([bae3ee1](https://github.com/CoCreate-app/CoCreate-filter/commit/bae3ee15262f803bd7f31c53fbfb95b6c4ddade2))
+* Update CoCreate depndencies to latest versions ([26e1b7d](https://github.com/CoCreate-app/CoCreate-filter/commit/26e1b7d66d3248f4422b1f959be45666c65ade0e))
+
 ## [1.22.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.22.0...v1.22.1) (2023-08-21)
 
 
