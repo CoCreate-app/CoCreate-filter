@@ -29,34 +29,43 @@ import { queryElements, checkValue, queryData, searchData, sortData } from '@coc
 const elements = new Map();
 const filters = new Map();
 const dispatch = new Map();
-const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]'
+const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]';
 
 
-function init() {
-    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit]'
+async function init() {
+    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit]';
     let filterElements = document.querySelectorAll(filterSelector)
+    let filteredElements = []
+
     for (let i = 0; i < filterElements.length; i++)
-        initElement(filterElements[i])
+        filteredElements.push(...initElement(filterElements[i]))
+
+    for (let j = 0; j < filteredElements.length; j++) {
+        if (!filters.has(filteredElements[j])) {
+            initFilterOnEvent(filteredElements[j]);
+            getFilter(filteredElements[j])
+            filteredElements[j].getFilter = () => getFilter(filteredElements[j])
+        }
+    }
+
+    return true
 }
 
 function initElement(element) {
+    let filteredElements = []
     if (!elements.has(element)) {
-        elements.set(element, {})
+        let newFilter = getElementFilters(element);
+
+        elements.set(element, newFilter)
 
         initElementEvents(element)
 
-        let filteredElements = queryElements({ element, prefix: 'filter' })
+        filteredElements = queryElements({ element, prefix: 'filter' })
         if (!filteredElements)
             filteredElements = [element]
 
-        for (let j = 0; j < filteredElements.length; j++) {
-            if (!filters.has(filteredElements[j])) {
-                initFilterOnEvent(filteredElements[j]);
-                getFilter(filteredElements[j])
-                filteredElements[j].getFilter = () => getFilter(filteredElements[j])
-            }
-        }
     }
+    return filteredElements
 }
 
 function initElementEvents(element) {
@@ -89,7 +98,7 @@ function getFilter(element) {
         if (!filteredElement) continue
         for (let i = 0; i < filteredElement.length; i++) {
             if (filteredElement[i] === element)
-                filter = { ...filter, ...filters.get(filteredElement[i]) }
+                filter = { ...filter, ...elements.get(key) }
         }
     }
 
@@ -318,7 +327,7 @@ observer.init({
 });
 
 
-init()
+// init()
 
 export default {
     init,
