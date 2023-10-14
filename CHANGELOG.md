@@ -1,3 +1,11 @@
+## [1.23.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.3...v1.23.4) (2023-10-14)
+
+
+### Bug Fixes
+
+* await init for filter checks ([91b7ab1](https://github.com/CoCreate-app/CoCreate-filter/commit/91b7ab1ea744df399c367005b7dfc737d3847a10))
+* bump dependencies ([1e12617](https://github.com/CoCreate-app/CoCreate-filter/commit/1e12617e130aa3e4e34800228705d71e0e365a45))
+
 ## [1.23.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.2...v1.23.3) (2023-10-09)
 
 
