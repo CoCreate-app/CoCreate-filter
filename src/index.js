@@ -38,7 +38,7 @@ async function init() {
     let filteredElements = []
 
     for (let i = 0; i < filterElements.length; i++)
-        filteredElements.push(...initElement(filterElements[i]))
+        filteredElements.push(...await initElement(filterElements[i]))
 
     for (let j = 0; j < filteredElements.length; j++) {
         if (!filters.has(filteredElements[j])) {
@@ -51,10 +51,10 @@ async function init() {
     return true
 }
 
-function initElement(element) {
+async function initElement(element) {
     let filteredElements = []
     if (!elements.has(element)) {
-        let newFilter = getElementFilters(element);
+        let newFilter = await getElementFilters(element);
 
         elements.set(element, newFilter)
 
@@ -75,14 +75,14 @@ function initElementEvents(element) {
         initInputEvent(element);
 }
 
-function getElementFilters(element) {
+async function getElementFilters(element) {
     let filter = {}
     if (element.hasAttribute('filter-sort-key'))
         applySort(filter, element);
     if (element.hasAttribute('filter-key'))
-        applyQuery(filter, element);
+        await applyQuery(filter, element);
     if (element.hasAttribute('filter-search'))
-        applySearch(filter, element);
+        await applySearch(filter, element);
 
     elements.set(element, filter)
     return filter
@@ -111,8 +111,8 @@ function getFilter(element) {
     return filter
 }
 
-function updateFilter(element, loadMore) {
-    let newFilter = getElementFilters(element);
+async function updateFilter(element, loadMore) {
+    let newFilter = await getElementFilters(element);
 
     let els = queryElements({ element, prefix: 'filter' })
     for (let i = 0; i < els.length; i++) {
@@ -137,7 +137,7 @@ function updateFilter(element, loadMore) {
     }
 }
 
-function applyQuery(filter, element) {
+async function applyQuery(filter, element) {
     let key = element.getAttribute('filter-key')
     let operator = element.getAttribute('filter-operator') || 'includes'
     let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
@@ -149,7 +149,7 @@ function applyQuery(filter, element) {
     let type = element.getAttribute('filter-type');
     let value = element.getAttribute('filter-value');
     if (!value && element.value !== undefined)
-        value = element.getValue();
+        value = await element.getValue();
 
     if (!checkValue(key) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
         filter.isFilter = false
@@ -181,10 +181,10 @@ function applyQuery(filter, element) {
         insertArray(filter.query, index, { key, value, operator, logicalOperator, type, caseSensitive });
 }
 
-function applySearch(filter, element) {
+async function applySearch(filter, element) {
     let operator = element.getAttribute('filter-operator') || 'or'
     let caseSensitive = element.getAttribute('filter-case-sensitive') || false
-    let value = element.getValue()
+    let value = await element.getValue()
     if (!checkValue(value) || !checkValue(operator))
         filter.isFilter = false
 
