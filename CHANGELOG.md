@@ -1,3 +1,10 @@
+## [1.23.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.4...v1.23.5) (2023-10-17)
+
+
+### Bug Fixes
+
+* await getValue() ([ac14de2](https://github.com/CoCreate-app/CoCreate-filter/commit/ac14de21e7e4730f3a961f1cd3b07ed1c812e617))
+
 ## [1.23.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.3...v1.23.4) (2023-10-14)
 
 
