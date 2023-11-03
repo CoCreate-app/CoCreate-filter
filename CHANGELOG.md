@@ -1,3 +1,11 @@
+## [1.23.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.6...v1.23.7) (2023-11-03)
+
+
+### Bug Fixes
+
+* favicon.ico path ([26cae72](https://github.com/CoCreate-app/CoCreate-filter/commit/26cae7227dffa4f93d11d0bb72ef70f0092d2e63))
+* update dependencies to the lates versions ([0fada78](https://github.com/CoCreate-app/CoCreate-filter/commit/0fada781096f35acc740fa19f7439e4ff919cc45))
+
 ## [1.23.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.5...v1.23.6) (2023-10-25)
 
 
