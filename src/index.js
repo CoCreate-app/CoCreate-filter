@@ -122,9 +122,9 @@ async function updateFilter(element, loadMore) {
             let filterLimit = element.getAttribute('filter-limit')
             if (filterLimit)
                 filter.limit = filterLimit
-            filter.index = filter.count
+        } else
+            filter.index = 0
 
-        }
         filters.set(els[i], filter)
 
         let delayTimer = dispatch.get(els[i])
