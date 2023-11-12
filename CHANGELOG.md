@@ -1,3 +1,16 @@
+# [1.24.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.8...v1.24.0) (2023-11-12)
+
+
+### Bug Fixes
+
+* bump dependencies for latest features ([b709097](https://github.com/CoCreate-app/CoCreate-filter/commit/b7090973b6de25bd562a6098a480ee55f058e5b4))
+* if not loadmore set index to 0 ([811719e](https://github.com/CoCreate-app/CoCreate-filter/commit/811719e0f062e5be259d2832e6fe1c98f6df18b3))
+
+
+### Features
+
+* observe removedNodes ([62b714e](https://github.com/CoCreate-app/CoCreate-filter/commit/62b714e18149a314ee66798ca438dcba6f628e91))
+
 ## [1.23.8](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.7...v1.23.8) (2023-11-09)
 
 
