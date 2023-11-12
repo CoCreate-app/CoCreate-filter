@@ -33,7 +33,7 @@ const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-
 
 
 async function init() {
-    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit]';
+    let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]';
     let filterElements = document.querySelectorAll(filterSelector)
     let filteredElements = []
 
@@ -326,6 +326,14 @@ observer.init({
     }
 });
 
+observer.init({
+    name: 'CoCreateFiltersRemovedNodes',
+    observe: ['removedNodes'],
+    target: selector,
+    callback: function (mutation) {
+        elements.delete(mutation.target)
+    }
+});
 
 // init()
 
