@@ -107,6 +107,11 @@ function getFilter(element) {
         filter.limit = filterLimit;
     }
 
+    let filterIndex = parseInt(element.getAttribute('filter-index'));
+    if (!isNaN(filterIndex)) {
+        filter.index = filterIndex;
+    }
+
     filters.set(element, filter);
     return filter
 }
@@ -115,6 +120,8 @@ async function updateFilter(element, loadMore) {
     let newFilter = await getElementFilters(element);
 
     let els = queryElements({ element, prefix: 'filter' })
+    if (els === false && filters.has(element))
+        els = [element]
     for (let i = 0; i < els.length; i++) {
         let filter = filters.get(els[i])
         filter = { ...filter, ...newFilter }
@@ -122,8 +129,14 @@ async function updateFilter(element, loadMore) {
             let filterLimit = element.getAttribute('filter-limit')
             if (filterLimit)
                 filter.limit = filterLimit
-        } else
+        } else {
             filter.index = 0
+            let filterIndex = parseInt(element.getAttribute('filter-index'));
+            if (!isNaN(filterIndex)) {
+                filter.index = filterIndex;
+            }
+            filter.overwrite = true
+        }
 
         filters.set(els[i], filter)
 
@@ -320,7 +333,7 @@ observer.init({
 observer.init({
     name: 'CoCreateFilterObserver',
     observe: ['attributes'],
-    attributeName: ['filter-key', 'filter-value', 'filter-operator', 'filter-logical-operator', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-case-sensitive', 'filter-type', 'filter-limit'],
+    attributeName: ['filter-key', 'filter-value', 'filter-operator', 'filter-logical-operator', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-case-sensitive', 'filter-type', 'filter-limit', 'filter-index'],
     callback(mutation) {
         updateFilter(mutation.target)
     }
