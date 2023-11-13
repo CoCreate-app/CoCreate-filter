@@ -144,7 +144,8 @@ async function updateFilter(element, loadMore) {
         clearTimeout(delayTimer);
         delayTimer = setTimeout(function () {
             dispatch.delete(els[i])
-            els[i].setFilter(filter)
+            if (els[i].setFilter)
+                els[i].setFilter(filter)
         }, 500);
         dispatch.set(els[i], delayTimer)
     }
@@ -162,7 +163,7 @@ async function applyQuery(filter, element) {
     let type = element.getAttribute('filter-type');
     let value = element.getAttribute('filter-value');
     if (!value && element.value !== undefined)
-        value = await element.getValue();
+        value = await element.getValue() || '';
 
     if (!checkValue(key) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
         filter.isFilter = false
@@ -333,9 +334,10 @@ observer.init({
 observer.init({
     name: 'CoCreateFilterObserver',
     observe: ['attributes'],
-    attributeName: ['filter-key', 'filter-value', 'filter-operator', 'filter-logical-operator', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-case-sensitive', 'filter-type', 'filter-limit', 'filter-index'],
+    attributeName: ['filter-key', 'filter-value', 'value', 'filter-operator', 'filter-logical-operator', 'filter-value-type', 'filter-sort-key', 'filter-sort-direction', 'filter-case-sensitive', 'filter-type', 'filter-limit', 'filter-index'],
     callback(mutation) {
-        updateFilter(mutation.target)
+        if (mutation.target.getAttribute(mutation.attributeName) !== mutation.oldValue)
+            updateFilter(mutation.target)
     }
 });
 
