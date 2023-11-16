@@ -1,3 +1,16 @@
+# [1.25.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.24.0...v1.25.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* compare mutation attribute observer if same return ([1b8e11b](https://github.com/CoCreate-app/CoCreate-filter/commit/1b8e11b7195dd5ba7939e3aed9a891722272d15a))
+* filter-name renamed to filter-key ([5e4579d](https://github.com/CoCreate-app/CoCreate-filter/commit/5e4579d71e09b4ae7378c60114a32835b72e3a48))
+
+
+### Features
+
+* fiter-index attribute and filter.overwite boolean ([e1775b8](https://github.com/CoCreate-app/CoCreate-filter/commit/e1775b82ac2ecb7f13beb4fa7ed2ee87e5fc3494))
+
 # [1.24.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.23.8...v1.24.0) (2023-11-12)
 
 
