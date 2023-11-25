@@ -1,3 +1,15 @@
+# [1.28.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.27.0...v1.28.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* update licensing details ([fe01900](https://github.com/CoCreate-app/CoCreate-filter/commit/fe01900e477d5a1f1cbf10189662c1a7f2276299))
+
+
+### Features
+
+* upgrade dependencies for latest features and fixes ([8eeee8f](https://github.com/CoCreate-app/CoCreate-filter/commit/8eeee8fe0ad7d38cdecd7391f65208e54319f210))
+
 # [1.27.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.26.0...v1.27.0) (2023-11-25)
 
 
