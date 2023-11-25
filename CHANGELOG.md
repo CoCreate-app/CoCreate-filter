@@ -1,3 +1,15 @@
+# [1.27.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.26.0...v1.27.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* update nav, edit button and css path ([8339de1](https://github.com/CoCreate-app/CoCreate-filter/commit/8339de184899992870697219e5c9d98518bc49d3))
+
+
+### Features
+
+* upgrade dependencies for latest features and fixes ([edd6fa3](https://github.com/CoCreate-app/CoCreate-filter/commit/edd6fa3c089a8e161b5c009503bffbeefd3a4455))
+
 # [1.26.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.25.0...v1.26.0) (2023-11-19)
 
 
