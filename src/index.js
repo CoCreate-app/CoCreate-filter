@@ -129,6 +129,7 @@ async function updateFilter(element, loadMore) {
             let filterLimit = element.getAttribute('filter-limit')
             if (filterLimit)
                 filter.limit = filterLimit
+            delete filter.overwrite
         } else {
             filter.index = 0
             let filterIndex = parseInt(element.getAttribute('filter-index'));
