@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.0...v1.28.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* delete filter.overwrite ([1e2d4b0](https://github.com/CoCreate-app/CoCreate-filter/commit/1e2d4b0758437dd9f4ea81691e742e16c9c1fcd2))
+
 # [1.28.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.27.0...v1.28.0) (2023-11-25)
 
 
