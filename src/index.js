@@ -24,7 +24,7 @@
 /*globals IntersectionObserver, CustomEvent*/
 import observer from '@cocreate/observer';
 import '@cocreate/element-prototype';
-import { queryElements, checkValue, queryData, searchData, sortData } from '@cocreate/utils'
+import { queryElements, checkValue, queryData, searchData, sortData, dotNotationToObject } from '@cocreate/utils'
 
 const elements = new Map();
 const filters = new Map();
@@ -154,8 +154,8 @@ async function updateFilter(element, loadMore) {
 
 async function applyQuery(filter, element) {
     let key = element.getAttribute('filter-key')
-    let operator = element.getAttribute('filter-operator') || 'includes'
-    let logicalOperator = element.getAttribute('filter-logical-operator') || 'and'
+    let operator = element.getAttribute('filter-operator')
+    let logicalOperator = element.getAttribute('filter-logical-operator')
     let filterValueType = element.getAttribute('filter-value-type') || 'string';
     let caseSensitive = element.getAttribute('filter-case-sensitive') || false
 
@@ -191,9 +191,29 @@ async function applyQuery(filter, element) {
         }
     }
 
-    let index = getQuery(filter, key, operator, logicalOperator);
-    if (index === null || filter.query[index].value !== value)
-        insertArray(filter.query, index, { key, value, operator, logicalOperator, type, caseSensitive });
+    addToQuery(filter, key, value, operator, logicalOperator, caseSensitive)
+}
+
+function addToQuery(filter, key, value, operator, logicalOperator, caseSensitive) {
+    let dotNotation = ''
+
+    if (logicalOperator && !logicalOperator.endsWith(']')) {
+        logicalOperator += '[]'
+        if (!logicalOperator.startsWith('$'))
+            logicalOperator = '$' + logicalOperator
+        dotNotation = logicalOperator + '.'
+    }
+
+    dotNotation += key
+
+    if (operator)
+        dotNotation += '.' + operator
+
+    if (!filter.query)
+        filter.query = {}
+
+    filter.query = dotNotationToObject({ [dotNotation]: value }, filter.query)
+    console.log(filter.query)
 }
 
 async function applySearch(filter, element) {
