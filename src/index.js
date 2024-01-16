@@ -97,14 +97,8 @@ async function getFilter(element) {
         let filteredElement = queryElements({ element: key, prefix: 'filter' })
         if (!filteredElement) continue
         for (let i = 0; i < filteredElement.length; i++) {
-            if (element.tagName === 'TBODY' && key.getAttribute('filter-key') === 'ambassador')
-                console.log('test')
-
 
             if (filteredElement[i] === element) {
-                if (element.tagName === 'TBODY' && key.getAttribute('filter-key') === 'ambassador')
-                    console.log('test')
-
                 let filterEl = elements.get(key) || {}
                 filter.query = { ...filter.query, ...filterEl.query }
                 if (filterEl.sort)
