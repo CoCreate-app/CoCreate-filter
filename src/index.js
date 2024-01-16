@@ -41,10 +41,11 @@ async function init() {
         filteredElements.push(...await initElement(filterElements[i]))
 
     for (let j = 0; j < filteredElements.length; j++) {
+
         if (!filters.has(filteredElements[j])) {
             initFilterOnEvent(filteredElements[j]);
-            getFilter(filteredElements[j])
-            filteredElements[j].getFilter = () => getFilter(filteredElements[j])
+            await getFilter(filteredElements[j])
+            filteredElements[j].getFilter = async () => await getFilter(filteredElements[j])
         }
     }
 
@@ -88,17 +89,30 @@ async function getElementFilters(element) {
     return filter
 }
 
-function getFilter(element) {
-    let filter = {
-        index: 0
-    }
+async function getFilter(element) {
+    let filter = await getElementFilters(element)
+    filter.index = 0
 
     for (let key of elements.keys()) {
         let filteredElement = queryElements({ element: key, prefix: 'filter' })
         if (!filteredElement) continue
         for (let i = 0; i < filteredElement.length; i++) {
-            if (filteredElement[i] === element)
-                filter = { ...filter, ...elements.get(key) }
+            if (element.tagName === 'TBODY' && key.getAttribute('filter-key') === 'ambassador')
+                console.log('test')
+
+
+            if (filteredElement[i] === element) {
+                if (element.tagName === 'TBODY' && key.getAttribute('filter-key') === 'ambassador')
+                    console.log('test')
+
+                let filterEl = elements.get(key) || {}
+                filter.query = { ...filter.query, ...filterEl.query }
+                if (filterEl.sort)
+                    mergeSort(filter, filterEl)
+
+                if (filterEl.search)
+                    filter.search = [...filter.search || [], ...filterEl.search]
+            }
         }
     }
 
@@ -124,7 +138,16 @@ async function updateFilter(element, loadMore) {
         els = [element]
     for (let i = 0; i < els.length; i++) {
         let filter = filters.get(els[i])
-        filter = { ...filter, ...newFilter }
+        if (newFilter) {
+            filter.query = { ...filter.query, ...newFilter.query }
+            if (newFilter.sort)
+                mergeSort(filter, newFilter)
+
+            if (newFilter.search)
+                filter.search = [...filter.search || [], ...newFilter.search]
+        }
+
+        // filter = { ...filter, ...newFilter }
         if (loadMore) {
             let filterLimit = element.getAttribute('filter-limit')
             if (filterLimit)
@@ -152,6 +175,23 @@ async function updateFilter(element, loadMore) {
     }
 }
 
+function mergeSort(filter, newFilter) {
+    if (newFilter.sort) {
+        if (!filter.sort)
+            filter.sort = [...newFilter.sort]
+        else {
+            for (let newSort of newFilter.sort) {
+                const index = filter.sort.findIndex(sort => sort.key === newSort.key);
+                if (index >= 0) {
+                    filter.sort[index] = newSort
+                } else {
+                    filter.sort.push(newSort)
+                }
+            }
+        }
+    }
+}
+
 async function applyQuery(filter, element) {
     let key = element.getAttribute('filter-key')
     let operator = element.getAttribute('filter-operator')
@@ -166,8 +206,11 @@ async function applyQuery(filter, element) {
     if (!value && element.value !== undefined)
         value = await element.getValue() || '';
 
+    if (!key || !value)
+        return
+
     if (!checkValue(key) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
-        filter.isFilter = false
+        return filter.isFilter = false
 
     if (value.includes(",")) {
         value = value.split(',');
@@ -191,10 +234,6 @@ async function applyQuery(filter, element) {
         }
     }
 
-    addToQuery(filter, key, value, operator, logicalOperator, caseSensitive)
-}
-
-function addToQuery(filter, key, value, operator, logicalOperator, caseSensitive) {
     let dotNotation = ''
 
     if (logicalOperator && !logicalOperator.endsWith(']')) {
@@ -213,33 +252,38 @@ function addToQuery(filter, key, value, operator, logicalOperator, caseSensitive
         filter.query = {}
 
     filter.query = dotNotationToObject({ [dotNotation]: value }, filter.query)
-    console.log(filter.query)
 }
 
 async function applySearch(filter, element) {
     let operator = element.getAttribute('filter-operator') || 'or'
     let caseSensitive = element.getAttribute('filter-case-sensitive') || false
     let value = await element.getValue()
-    if (!checkValue(value) || !checkValue(operator))
-        filter.isFilter = false
+    if (!checkValue(value) || !checkValue(operator) || !checkValue(caseSensitive))
+        return filter.isFilter = false
 
-    let index = getSearch(filter, value, operator, caseSensitive);
-    if (index === null)
-        insertArray(filter.search, index, { value, operator, caseSensitive });
-
+    if (!filter.search)
+        filter.search = []
+    filter.search.push({ value, operator, caseSensitive })
 }
 
 function applySort(filter, element) {
     let key = element.getAttribute('filter-sort-key');
     let direction = element.getAttribute('filter-sort-direction')
 
-    if (!key || !direction || !checkValue(key) || !checkValue(direction))
+    if (!key || !direction)
         return
 
-    let index = getSort(filter, key);
-    if (index === null || filter.sort[index].direction !== direction) {
-        filter.sort.splice(index, 1)
-        insertArray(filter.sort, index, { key, direction });
+    if (!checkValue(key) || !checkValue(direction))
+        return filter.isFilter = false
+
+    if (!filter.sort)
+        filter.sort = []
+
+    const index = filter.sort.findIndex(sort => sort.key === key);
+    if (index >= 0) {
+        filter.sort[index] = { key, direction }
+    } else {
+        filter.sort.push({ key, direction })
     }
 }
 
@@ -292,56 +336,6 @@ const intersectionObserver = new IntersectionObserver((entries, observer) => {
 }, {
     threshold: 1
 });
-
-function getQuery(filter, key, operator, logicalOperator) {
-    if (filter.query) {
-        for (let i = 0; i < filter.query.length; i++) {
-            let f = filter.query[i];
-            if (f.key == key && f.operator == operator && f.logicalOperator == logicalOperator) {
-                return i;
-            }
-        }
-    } else {
-        filter.query = []
-    }
-    return null;
-}
-
-function getSearch(filter, value, operator, caseSensitive) {
-    if (filter.search) {
-        for (let i = 0; i < filter.search.length; i++) {
-            let f = filter.search[i];
-            if (f.operator == operator && f.caseSensitive == caseSensitive) {
-                return i;
-            }
-        }
-    } else {
-        filter.search = []
-    }
-    return null;
-}
-
-function getSort(filter, key) {
-    if (filter.sort) {
-        for (let i = 0; i < filter.sort.length; i++) {
-            if (filter.sort[i].key == key) {
-                return i;
-            }
-        }
-    } else {
-        filter.sort = []
-    }
-    return null;
-}
-
-function insertArray(filterArray, index, obj) {
-    if (index !== null && index >= 0)
-        filterArray.splice(index, 1, obj);
-    else
-        filterArray.push(obj);
-
-    return filterArray;
-}
 
 observer.init({
     name: 'CoCreateFilterInit',
