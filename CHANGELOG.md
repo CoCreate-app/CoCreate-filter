@@ -1,3 +1,12 @@
+## [1.28.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.1...v1.28.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* improved filter creation ([4de1f44](https://github.com/CoCreate-app/CoCreate-filter/commit/4de1f44d1d3018bd02f2435a4180c623ddc16694))
+* removed test logs ([9f4f16c](https://github.com/CoCreate-app/CoCreate-filter/commit/9f4f16c94e464281749f0b167e1d6268d52029d8))
+* update to support new query system ([f6b354b](https://github.com/CoCreate-app/CoCreate-filter/commit/f6b354b927e20249ed1e8d68b6da8ad5422d35e3))
+
 ## [1.28.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.0...v1.28.1) (2023-12-18)
 
 
