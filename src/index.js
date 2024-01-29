@@ -200,6 +200,9 @@ async function applyQuery(filter, element) {
     if (!value && element.value !== undefined)
         value = await element.getValue() || '';
 
+    if (!value && element.value === '$user_id')
+        value = '$user_id'
+
     if (!key || !value)
         return
 
