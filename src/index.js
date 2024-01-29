@@ -242,6 +242,9 @@ async function applyQuery(filter, element) {
     if (operator)
         dotNotation += '.' + operator
 
+    if (operator === '$in' && !Array.isArray(value))
+        value = [value]
+
     if (!filter.query)
         filter.query = {}
 
