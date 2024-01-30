@@ -1,3 +1,10 @@
+## [1.28.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.2...v1.28.3) (2024-01-30)
+
+
+### Bug Fixes
+
+* if $in query value needs to be an array ([08e28df](https://github.com/CoCreate-app/CoCreate-filter/commit/08e28dfc21afa30bb96ae6a9f984587111d93878))
+
 ## [1.28.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.1...v1.28.2) (2024-01-17)
 
 
