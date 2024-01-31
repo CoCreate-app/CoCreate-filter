@@ -200,6 +200,7 @@ async function applyQuery(filter, element) {
     if (!value && element.value !== undefined)
         value = await element.getValue() || '';
 
+    // TODO: Improve autorization then test to see if still required
     if (!value && element.value === '$user_id')
         value = '$user_id'
 
