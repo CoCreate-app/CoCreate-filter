@@ -1,3 +1,10 @@
+## [1.28.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.3...v1.28.4) (2024-02-03)
+
+
+### Bug Fixes
+
+* handle if $user_id returns null ([14f320e](https://github.com/CoCreate-app/CoCreate-filter/commit/14f320e82960bf3e2443d1cff5f697916ce76bda))
+
 ## [1.28.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.2...v1.28.3) (2024-01-30)
 
 
