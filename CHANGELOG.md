@@ -1,3 +1,10 @@
+## [1.28.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.4...v1.28.5) (2024-02-05)
+
+
+### Bug Fixes
+
+* Removed https://cdn.cocreate.app/latest/CoCreate.min.css ([0ae6a92](https://github.com/CoCreate-app/CoCreate-filter/commit/0ae6a92b83ad0f45b2a1e9b8b511a09d29766e01))
+
 ## [1.28.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.3...v1.28.4) (2024-02-03)
 
 
