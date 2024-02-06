@@ -35,19 +35,9 @@ const selector = '[filter-selector], [filter-closest], [filter-parent], [filter-
 async function init() {
     let filterSelector = selector + ', [filter-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]';
     let filterElements = document.querySelectorAll(filterSelector)
-    let filteredElements = []
 
     for (let i = 0; i < filterElements.length; i++)
-        filteredElements.push(...await initElement(filterElements[i]))
-
-    for (let j = 0; j < filteredElements.length; j++) {
-
-        if (!filters.has(filteredElements[j])) {
-            initFilterOnEvent(filteredElements[j]);
-            await getFilter(filteredElements[j])
-            filteredElements[j].getFilter = async () => await getFilter(filteredElements[j])
-        }
-    }
+        await initElement(filterElements[i])
 
     return true
 }
@@ -65,7 +55,15 @@ async function initElement(element) {
         if (!filteredElements)
             filteredElements = [element]
 
+        for (let j = 0; j < filteredElements.length; j++) {
+            if (!filters.has(filteredElements[j])) {
+                initFilterOnEvent(filteredElements[j]);
+                await getFilter(filteredElements[j])
+                filteredElements[j].getFilter = async () => await getFilter(filteredElements[j])
+            }
+        }
     }
+
     return filteredElements
 }
 
