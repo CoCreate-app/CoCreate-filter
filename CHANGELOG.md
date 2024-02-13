@@ -1,3 +1,10 @@
+## [1.28.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.5...v1.28.6) (2024-02-13)
+
+
+### Bug Fixes
+
+* initElements ([c9dda7b](https://github.com/CoCreate-app/CoCreate-filter/commit/c9dda7b69ed94800b101fb48b9dd953257952e7b))
+
 ## [1.28.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.4...v1.28.5) (2024-02-05)
 
 
