@@ -130,6 +130,8 @@ async function updateFilter(element, loadMore) {
         els = [element]
     for (let i = 0; i < els.length; i++) {
         let filter = filters.get(els[i])
+        if (!filter)
+            return filter = { isFilter: false }
         if (newFilter) {
             filter.query = { ...filter.query, ...newFilter.query }
             if (newFilter.sort)
@@ -198,12 +200,12 @@ async function applyQuery(filter, element) {
     if (!value && element.value !== undefined)
         value = await element.getValue() || '';
 
-    // TODO: Improve autorization then test to see if still required
-    if (!value && element.value === '$user_id')
-        value = '$user_id'
+    const keys = ['$organization_id', '$user_id', '$clientId', '$session_id'];
+    if (!value && keys.includes(element.value))
+        value = element.getAttribute('value')
 
     if (!key || !value)
-        return
+        return filter.isFilter = false
 
     if (!checkValue(key) || !checkValue(value) || !checkValue(type) || !checkValue(operator))
         return filter.isFilter = false
