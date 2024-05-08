@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.7...v1.29.0) (2024-05-08)
+
+
+### Features
+
+* support operators local storage operators ([bb79f3b](https://github.com/CoCreate-app/CoCreate-filter/commit/bb79f3b4871ec32ad8d2ff4eb834069d1e87a8d8))
+
 ## [1.28.7](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.6...v1.28.7) (2024-04-29)
 
 
