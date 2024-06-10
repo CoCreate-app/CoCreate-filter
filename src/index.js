@@ -191,7 +191,6 @@ async function applyQuery(filter, element) {
     let operator = element.getAttribute('filter-operator')
     let logicalOperator = element.getAttribute('filter-logical-operator')
     let filterValueType = element.getAttribute('filter-value-type') || 'string';
-    let caseSensitive = element.getAttribute('filter-case-sensitive') || false
 
     // TODO: rename to filter-query-type?
     // filter-type used for $center $box etc
@@ -242,7 +241,7 @@ async function applyQuery(filter, element) {
     }
 
     dotNotation += key
-
+    let regexKey = dotNotation
     if (operator)
         dotNotation += '.' + operator
 
@@ -252,7 +251,16 @@ async function applyQuery(filter, element) {
     if (!filter.query)
         filter.query = {}
 
+
     filter.query = dotNotationToObject({ [dotNotation]: value }, filter.query)
+
+    if (operator === '$regex') {
+        regexKey += '.' + '$options'
+        let options = element.getAttribute('filter-regex-flag')
+        if (options)
+            filter.query = dotNotationToObject({ [regexKey]: options }, filter.query)
+    }
+
 }
 
 async function applySearch(filter, element) {
