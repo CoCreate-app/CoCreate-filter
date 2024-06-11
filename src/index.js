@@ -108,7 +108,7 @@ async function getFilter(element) {
         }
     }
 
-    let filterLimit = parseInt(element.getAttribute('filter-limit'));
+    let filterLimit = parseInt(element.getAttribute('filter-limit')) || 20;
     if (!isNaN(filterLimit)) {
         filter.limit = filterLimit;
     }
@@ -143,7 +143,7 @@ async function updateFilter(element, loadMore) {
 
         // filter = { ...filter, ...newFilter }
         if (loadMore) {
-            let filterLimit = element.getAttribute('filter-limit')
+            let filterLimit = element.getAttribute('filter-limit') || 20
             if (filterLimit)
                 filter.limit = filterLimit
             delete filter.overwrite
