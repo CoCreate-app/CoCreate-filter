@@ -1,3 +1,17 @@
+# [1.30.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.29.0...v1.30.0) (2024-06-12)
+
+
+### Bug Fixes
+
+* bump cocreate dependencies ([f872796](https://github.com/CoCreate-app/CoCreate-filter/commit/f87279664be228b85bc1d54edde2c59dcbfb1a04))
+* filter-limit defualts to 20 if undefined ([38e6c67](https://github.com/CoCreate-app/CoCreate-filter/commit/38e6c672c56c68d9007f1152766b4f9ee250ab3a))
+* svg icon class ([35dde17](https://github.com/CoCreate-app/CoCreate-filter/commit/35dde1784036b77c25984d70e0bc9fda605d7490))
+
+
+### Features
+
+* handle regex flag ([5fccc3b](https://github.com/CoCreate-app/CoCreate-filter/commit/5fccc3b6359229cfe05e3e4a44e864e0c07eaf3b))
+
 # [1.29.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.28.7...v1.29.0) (2024-05-08)
 
 
