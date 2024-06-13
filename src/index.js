@@ -108,9 +108,13 @@ async function getFilter(element) {
         }
     }
 
-    let filterLimit = parseInt(element.getAttribute('filter-limit')) || 20;
-    if (!isNaN(filterLimit)) {
-        filter.limit = filterLimit;
+    if (!element.hasAttribute('filter-limit')) {
+        filter.limit = 20;
+    } else {
+        let filterLimit = parseInt(element.getAttribute('filter-limit'));
+        if (!isNaN(filterLimit)) {
+            filter.limit = filterLimit;
+        }
     }
 
     let filterIndex = parseInt(element.getAttribute('filter-index'));
@@ -143,9 +147,18 @@ async function updateFilter(element, loadMore) {
 
         // filter = { ...filter, ...newFilter }
         if (loadMore) {
-            let filterLimit = element.getAttribute('filter-limit') || 20
-            if (filterLimit)
-                filter.limit = filterLimit
+            if (!element.hasAttribute('filter-limit')) {
+                filter.limit = 20;
+            } else {
+                let filterLimit = parseInt(element.getAttribute('filter-limit'));
+                if (!isNaN(filterLimit)) {
+                    filter.limit = filterLimit;
+                }
+            }
+
+            // let filterLimit = element.getAttribute('filter-limit') || 20
+            // if (filterLimit)
+            //     filter.limit = filterLimit
             delete filter.overwrite
         } else {
             filter.index = 0
