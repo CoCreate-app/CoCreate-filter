@@ -122,6 +122,7 @@ async function getFilter(element) {
         filter.index = filterIndex;
     }
 
+    filter.overwrite = true
     filters.set(element, filter);
     return filter
 }
@@ -155,10 +156,7 @@ async function updateFilter(element, loadMore) {
                     filter.limit = filterLimit;
                 }
             }
-
-            // let filterLimit = element.getAttribute('filter-limit') || 20
-            // if (filterLimit)
-            //     filter.limit = filterLimit
+            filter.loadMore = true
             delete filter.overwrite
         } else {
             filter.index = 0
