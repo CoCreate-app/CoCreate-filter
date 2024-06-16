@@ -56,6 +56,9 @@ async function initElement(element) {
             filteredElements = [element]
 
         for (let j = 0; j < filteredElements.length; j++) {
+            if (!filteredElements[j])
+                continue
+
             if (!filters.has(filteredElements[j])) {
                 initFilterOnEvent(filteredElements[j]);
                 await getFilter(filteredElements[j])
