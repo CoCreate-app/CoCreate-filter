@@ -1,3 +1,12 @@
+## [1.30.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.30.0...v1.30.1) (2024-06-19)
+
+
+### Bug Fixes
+
+* if filteredElement not found continue ([6307248](https://github.com/CoCreate-app/CoCreate-filter/commit/6307248f1ab17901729c3d5e3aa98a287aab1a71))
+* set filter.overwrite true ([41ef5e7](https://github.com/CoCreate-app/CoCreate-filter/commit/41ef5e7e9a144b66a638cb0355e4415ab024c3e1))
+* to set filter limit as infinite apply empty filter-limit attribute ([4652521](https://github.com/CoCreate-app/CoCreate-filter/commit/4652521cc81a2aa5806b1b7a65a8ce934579b339))
+
 # [1.30.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.29.0...v1.30.0) (2024-06-12)
 
 
