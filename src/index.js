@@ -353,7 +353,7 @@ const intersectionObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             updateFilter(entry.target, true)
-            intersectionObserver.unobserve(entry.target);
+            // intersectionObserver.unobserve(entry.target);
         }
     });
 }, {
