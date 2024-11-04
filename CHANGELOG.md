@@ -1,3 +1,17 @@
+# [1.31.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.30.1...v1.31.0) (2024-11-04)
+
+
+### Bug Fixes
+
+* observer taget has been renamed to selector ([a2bcb40](https://github.com/CoCreate-app/CoCreate-filter/commit/a2bcb40927437d16c0d1609dfbe65aa4eb8bf927))
+* pretier.config.js and file formating ([90e94ed](https://github.com/CoCreate-app/CoCreate-filter/commit/90e94edb932aeea1c2539d4222832e6a84466a6e))
+* removed intersectunobserve ([d720b21](https://github.com/CoCreate-app/CoCreate-filter/commit/d720b216d978dea19702f90a2f96bab3b15b8c10))
+
+
+### Features
+
+* add prettier.config.js and format files ([0be1aa5](https://github.com/CoCreate-app/CoCreate-filter/commit/0be1aa543e23c05ded3cc2aa4675d66ef834f2ae))
+
 ## [1.30.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.30.0...v1.30.1) (2024-06-19)
 
 
