@@ -36,16 +36,28 @@ const elements = new Map();
 const filters = new Map();
 const dispatch = new Map();
 const selector =
-	"[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous]";
+	"[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous], [filter-key], [filter-query-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]";
 
-async function init() {
-	let filterSelector =
-		selector +
-		", [filter-key], [filter-query-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]";
-	let filterElements = document.querySelectorAll(filterSelector);
-
-	for (let i = 0; i < filterElements.length; i++)
-		await initElement(filterElements[i]);
+async function init(element) {
+	if (!element) {
+		element = document.querySelectorAll(selector);
+		for (let i = 0; i < element.length; i++) {
+			await initElement(element[i]);
+		}
+	} else {
+		if (
+			!(element instanceof HTMLCollection) &&
+			!(element instanceof NodeList) &&
+			!Array.isArray(element)
+		) {
+			element = [element];
+		}
+		for (let i = 0; i < element.length; i++) {
+			if (element[i].matches(selector)) {
+				await initElement(element[i]);
+			}
+		}
+	}
 
 	return true;
 }
@@ -459,7 +471,7 @@ observer.init({
 	}
 });
 
-// init()
+init();
 
 export default {
 	init,
