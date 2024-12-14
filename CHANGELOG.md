@@ -1,3 +1,16 @@
+# [1.32.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.31.0...v1.32.0) (2024-12-14)
+
+
+### Bug Fixes
+
+* init caused filter ti not initialized commented code causing issue ([87fc647](https://github.com/CoCreate-app/CoCreate-filter/commit/87fc647dbcf48af69557678543a7f246bf15e1c0))
+
+
+### Features
+
+* filter-key now used to handle projections. filter-query-key for appplying filters ([d8851f1](https://github.com/CoCreate-app/CoCreate-filter/commit/d8851f105d2aa87bf9a1cb26757755fd9c0b74e4))
+* init accepts an element to intialize else it will document query filter elements ([f7c7915](https://github.com/CoCreate-app/CoCreate-filter/commit/f7c79155d575a550ca428372901a33c3d8d57f94))
+
 # [1.31.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.30.1...v1.31.0) (2024-11-04)
 
 
