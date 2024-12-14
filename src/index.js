@@ -39,25 +39,30 @@ const selector =
 	"[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous], [filter-key], [filter-query-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]";
 
 async function init(element) {
-	if (!element) {
-		element = document.querySelectorAll(selector);
-		for (let i = 0; i < element.length; i++) {
-			await initElement(element[i]);
-		}
-	} else {
-		if (
-			!(element instanceof HTMLCollection) &&
-			!(element instanceof NodeList) &&
-			!Array.isArray(element)
-		) {
-			element = [element];
-		}
-		for (let i = 0; i < element.length; i++) {
-			if (element[i].matches(selector)) {
-				await initElement(element[i]);
-			}
-		}
+	element = document.querySelectorAll(selector);
+	for (let i = 0; i < element.length; i++) {
+		await initElement(element[i]);
 	}
+
+	// if (!element) {
+	// 	element = document.querySelectorAll(selector);
+	// 	for (let i = 0; i < element.length; i++) {
+	// 		await initElement(element[i]);
+	// 	}
+	// } else {
+	// 	if (
+	// 		!(element instanceof HTMLCollection) &&
+	// 		!(element instanceof NodeList) &&
+	// 		!Array.isArray(element)
+	// 	) {
+	// 		element = [element];
+	// 	}
+	// 	for (let i = 0; i < element.length; i++) {
+	// 		if (element[i].matches(selector)) {
+	// 			await initElement(element[i]);
+	// 		}
+	// 	}
+	// }
 
 	return true;
 }
