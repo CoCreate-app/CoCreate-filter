@@ -1,70 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="../assets/favicon.ico" />
-        <title>Filter | CoCreateJS</title>
-        <!-- CoCreate CSS CDN -->
-        <!-- <link rel="stylesheet" href="https://cdn.cocreate.app/filter/latest/CoCreate-filter.min.css" type="text/css"/> -->
+	<head>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="../assets/favicon.ico" />
+		<title>Filter | CoCreateJS</title>
+		<!-- CoCreate CSS CDN -->
+		<!-- <link rel="stylesheet" href="https://cdn.cocreate.app/filter/latest/CoCreate-filter.min.css" type="text/css"/> -->
 
-        <link rel="manifest" href="/manifest.webmanifest" />
-    </head>
-    <body>
-        <input
-            placeholder="test"
-            array="test"
-            object="6465646af1e023c0aee760c2"
-            key="name" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+	</head>
+	<body>
+		<input
+			placeholder="test"
+			array="test"
+			object="6465646af1e023c0aee760c2"
+			key="name" />
 
-        <div class="padding:10px">
-            <input
-                class="floating-label"
-                filter-selector="document; #test"
-                placeholder="Search" />
-            <input
-                class="floating-label"
-                filter-selector="document; #test"
-                filter-key="name"
-                placeholder="Name" />
-        </div>
+		<div class="padding:10px">
+			<input
+				class="floating-label"
+				filter-selector="document; #test"
+				placeholder="Search" />
+			<input
+				class="floating-label"
+				filter-selector="document; #test"
+				filter-query-key="name"
+				placeholder="Name" />
+		</div>
 
-        <div
-            id="test"
-            class="display:flex flex-wrap:wrap"
-            array="test"
-            object
-            filter-limit="5"
-            render-selector=".card[template]">
-            <div
-                template
-                render="object"
-                class="card margin:10px flex-grow:1 min-width:250px">
-                <div class="padding:15px">
-                    <h5
-                        data-test="{{ 'array':'test', 'object':{'_id':'6465646af1e023c0aee760c2'}, 'key':'name' }}"
-                        object="{{object._id}}">
-                        {{object._id}}{{status}}
-                    </h5>
+		<div
+			id="test"
+			class="display:flex flex-wrap:wrap"
+			array="test"
+			object
+			filter-limit="5"
+			render-selector=".card[template]">
+			<div
+				template
+				render="object"
+				class="card margin:10px flex-grow:1 min-width:250px">
+				<div class="padding:15px">
+					<h5
+						data-test="{{ 'array':'test', 'object':{'_id':'6465646af1e023c0aee760c2'}, 'key':'name' }}"
+						object="{{object._id}}">
+						{{object._id}}{{status}}
+					</h5>
 
-                    <textarea
-                        array="{{object.array}}"
-                        object="{{object._id}}"
-                        key="src"></textarea>
+					<textarea
+						array="{{object.array}}"
+						object="{{object._id}}"
+						key="src"></textarea>
 
-                    <div
-                        render="object.test.nested.nested1"
-                        render-as="nested"
-                        template>
-                        <span>{{nested.key}}: {{nested.value}}</span>
-                        <h3>parentKey: {{parentKey}}</h3>
-                        <h3>keyPath: {{keyPath}}</h3>
-                        <h3>key: {{nested.key}}</h3>
-                    </div>
+					<div
+						render="object.test.nested.nested1"
+						render-as="nested"
+						template>
+						<span>{{nested.key}}: {{nested.value}}</span>
+						<h3>parentKey: {{parentKey}}</h3>
+						<h3>keyPath: {{keyPath}}</h3>
+						<h3>key: {{nested.key}}</h3>
+					</div>
 
-                    <!-- <div
+					<!-- <div
                         render="object.modified"
                         render-as="updated"
                         template>
@@ -72,7 +72,7 @@
                         <h3>parentKey: {{parentKey}}</h3>
                         <h3>keyPath: {{keyPath}}</h3>
                         <h3>key: {{updated.key}}</h3> -->
-                    <!-- <input
+					<!-- <input
                             type="datetime-local"
                             array="{{object.array}}"
                             object="{{object._id}}"
@@ -82,7 +82,7 @@
                             array="{{object.array}}"
                             object="{{object._id}}"
                             key="{{modified.parentKey}}.{{modified.key}}" /> -->
-                    <!-- 
+					<!-- 
                         <span>{{modified.renderAs}}</span>
 
                         <span
@@ -90,9 +90,9 @@
                             {{object.modified.{{modified.key}}}}
                             {{status}}</span
                         > -->
-                    <!-- </div> -->
+					<!-- </div> -->
 
-                    <!-- <div render="object.created" render-as="created">
+					<!-- <div render="object.created" render-as="created">
                         <span>{{created.key}}: {{created.value}}</span>
                         <span
                             >{{created.key}}:
@@ -101,14 +101,14 @@
                         >
                         <span>{{created.keyPath}}</span>
                     </div> -->
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 
-        <div filter-on="click" filter-selector="#test">Load More</div>
+		<div filter-on="click" filter-selector="#test">Load More</div>
 
-        <!--<script src="../dist/CoCreate-filter.js"></script>-->
-        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
-        <script src="https://CoCreate.app/dist/CoCreate.js"></script>
-    </body>
+		<!--<script src="../dist/CoCreate-filter.js"></script>-->
+		<!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
+		<script src="https://CoCreate.app/dist/CoCreate.js"></script>
+	</body>
 </html>

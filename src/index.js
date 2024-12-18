@@ -127,7 +127,12 @@ async function getFilter(element) {
 		for (let i = 0; i < filteredElement.length; i++) {
 			if (filteredElement[i] === element) {
 				let filterEl = elements.get(key) || {};
-				filter.query = { ...filter.query, ...filterEl.query };
+				filter.query = mergeObject(
+					filter.query || {},
+					filterEl.query || {}
+				);
+
+				// filter.query = { ...filter.query, ...filterEl.query };
 				if (filterEl.key)
 					filter.key = { ...(filter.key || {}), ...filterEl.key };
 
@@ -170,7 +175,10 @@ async function updateFilter(element, loadMore) {
 		let filter = filters.get(els[i]);
 		if (!filter) return (filter = { isFilter: false });
 		if (newFilter) {
-			filter.query = { ...filter.query, ...newFilter.query };
+			if (newFilter.query) {
+				filter.query = mergeObject(filter.query || {}, newFilter.query);
+			}
+
 			if (newFilter.key)
 				filter.key = {
 					...(filter.key || {}),
@@ -183,7 +191,6 @@ async function updateFilter(element, loadMore) {
 				filter.search = [...(filter.search || []), ...newFilter.search];
 		}
 
-		// filter = { ...filter, ...newFilter }
 		if (loadMore) {
 			if (!element.hasAttribute("filter-limit")) {
 				filter.limit = 20;
@@ -218,6 +225,29 @@ async function updateFilter(element, loadMore) {
 	}
 }
 
+function mergeObject(target, source) {
+	// Iterate through all keys in the source object
+	for (const key in source) {
+		// Check if the property is an object in both target and source
+		if (
+			source[key] &&
+			typeof source[key] === "object" &&
+			!Array.isArray(source[key])
+		) {
+			if (!target[key] || typeof target[key] !== "object") {
+				// If the target key is not an object, initialize it as an object
+				target[key] = {};
+			}
+			// Recursively merge objects
+			mergeObject(target[key], source[key]);
+		} else {
+			// For non-object properties (or arrays), directly assign from source
+			target[key] = source[key];
+		}
+	}
+	return target;
+}
+
 function mergeSort(filter, newFilter) {
 	if (newFilter.sort) {
 		if (!filter.sort) filter.sort = [...newFilter.sort];
@@ -238,84 +268,22 @@ function mergeSort(filter, newFilter) {
 
 async function applyQuery(filter, element) {
 	let key = element.getAttribute("filter-query-key");
-	let operator = element.getAttribute("filter-operator");
-	let logicalOperator = element.getAttribute("filter-logical-operator");
-	let filterValueType = element.getAttribute("filter-value-type") || "string";
-
-	// TODO: rename to filter-query-type?
-	// filter-type used for $center $box etc
-	let type = element.getAttribute("filter-type");
 	let value = element.getAttribute("filter-query-value");
+
 	if (!value && element.value !== undefined)
 		value = (await element.getValue()) || "";
 
-	const keys = ["$organization_id", "$user_id", "$clientId", "$session_id"];
-	if (!value && keys.includes(element.value))
-		value = element.getAttribute("value");
-
-	if (!key || !value) return (filter.isFilter = false);
-
-	if (
-		!checkValue(key) ||
-		!checkValue(value) ||
-		!checkValue(type) ||
-		!checkValue(operator)
-	)
+	if (!key || !value || !checkValue(key) || !checkValue(value))
 		return (filter.isFilter = false);
 
-	if (value.includes(",")) {
-		value = value.split(",");
-		for (let i = 0; i < value.length; i++) value[i] = value[i].trim();
-	}
+	let newFilter = { [key]: value };
 
-	if (Array.isArray(value)) {
-		for (let i = 0; i < value.length; i++) {
-			switch (filterValueType) {
-				case "number":
-					value[i] = Number(value[i]);
-					break;
-			}
-		}
-	} else {
-		switch (filterValueType) {
-			case "number":
-				value = Number(value);
-				break;
-		}
-	}
-
-	let dotNotation = "";
-
-	if (logicalOperator && !logicalOperator.endsWith("]")) {
-		logicalOperator += "[]";
-		if (!logicalOperator.startsWith("$"))
-			logicalOperator = "$" + logicalOperator;
-		dotNotation = logicalOperator + ".";
-	}
-
-	dotNotation += key;
-	let regexKey = dotNotation;
-	// if (operator) dotNotation += "." + operator;
-
-	if (operator === "$in" && !Array.isArray(value)) value = [value];
-
+	let options = element.getAttribute("filter-query-options");
+	if (options) newFilter[key.replace("$regex", "$options")] = options;
 	if (!filter.query) filter.query = {};
 
-	// filter.query = dotNotationToObject({ [dotNotation]: value }, filter.query)
-	if (operator) {
-		filter.query[dotNotation] = { [operator]: value };
-	} else {
-		filter.query[dotNotation] = value;
-	}
-	if (operator === "$regex") {
-		regexKey += "." + "$options";
-		let options = element.getAttribute("filter-regex-flag");
-		if (options)
-			filter.query = dotNotationToObject(
-				{ [regexKey]: options },
-				filter.query
-			);
-	}
+	// Use dotNotationToObject to construct the query
+	filter.query = dotNotationToObject(newFilter, filter.query);
 }
 
 async function applyKey(filter, element) {
