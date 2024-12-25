@@ -105,7 +105,8 @@ function initElementEvents(element) {
 }
 
 async function getElementFilters(element) {
-	let filter = {};
+	let filter = filters.get(element) || {};
+
 	if (element.hasAttribute("filter-sort-key")) applySort(filter, element);
 	if (element.hasAttribute("filter-key")) await applyKey(filter, element);
 	if (element.hasAttribute("filter-query-key"))
@@ -131,6 +132,7 @@ async function getFilter(element) {
 					filter.query || {},
 					filterEl.query || {}
 				);
+				filter.query = dotNotationToObject(filter.query);
 
 				// filter.query = { ...filter.query, ...filterEl.query };
 				if (filterEl.key)
@@ -177,6 +179,7 @@ async function updateFilter(element, loadMore) {
 		if (newFilter) {
 			if (newFilter.query) {
 				filter.query = mergeObject(filter.query || {}, newFilter.query);
+				filter.query = dotNotationToObject(filter.query);
 			}
 
 			if (newFilter.key)
@@ -283,7 +286,8 @@ async function applyQuery(filter, element) {
 	if (!filter.query) filter.query = {};
 
 	// Use dotNotationToObject to construct the query
-	filter.query = dotNotationToObject(newFilter, filter.query);
+	// filter.query = dotNotationToObject(newFilter, filter.query);
+	filter.query = mergeObject(filter.query, newFilter);
 }
 
 async function applyKey(filter, element) {
