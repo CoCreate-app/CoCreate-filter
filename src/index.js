@@ -223,7 +223,7 @@ async function updateFilter(element, loadMore) {
 		delayTimer = setTimeout(function () {
 			dispatch.delete(els[i]);
 			if (els[i].setFilter) els[i].setFilter(filter);
-		}, 500);
+		}, 1000);
 		dispatch.set(els[i], delayTimer);
 	}
 }
@@ -273,8 +273,9 @@ async function applyQuery(filter, element) {
 	let key = element.getAttribute("filter-query-key");
 	let value = element.getAttribute("filter-query-value");
 
-	if (!value && element.value !== undefined)
+	if (!value && element.getValue) {
 		value = (await element.getValue()) || "";
+	}
 
 	if (!key || !value || !checkValue(key) || !checkValue(value))
 		return (filter.isFilter = false);
@@ -355,15 +356,19 @@ function initSortEvent(element) {
 }
 
 function initInputEvent(element) {
-	let contenteditable = element.getAttribute("contenteditable");
-	if (
-		["INPUT", "TEXTAREA", "SELECT"].includes(element.tagName) ||
-		(contenteditable != undefined && contenteditable != "false")
-	) {
-		element.addEventListener("input", function () {
-			updateFilter(element);
-		});
-	}
+	// let contenteditable = element.getAttribute("contenteditable");
+	element.addEventListener("input", function () {
+		updateFilter(element);
+	});
+
+	// if (
+	// 	["INPUT", "TEXTAREA", "SELECT"].includes(element.tagName) ||
+	// 	(contenteditable != undefined && contenteditable != "false")
+	// ) {
+	// 	element.addEventListener("input", function () {
+	// 		updateFilter(element);
+	// 	});
+	// }
 }
 
 function initFilterOnEvent(element) {
