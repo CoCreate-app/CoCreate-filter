@@ -1,3 +1,16 @@
+# [1.33.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.32.0...v1.33.0) (2025-01-18)
+
+
+### Bug Fixes
+
+* query merge ([ff9fc9f](https://github.com/CoCreate-app/CoCreate-filter/commit/ff9fc9f5febdc411ae2ba53e64338628c09f9023))
+
+
+### Features
+
+* query supports all elements ([b3a58e0](https://github.com/CoCreate-app/CoCreate-filter/commit/b3a58e0e0d1263790d70207e531d9a399af6001a))
+* update filter-query-key now accepts an operator ([01bcb36](https://github.com/CoCreate-app/CoCreate-filter/commit/01bcb3686213c3f2ec98d6f399a35e69d38ab38a))
+
 # [1.32.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.31.0...v1.32.0) (2024-12-14)
 
 
