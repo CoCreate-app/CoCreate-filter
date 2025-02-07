@@ -439,8 +439,21 @@ observer.init({
 		if (
 			mutation.target.getAttribute(mutation.attributeName) !==
 			mutation.oldValue
-		)
+		) {
+			if (
+				mutation.attributeName === "value" &&
+				![
+					"filter-key",
+					"filter-query-key",
+					"filter-sort-key",
+					"filter-search"
+				].some((attr) => mutation.target.hasAttribute(attr))
+			) {
+				return;
+			}
+
 			updateFilter(mutation.target);
+		}
 	}
 });
 
