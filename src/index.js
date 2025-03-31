@@ -408,7 +408,7 @@ const intersectionObserver = new IntersectionObserver(
 
 observer.init({
 	name: "CoCreateFilterInit",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector,
 	callback(mutation) {
 		initElement(mutation.target);
@@ -417,8 +417,8 @@ observer.init({
 
 observer.init({
 	name: "CoCreateFilterObserver",
-	observe: ["attributes"],
-	attributeName: [
+	types: ["attributes"],
+	attributeFilter: [
 		"filter-key",
 		"filter-value",
 		"filter-query-key",
@@ -459,7 +459,7 @@ observer.init({
 
 observer.init({
 	name: "CoCreateFiltersRemovedNodes",
-	observe: ["removedNodes"],
+	types: ["removedNodes"],
 	selector,
 	callback: function (mutation) {
 		elements.delete(mutation.target);
