@@ -358,6 +358,12 @@ function initSortEvent(element) {
 function initInputEvent(element) {
 	// let contenteditable = element.getAttribute("contenteditable");
 	element.addEventListener("input", function () {
+		if (
+			element.hasAttribute("filter-value") ||
+			element.hasAttribute("filter-query-value")
+		) {
+			return;
+		}
 		updateFilter(element);
 	});
 
