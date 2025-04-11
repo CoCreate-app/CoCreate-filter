@@ -1,3 +1,13 @@
+## [1.33.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.0...v1.33.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* if mutation attribute name is value check for other required atributes like filter-key, etc ([1ee4f32](https://github.com/CoCreate-app/CoCreate-filter/commit/1ee4f32e1729477fb799f978857dc4627b951e7c))
+* loop when input event fires on render elements ([d7221da](https://github.com/CoCreate-app/CoCreate-filter/commit/d7221da84672cc35fad75600bd483f1e7a2e244d))
+* prefix-document to target elements within current document ([78d254c](https://github.com/CoCreate-app/CoCreate-filter/commit/78d254c50527b12756dc2fc5336918d03429ff02))
+* update observer observe param to type and and attributeName to attributeFilter ([ad4826e](https://github.com/CoCreate-app/CoCreate-filter/commit/ad4826eaab56533a0eb7dbb8239014a33f129565))
+
 # [1.33.0](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.32.0...v1.33.0) (2025-01-18)
 
 
