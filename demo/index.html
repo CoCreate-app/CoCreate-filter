@@ -22,11 +22,11 @@
 		<div class="padding:10px">
 			<input
 				class="floating-label"
-				filter-document="#test"
+				filter-query="$document #test"
 				placeholder="Search" />
 			<input
 				class="floating-label"
-				filter-document="#test"
+				filter-query="$document #test"
 				filter-query-key="name"
 				placeholder="Name" />
 		</div>
@@ -37,7 +37,7 @@
 			array="test"
 			object
 			filter-limit="5"
-			render-selector=".card[template]">
+			render-query=".card[template]">
 			<div
 				template
 				render="object"
@@ -105,7 +105,7 @@
 			</div>
 		</div>
 
-		<div filter-on="click" filter-selector="#test">Load More</div>
+		<div filter-on="click" filter-query="#test">Load More</div>
 
 		<!--<script src="../dist/CoCreate-filter.js"></script>-->
 		<!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->

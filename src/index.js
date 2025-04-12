@@ -36,7 +36,7 @@ const elements = new Map();
 const filters = new Map();
 const dispatch = new Map();
 const selector =
-	"[filter-selector], [filter-closest], [filter-parent], [filter-next], [filter-previous], [filter-key], [filter-query-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]";
+	"[filter-query], [filter-key], [filter-query-key], [filter-search], [filter-sort-key], [filter-on], [filter-limit], [filter-index]";
 
 async function init(element) {
 	element = document.querySelectorAll(selector);
@@ -75,9 +75,11 @@ async function initElement(element) {
 		elements.set(element, newFilter);
 
 		initElementEvents(element);
-
-		filteredElements = queryElements({ element, prefix: "filter" });
-		if (!filteredElements) filteredElements = [element];
+		if (element.hasAttribute("filter-query")) {
+			filteredElements = queryElements({ element, prefix: "filter" });
+		} else {
+			filteredElements = [element];
+		}
 
 		for (let j = 0; j < filteredElements.length; j++) {
 			if (!filteredElements[j]) continue;
@@ -171,8 +173,13 @@ async function getFilter(element) {
 async function updateFilter(element, loadMore) {
 	let newFilter = await getElementFilters(element);
 
-	let els = queryElements({ element, prefix: "filter" });
-	if (els === false && filters.has(element)) els = [element];
+	let els = [];
+	if (element.hasAttribute("filter-query")) {
+		els = queryElements({ element, prefix: "filter" });
+	} else if (filters.has(element)) {
+		els = [element];
+	}
+
 	for (let i = 0; i < els.length; i++) {
 		let filter = filters.get(els[i]);
 		if (!filter) return (filter = { isFilter: false });
