@@ -1,3 +1,13 @@
+## [1.33.2](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.1...v1.33.2) (2025-04-30)
+
+
+### Bug Fixes
+
+* added css-loader ([e520edb](https://github.com/CoCreate-app/CoCreate-filter/commit/e520edb162ef9284b737407aa830695dd695fafe))
+* update query attributes ([c8b12a1](https://github.com/CoCreate-app/CoCreate-filter/commit/c8b12a10ac239e3fd92f503a2f1c4b763b261680))
+* updated cocreate modules versions ([929887d](https://github.com/CoCreate-app/CoCreate-filter/commit/929887dc2aad9a9925ce3f14f24fae738cda90b9))
+* webpack.config and devdependencies ([031bccf](https://github.com/CoCreate-app/CoCreate-filter/commit/031bccf5ada056a26dca87241037f3cac755383b))
+
 ## [1.33.1](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.0...v1.33.1) (2025-04-11)
 
 
