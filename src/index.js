@@ -284,6 +284,14 @@ async function applyQuery(filter, element) {
 		value = (await element.getValue()) || "";
 	}
 
+	// If value is an empty array, remove the key from the query and skip filter
+	if (Array.isArray(value) && value.length === 0) {
+		if (filter.query && filter.query.hasOwnProperty(key)) {
+			delete filter.query[key];
+		}
+		return (filter.isFilter = false);
+	}
+
 	if (!key || !value || !checkValue(key) || !checkValue(value))
 		return (filter.isFilter = false);
 
@@ -321,6 +329,7 @@ async function applyKey(filter, element) {
 }
 
 async function applySearch(filter, element) {
+	// TODO: Remove "filter-operator" and use $or $and to construct logical operator
 	let operator = element.getAttribute("filter-operator") || "or";
 	let caseSensitive = element.getAttribute("filter-case-sensitive") || false;
 	let value = await element.getValue();
@@ -438,7 +447,6 @@ observer.init({
 		"filter-query-value",
 		"value",
 		"filter-operator",
-		"filter-logical-operator",
 		"filter-value-type",
 		"filter-sort-key",
 		"filter-sort-direction",
