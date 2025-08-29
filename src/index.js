@@ -93,7 +93,7 @@ async function initElement(element) {
 		}
 	}
 
-	return filteredElements;
+	return filters;
 }
 
 function initElementEvents(element) {
