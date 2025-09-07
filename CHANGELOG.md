@@ -1,3 +1,11 @@
+## [1.33.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.3...v1.33.4) (2025-09-07)
+
+
+### Bug Fixes
+
+* handle empty array in applyQuery and update applySearch for logical operators ([bf92802](https://github.com/CoCreate-app/CoCreate-filter/commit/bf9280280e2b8ea961e35280efbd7623d42dfc27))
+* return filters instead of filteredElements in initElement function ([a57f87e](https://github.com/CoCreate-app/CoCreate-filter/commit/a57f87e8964f73f2cf3e8bdc5ea6f6bc8797b85f))
+
 ## [1.33.3](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.2...v1.33.3) (2025-05-01)
 
 
