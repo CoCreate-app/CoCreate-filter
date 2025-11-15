@@ -71,8 +71,7 @@ async function initElement(element) {
 	let filteredElements = [];
 	if (!elements.has(element)) {
 		let newFilter = await getElementFilters(element);
-
-		elements.set(element, newFilter);
+		// elements.set(element, newFilter);
 
 		initElementEvents(element);
 		if (element.hasAttribute("filter-query")) {
@@ -115,7 +114,8 @@ async function getElementFilters(element) {
 		await applyQuery(filter, element);
 	if (element.hasAttribute("filter-search"))
 		await applySearch(filter, element);
-
+	if (filter.query)
+		filter.query = dotNotationToObject(filter.query);
 	elements.set(element, filter);
 	return filter;
 }
