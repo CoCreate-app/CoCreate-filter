@@ -1,3 +1,10 @@
+## [1.33.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.4...v1.33.5) (2025-11-16)
+
+
+### Bug Fixes
+
+* comment out elements.set in initElement and update filter.query in getElementFilters ([9620738](https://github.com/CoCreate-app/CoCreate-filter/commit/9620738f07f4d229d0cef4a2666adcf2652a4288))
+
 ## [1.33.4](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.3...v1.33.4) (2025-09-07)
 
 
