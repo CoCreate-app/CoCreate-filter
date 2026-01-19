@@ -1,3 +1,10 @@
+## [1.33.6](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.5...v1.33.6) (2026-01-19)
+
+
+### Bug Fixes
+
+* update worklow ([d881fa0](https://github.com/CoCreate-app/CoCreate-filter/commit/d881fa0060156d9943eaf238579c5fc231ff2ab9))
+
 ## [1.33.5](https://github.com/CoCreate-app/CoCreate-filter/compare/v1.33.4...v1.33.5) (2025-11-16)
 
 
